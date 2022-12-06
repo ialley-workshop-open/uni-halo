@@ -26,7 +26,7 @@
 			</tm-grouplist>
 		</view>
 		<view class="copyright bg-white text-size-xs text-align-center text-grey-darken-1 pa-36">
-			<view class="">根据 MIT 许可证发布</view>
+			<view class="">根据 AGPL-3.0 协议开源</view>
 			<view class="mt-8">「 2022 uni-halo 丨 开源项目丨巷子工坊@小莫唐尼 」</view>
 		</view>
 	</view>

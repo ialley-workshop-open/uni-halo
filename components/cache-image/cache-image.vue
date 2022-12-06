@@ -1,5 +1,5 @@
 <template>
-	<view class="">
+	<view class="cache-image">
 		<view v-if="loadStatus == 'loading'" class="img-loading" :style="[imgStyle, loadStyle]">
 			<!-- <text class="img-load-icon iconfont icon-loading"></text>
 			<text class="img-load-text">{{ loadText }}</text> -->
@@ -108,6 +108,7 @@ export default {
 		}
 	},
 	created() {
+		console.log('cache-image', this.url);
 		this.imgStyle = {
 			width: this.width,
 			height: this.height,
@@ -144,6 +145,10 @@ export default {
 </script>
 
 <style scoped lang="scss">
+.cache-image {
+	width: 100%;
+	height: 100%;
+}
 .img-loading,
 .img-error {
 	display: flex;

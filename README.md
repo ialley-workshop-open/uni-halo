@@ -45,7 +45,7 @@
 </table>
 
 
-## 快速开始
+## 🌸 快速开始
 
 详细部署文档请查阅 [uni-halo-doc](https://uni-halo.925i.cn/)
 
@@ -58,19 +58,53 @@
 -    发行小程序：点击工具栏 发行 -> 小程序-微信
 -    发行APP：  点击工具栏 发行 -> 原生App-云打包
 
-## 在线体验
+
+## ⭐️ 功能清单
+
+### 用户部分
+1. - [x] 文章分类
+2. - [x] 文章详情&海报分享
+3. - [x] 文章归档
+4. - [x] 文章列表和搜索
+5. - [x] 数据统计展示
+6. - [x] 图库
+7. - [x] 友链
+8. - [x] 留言板
+9. - [x] 个人日记
+
+### 管理部分
+1. - [x] 个人信息修改
+2. - [x] 个人密码修改
+3. - [x] 日记管理
+4. - [x] 文章管理
+5. - [x] 分类管理
+6. - [x] 标签管理
+7. - [x] 附件管理
+8. - [x] 友链管理
+9. - [x] 图库管理
+10. - [x] 评论管理
+11. - [x] 日志管理
+12. - [ ] 菜单设置
+13. - [ ] 系统设置
+
+## 📃 TODO
+1. - [ ] 暗黑模式
+2. - [ ] 国际化
+
+
+## 🌈 在线体验
 
 - 敬请期待...
  
  
-## 许可证
+## 🔍 许可证
 <a href="https://gitee.com/ialley-workshop-open/uni-halo/master/LICENSE"><img src="https://img.shields.io/github/license/mashape/apistatus.svg"></a>
 uni-halo 使用 MIT 协议开源，请遵守开源协议。
 
-## 贡献
+## 🏭 贡献
 
 贡献代码请查看 [代码贡献规范](https://uni-halo.925i.cn/standard/category.html)
 
-## Halo Api地址
+## 🙆‍♂ Halo  
 - 接口文档地址（内容端）：<https://api.halo.run/content-api.html> 
 - 接口文档地址（管理端）：<https://api.halo.run/admin-api.html> 

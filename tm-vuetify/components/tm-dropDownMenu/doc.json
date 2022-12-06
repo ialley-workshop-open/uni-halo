@@ -1,0 +1,107 @@
+//格式如下。如果是单选或者多选项,id为必须。
+// input或者slider模式，value,必须,其它格式见下面
+[{
+		title: '排序',
+		disabled: true,
+		children: [{
+				title: "默认排序",
+				model: "checkbox",
+				children: [{
+						title: "默认排序",
+						id: '1-1'
+					},
+					{
+						title: "最近更新",
+						id: '1-2'
+					},
+					{
+						title: "信誉值最高",
+						id: '1-3'
+					},
+					{
+						title: "信誉值最高",
+						id: '1-4'
+					}
+				]
+			},
+			{
+				title: "价格选择",
+				model: "radio",
+				children: [{
+						title: "默认排序",
+						id: '2-1'
+					},
+					{
+						title: "最近更新",
+						id: '2-2'
+					},
+					{
+						title: "信誉值最高",
+						id: '2-3'
+					},
+					{
+						title: "最近更新",
+						id: '2-4'
+					},
+					{
+						title: "信誉值最高",
+						id: '2-5'
+					}
+				]
+			}
+		]
+	}, {
+		title: '价格',
+		children: [{
+			title: "价格排序",
+			model: "radio",
+			children: [{
+					title: "默认排序",
+					id: '3-1'
+				},
+				{
+					title: "最近更新",
+					id: '3-2'
+				},
+				{
+					title: "信誉值最高",
+					id: '3-3'
+				}
+			]
+		}]
+	},
+	{
+		title: '品牌',
+		children: [{
+				title: '自定品牌',
+				model: "input",
+				type: "number",
+				value: ""
+			},
+			{
+				title: '自定价格',
+				model: "slider",
+				suffix: '元',
+				max: 1000,
+				value: 0
+			},
+			{
+				title: "品牌排序",
+				model: "checkbox",
+				children: [{
+						title: "默认排序",
+						id: '4-1'
+					},
+					{
+						title: "最近更新",
+						id: '4-2'
+					},
+					{
+						title: "信誉值最高",
+						id: '4-3'
+					}
+				]
+			}
+		]
+	}
+]

@@ -1,0 +1,9 @@
+{
+  "devDependencies": {
+    "vue-i18n": "^9.1.10"
+  },
+  "dependencies": {
+    "uni-read-pages": "^1.0.5",
+    "uni-simple-router": "^2.0.8-beta.4"
+  }
+}

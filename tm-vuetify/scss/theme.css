@@ -1,0 +1,28 @@
+/**
+ * 以下主题库为我精细细化生成。
+ * 可通过我的工具库自动生成。
+ * 见：https://jx2d.cn/themetool/
+ * @版权2021 tmzdy https://jx2d.cn/
+ * 想要哪个颜色就把注释去掉。
+ */
+@import "./theme/primary.css";
+/**用户自定主题,默认主题，不可删除，可通过工具生成覆盖**/
+@import "./theme/amber.css";
+@import "./theme/blue.css";
+@import "./theme/brown.css";
+@import "./theme/cyan.css";
+@import "./theme/green.css";
+@import "./theme/indigo.css";
+@import "./theme/lime.css";
+@import "./theme/orange.css";
+@import "./theme/pink.css";
+@import "./theme/purple.css";
+@import "./theme/red.css";
+/**组件库，必要的主题，不可删除**/
+@import "./theme/teal.css";
+@import "./theme/yellow.css";
+@import "./theme/blue-grey.css";
+@import "./theme/deep-orange.css";
+@import "./theme/deep-purple.css";
+@import "./theme/light-blue.css";
+@import "./theme/light-green.css";

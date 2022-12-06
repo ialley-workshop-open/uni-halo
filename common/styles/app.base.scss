@@ -1,0 +1,38 @@
+// 全局css基础样式
+
+.card-shadow {
+	box-shadow: 0rpx 0rpx 24rpx rgba(0, 0, 0, 0.08);
+}
+.bg-white {
+	background-color: #fff;
+}
+.load-text {
+	padding: 0 0 20rpx 0;
+	text-align: center;
+	color: #999;
+	font-size: 24rpx;
+}
+.e-fixed {
+	position: fixed;
+	left: 0;
+	/* #ifndef H5 */
+	top: 0;
+	/* #endif */
+	/* #ifdef H5 */
+	top: 88rpx;
+	/* #endif */
+	right: 0;
+	z-index: 6;
+}
+.e-loading-icon {
+	animation: eLoading 0.8s linear infinite;
+}
+
+@keyframes eLoading {
+	0% {
+		transform: rotateZ(0deg);
+	}
+	100% {
+		transform: rotateZ(360deg);
+	}
+}

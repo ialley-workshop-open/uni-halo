@@ -98,8 +98,8 @@
  
  
 ## 🔍 许可证
-<a href="https://gitee.com/ialley-workshop-open/uni-halo/master/LICENSE"><img src="https://img.shields.io/github/license/mashape/apistatus.svg"></a>
-uni-halo 使用 MIT 协议开源，请遵守开源协议。
+
+uni-halo 使用 AGPL-3.0 协议开源，请遵守开源协议。
 
 ## 🏭 贡献
 

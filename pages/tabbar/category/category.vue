@@ -23,6 +23,10 @@
 					@refresherrefresh="fnGetData(true)"
 					@scrolltolower="fnGetData(false)"
 					@scroll="fnOnScroll"
+					@touchmove.stop
+					@touchstart="fnOnTouchStart"
+					@touchend="fnOnTouchEnd"
+					@touchcancel="fnOnTouchEnd"
 				>
 					<view v-if="dataList.length == 0" class="article-empty flex flex-center">
 						<tm-empty icon="icon-shiliangzhinengduixiang-" label="该分类下暂无文章~"></tm-empty>
@@ -78,6 +82,8 @@ export default {
 			isLoadMore: false,
 			loadMoreText: '',
 			scrollTop: 0,
+			tempScrollTop: 0,
+			scrollTimeout: null,
 			triggered: false
 		};
 	},
@@ -181,9 +187,7 @@ export default {
 			});
 		},
 		fnOnScroll(e) {
-			throttle(() => {
-				this.scrollTop = e.detail.scrollTop;
-			}, 1000);
+			this.tempScrollTop = e.detail.scrollTop;
 		},
 		fnToTopScroll() {
 			uni.pageScrollTo({
@@ -191,6 +195,15 @@ export default {
 				duration: 500
 			});
 			this.scrollTop = 0;
+			this.tempScrollTop = 0;
+		},
+		fnOnTouchStart() {
+			clearTimeout(this.scrollTimeout);
+		},
+		fnOnTouchEnd() {
+			this.scrollTimeout = setTimeout(() => {
+				this.scrollTop = this.tempScrollTop;
+			}, 500);
 		}
 	}
 };

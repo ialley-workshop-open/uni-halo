@@ -1,6 +1,5 @@
 <template>
-	<view class="app-page bg-gradient-blue-lighten-b">
-		<!-- 流星-->
+	<view class="app-page bg-gradient-blue-lighten-b" :style="pageStyle">
 		<view class="tn-satr">
 			<view class="sky"></view>
 			<view class="stars">
@@ -41,18 +40,19 @@
 			</view>
 		</view>
 
-		<!-- 头像用户信息 -->
 		<view class="user-info__container flex flex-col flex-center">
-			<image class="user-info__avatar" src="https://blog-oss.925i.cn/blog-files/d500acd35e8b6d24bbfa2dabd2a605e6.png" mode="aspectFill"></image>
-			<view class="user-info__nick-name">「 uni-halo 」</view>
+			<image class="user-info__avatar" :src="startInfo.logo" mode="aspectFill"></image>
+			<view class="user-info__nick-name">「 {{ startInfo.title }} 」</view>
 		</view>
 
 		<view class="text-align-center text-white" style="padding: 60vh 0 0 0;">
-			<view class="" style="font-size: 44rpx;">全新UI，准备出发</view>
-			<view class="mt-30 text-size-m">新触动 新感受 新体验</view>
+			<view class="" style="font-size: 44rpx;" v-if="startInfo.desc1">{{ startInfo.desc1 }}</view>
+			<view class="mt-30 text-size-m" v-if="startInfo.desc2">{{ startInfo.desc2 }}</view>
 		</view>
 
-		<view class="" style="padding: 120rpx 200rpx;z-index: 999;position: relative;"><view class="start-btn" @click="fnStart()">全新出发</view></view>
+		<view class="" style="padding: 120rpx 200rpx;z-index: 999;position: relative;">
+			<view class="start-btn" @click="fnStart()">{{ startInfo.btnText || '开始体验' }}</view>
+		</view>
 
 		<!-- 波浪效果 -->
 		<wave></wave>
@@ -63,6 +63,20 @@
 import wave from '@/components/wave/wave.vue';
 export default {
 	components: { wave },
+	computed: {
+		startInfo() {
+			return getApp().globalData.start;
+		},
+		pageStyle() {
+			if (this.startInfo.bg) {
+				const _bg = this.$utils.checkIsUrl(this.startInfo.bg) ? `url(${this.startInfo.bg})` : this.startInfo.bg;
+				return {
+					background: _bg + '!important'
+				};
+			}
+			return {};
+		}
+	},
 	methods: {
 		fnStart() {
 			uni.switchTab({

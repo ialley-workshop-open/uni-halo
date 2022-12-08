@@ -151,7 +151,8 @@ export default {
 			form: {
 				content: '',
 				keepRaw: true,
-				sourceContent: '',
+				originalContent: '',
+				formatContent: '',
 				type: 'PUBLIC'
 			},
 			modal: null,
@@ -532,9 +533,10 @@ export default {
 				return uni.$tm.toast('请输入内容!');
 			}
 			this.form.content = _content;
-			this.form.sourceContent = this.$refs.markdown.getText();
+			this.form.formatContent = _content;
+			this.form.originalContent = this.$refs.markdown.getText();
 			uni.setStorageSync('posts-content', _content);
-			uni.setStorageSync('posts-content-source', this.form.sourceContent);
+			uni.setStorageSync('posts-content-source', this.form.originalContent);
 			if (this.form.id) {
 				this.$Router.push({
 					path: '/pagesB/articles/article-setting',

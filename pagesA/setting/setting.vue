@@ -148,6 +148,8 @@ export default {
 			isBlackTheme: false,
 			loading: true,
 			appSettings: {},
+			isSaved: true,
+			firstLoad: true,
 			homeLayout: {
 				list: [{ name: '一行一列', value: 'h_row_col1' }, { name: '一行两列', value: 'h_row_col2' }],
 				selectDefault: ['一行一列'],
@@ -169,15 +171,17 @@ export default {
 			dotPositionList: [{ name: '右边', value: 'right', checked: true }, { name: '下边', value: 'bottom', checked: false }]
 		};
 	},
-	computed: {
-		// 获取设置
-		_appSettings() {
-			return uni.$tm.vx.getters().setting.getSettings;
-		}
-	},
+
 	watch: {
-		_appSettings(val) {
-			this.appSettings = val;
+		appSettings: {
+			deep: true,
+			handler() {
+				if (this.firstLoad) {
+					this.firstLoad = false;
+				} else {
+					this.isSaved = false;
+				}
+			}
 		}
 	},
 
@@ -185,7 +189,7 @@ export default {
 		this.fnSetPageTitle('应用设置');
 	},
 	created() {
-		this.appSettings = this._appSettings;
+		this.appSettings = uni.$tm.vx.getters().setting.getSettings;
 		this.fnHandleFormatSelect();
 		uni.showLoading({
 			title: '加载中...',
@@ -242,6 +246,7 @@ export default {
 		},
 		// 保存
 		fnOnSave() {
+			this.isSaved = true;
 			this.$tm.vx.commit('setting/setSettings', this.appSettings);
 			uni.$tm.toast('保存成功，部分设置在重启后生效！');
 		},
@@ -257,12 +262,16 @@ export default {
 				confirmColor: '#03a9f4'
 			})
 				.then(res => {
+					this.isSaved = true;
 					uni.$tm.vx.actions('setting/updateDefaultAppSettings');
 					uni.$tm.toast('系统设置已恢复为默认配置，部分设置在重启后生效！');
 				})
 				.catch(err => {});
 		},
 		fnOnBack() {
+			if (this.isSaved) {
+				uni.navigateBack();
+			}
 			uni.$eShowModal({
 				title: '提示',
 				content: '您当前可能有未保存的数据，确定返回吗？',
@@ -274,6 +283,7 @@ export default {
 			})
 				.then(res => {
 					uni.navigateBack();
+					this.isSaved = true;
 				})
 				.catch(err => {});
 		}

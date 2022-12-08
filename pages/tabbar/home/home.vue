@@ -196,7 +196,10 @@ export default {
 			this.$httpApi
 				.getCategoryList({ more: true })
 				.then(res => {
-					this.categoryList = res.data;
+					this.categoryList = res.data.sort((a, b) => {
+						return b.postCount - a.postCount;
+					});
+
 					setTimeout(() => {
 						this.loading = 'success';
 					}, 500);
@@ -216,12 +219,16 @@ export default {
 		fnGetBanner() {
 			const _this = this;
 			const _format = function(list, type) {
-				return list.map(item => {
+				return list.map((item, index) => {
 					switch (type) {
 						case 'list':
 							return {
-								id: '',
-								src: item
+								id: index,
+								nickname: _this.bloggerInfo.nickname,
+								avatar: _this.bloggerInfo.avatar,
+								address: item.href || '',
+								title: item.title,
+								image: _this.$utils.checkImageUrl(item.thumbnail)
 							};
 						case 'article':
 							return {

@@ -6,10 +6,10 @@
 			<tm-skeleton model="listAvatr"></tm-skeleton>
 		</view>
 		<!-- 内容区域 -->
-		<view v-else class="app-page-content bg-white pa-24">
+		<view v-else class="app-page-content pa-24" :class="{ 'bg-white': dataList.length !== 0 }">
 			<view v-if="dataList.length == 0" class="content-empty flex flex-center">
 				<!-- 空布局 -->
-				<tm-empty icon="icon-shiliangzhinengduixiang-" label="该分类下暂无数据"></tm-empty>
+				<tm-empty icon="icon-shiliangzhinengduixiang-" label="啊偶,博主还没有留言~"></tm-empty>
 			</view>
 			<block v-else>
 				<block v-for="(item, index) in dataList" :key="index">
@@ -28,9 +28,9 @@
 					</tm-translate>
 				</block>
 				<tm-flotbutton :offset="[16, 80]" @click="fnToTopPage" size="m" color="light-blue" icon="icon-angle-up"></tm-flotbutton>
-				<tm-flotbutton actions-pos="left" :show-text="true" color="bg-gradient-orange-accent" @click="fnToComment(null)"></tm-flotbutton>
 				<view class="load-text">{{ loadMoreText }}</view>
 			</block>
+			<tm-flotbutton actions-pos="left" :show-text="true" color="bg-gradient-orange-accent" @click="fnToComment(null)"></tm-flotbutton>
 		</view>
 
 		<!-- 评论详情 -->
@@ -164,6 +164,7 @@ export default {
 				.then(res => {
 					if (res.status == 200) {
 						this.loading = 'success';
+						// return;
 						this.loadMoreText = res.data.hasNext ? '上拉加载更多' : '呜呜，没有更多数据啦~';
 						// 处理数据
 						this.result = res.data;
@@ -252,12 +253,18 @@ export default {
 	width: 100vw;
 	display: flex;
 	flex-direction: column;
+	background-color: #fafafd;
 }
 .app-page-content {
 	box-sizing: border-box;
-	box-shadow: 0rpx 0rpx 24rpx rgba(0, 0, 0, 0.05);
+	// box-shadow: 0rpx 0rpx 24rpx rgba(0, 0, 0, 0.05);
+}
+.content-empty {
+	width: 100%;
+	height: 60vh;
 }
 .loading-wrap {
+	box-sizing: border-box;
 	padding: 24rpx;
 }
 </style>

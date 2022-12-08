@@ -16,10 +16,10 @@
 			<tm-skeleton model="listAvatr"></tm-skeleton>
 		</view>
 		<!-- 内容区域 -->
-		<view class="content" v-else>
+		<view class="content" v-else :class="{ 'bg-white': dataList.length !== 0 }">
 			<view v-if="dataList.length == 0" class="content-empty">
 				<!-- 空布局 -->
-				<tm-empty icon="icon-shiliangzhinengduixiang-" label="该分类下暂无数据"></tm-empty>
+				<tm-empty icon="icon-shiliangzhinengduixiang-" label="博主还没有分享图片~"></tm-empty>
 			</view>
 			<block v-else>
 				<tm-flowLayout v-if="globalAppSettings.gallery.useWaterfull" @click="fnOnClick" ref="wafll">
@@ -227,26 +227,32 @@ export default {
 			this.$httpApi
 				.getPhotoListByPage(this.queryParams)
 				.then(res => {
-					this.loading = 'success';
-					this.result = res.data;
-					if (res.data.content.length != 0) {
-						const _list = res.data.content.map((item, index) => {
-							item['image'] = this.$utils.checkImageUrl(item.thumbnail);
-							item['model'] = 'text';
-							item['takeTime'] = this.$tm.dayjs(item['takeTime']).format('DD/MM/YYYY');
-							return item;
-						});
-						this.fnCacheDataList(_list);
-						if (this.globalAppSettings.gallery.useWaterfull) {
-							this.dataList = _list;
-							this.$nextTick(() => {
-								this.$refs.wafll.pushData(_list);
+					if (res.status == 200) {
+						this.loading = 'success';
+						this.result = res.data;
+						if (res.data.content.length != 0) {
+							const _list = res.data.content.map((item, index) => {
+								item['image'] = this.$utils.checkImageUrl(item.thumbnail);
+								item['model'] = 'text';
+								item['takeTime'] = this.$tm.dayjs(item['takeTime']).format('DD/MM/YYYY');
+								return item;
 							});
-						} else {
-							this.dataList = this.dataList.concat(_list);
+							this.fnCacheDataList(_list);
+							if (this.globalAppSettings.gallery.useWaterfull) {
+								this.dataList = _list;
+								this.$nextTick(() => {
+									this.$refs.wafll.pushData(_list);
+								});
+							} else {
+								this.dataList = this.dataList.concat(_list);
+							}
 						}
+						this.loadMoreText = res.data.hasNext ? '上拉加载更多' : '呜呜，没有更多数据啦~';
+					} else {
+						this.loading = 'error';
+						this.waterfall.loading = 'finish';
+						this.loadMoreText = '';
 					}
-					this.loadMoreText = res.data.hasNext ? '上拉加载更多' : '呜呜，没有更多数据啦~';
 				})
 				.catch(err => {
 					console.error(err);
@@ -301,6 +307,7 @@ export default {
 	}
 }
 .content {
+	box-sizing: border-box;
 	padding: 0 24rpx;
 	padding-top: 24rpx;
 
@@ -312,6 +319,7 @@ export default {
 	}
 }
 .loading-wrap {
+	box-sizing: border-box;
 	padding: 24rpx;
 }
 </style>

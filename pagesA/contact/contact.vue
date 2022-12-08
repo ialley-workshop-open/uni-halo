@@ -2,12 +2,9 @@
 	<view class="app-page flex flex-col felx-center bg-white">
 		<!-- 信息 -->
 		<view class="profile flex flex-col flex-center pa-36">
-			<view class="avatar">
-				<text v-if="false" class="icon flex flex-center"><text class="iconfont icon-check text-size-s"></text></text>
-				<image class="avatar-img" :src="bloggerInfo.avatar" mode="aspectFill"></image>
-			</view>
+			<view class="avatar"><image class="avatar-img" :src="bloggerInfo.avatar" mode="aspectFill"></image></view>
 			<view class="nickname mt-24 text-weight-b text-size-g">{{ bloggerInfo.nickname }}</view>
-			<view class="desc mt-24 text-size-m text-grey-darken-3">{{ bloggerInfo.description }}</view>
+			<view class="desc mt-24 text-size-m text-grey-darken-3">{{ bloggerInfo.description || '这个博主很懒，竟然没写介绍~' }}</view>
 			<!-- 联系图标 -->
 			<view class="mt-24 contact-icons">
 				<!-- 放全部：似乎显得有点拥挤 -->
@@ -19,7 +16,7 @@
 				<text class="ml-12 halocoloricon halocoloricon-gitee"></text>
 				<text class="ml-12 halocoloricon halocoloricon-ic_email_round"></text>
 			</view>
-			<view class="mt-24 ">
+			<view v-if="false" class="mt-24 ">
 				<tm-button theme="bg-gradient-light-blue-accent" size="m" openType="contact">在线客服联系</tm-button>
 				<tm-button theme="bg-gradient-orange-accent" size="m" @click="fnOnToWeb">访问PC端博客</tm-button>
 			</view>
@@ -129,7 +126,7 @@ export default {
 		}
 	},
 	onLoad() {
-		this.fnSetPageTitle('❤');
+		this.fnSetPageTitle('联系博主');
 	},
 	created() {
 		this.fnGetData();
@@ -185,19 +182,6 @@ export default {
 		border: 6rpx solid #fff;
 		box-shadow: 0rpx 2rpx 24rpx rgba(0, 0, 0, 0.07);
 		overflow: hidden;
-		.icon {
-			width: 42rpx;
-			height: 42rpx;
-			position: absolute;
-			right: 6rpx;
-			bottom: 0rpx;
-			border-radius: 50%;
-			color: #fff;
-			box-sizing: border-box;
-			background-color: #03b0fd;
-			border: 4rpx solid #fff;
-			z-index: 2;
-		}
 		&-img {
 			width: 100%;
 			height: 100%;

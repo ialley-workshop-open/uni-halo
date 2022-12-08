@@ -36,7 +36,7 @@ export const _DefaultAppSettings = {
 	},
 	gallery: {
 		// 是否使用瀑布流
-		useWaterfull: false
+		useWaterfull: true
 	},
 	links: {
 		// 是否使用简约模式

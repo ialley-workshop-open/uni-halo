@@ -201,8 +201,7 @@
 				"path": "contact/contact",
 				"style": {
 					"navigationBarTitleText": "联系博主",
-					"enablePullDownRefresh": false,
-					"navigationStyle": "custom"
+					"enablePullDownRefresh": false
 				}
 			}, {
 				"path": "about/about",
@@ -216,7 +215,6 @@
 					"navigationBarTitleText": "设置",
 					"enablePullDownRefresh": false
 				}
-
 			}]
 		},
 		{

@@ -16,7 +16,7 @@
 				<view class="load-text">{{ loadMoreText }}</view>
 			</block>
 
-			<tm-flotbutton @click="fnToTopPage" size="m" icon="icon-angle-up"></tm-flotbutton>
+			<tm-flotbutton @click="fnToTopPage" color="light-blue" size="m" icon="icon-angle-up"></tm-flotbutton>
 		</block>
 	</view>
 </template>

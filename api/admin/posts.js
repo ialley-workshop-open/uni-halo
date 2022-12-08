@@ -24,6 +24,7 @@ const createOrEditModel = {
 		"value": "string"
 	}],
 	"originalContent": "string",
+	"formatContent": "",
 	"password": "string",
 	"slug": "string",
 	"status": "DRAFT",

@@ -151,7 +151,7 @@
 			<!-- 操作区域 -->
 			<view class="btn-bar flex flex-center bg-white">
 				<tm-button theme="blue" :shadow="0" block :height="70" @click="fnOnSave(false, false)">立即保存</tm-button>
-				<tm-button theme="light-blue" :shadow="0" block :height="70" @click="fnOnSave(false, true)">保存并返回</tm-button>
+				<tm-button v-if="isEdit" theme="light-blue" :shadow="0" block :height="70" @click="fnOnSave(false, true)">保存并返回</tm-button>
 				<!-- 	<block v-if="from == 'edit' && isEdit">
 					<tm-button
 						v-if="article.status == 'DRAFT' || article.status == 'INTIMATE' || article.status == 'RECYCLE'"
@@ -357,10 +357,21 @@ export default {
 				list: ['常规', '高级', 'SEO']
 			},
 			article: {
+				title: '',
+				slug: '',
+				status: '',
 				content: '',
 				keepRaw: true,
-				sourceContent: '',
-				type: 'PUBLIC'
+				topPriority: 0,
+				summary: '',
+				password: '',
+				originalContent: '',
+				metaDescription: '',
+				formatContent: '',
+				editorType: 'MARKDOWN',
+				createTime: '',
+				categoryIds: [],
+				tagIds: []
 			},
 			articleStatus: {
 				list: [{ name: '发布', value: 'PUBLISHED' }, { name: '私有', value: 'INTIMATE' }, { name: '草稿', value: 'DRAFT' }, { name: '回收站', value: 'RECYCLE' }],
@@ -397,6 +408,9 @@ export default {
 		this.from = from;
 		this.createTime = uni.$tm.dayjs(new Date().getTime()).format('YYYY-MM-DD HH:mm:ss');
 		this.fnGetSettings();
+
+		console.log(uni.getStorageSync('posts-content'));
+		console.log(uni.getStorageSync('posts-content-source'));
 	},
 	onPullDownRefresh() {
 		if (this.isEdit == false) {
@@ -533,7 +547,7 @@ export default {
 						}
 						this.createTime = uni.$tm.dayjs(new Date(this.article.createTime).getTime()).format('YYYY-MM-DD HH:mm:ss');
 						if (this.postTitle) {
-							this.article.title = this.postTitle;
+							this.$set(this.article, 'title', this.postTitle);
 						}
 					}
 					const _cateRes = res[1];
@@ -577,6 +591,7 @@ export default {
 				})
 				.catch(err => {
 					this.$tm.toast('数据加载失败，请重试！');
+					console.log(err);
 					this.loading = 'error';
 				})
 				.finally(() => {
@@ -626,7 +641,8 @@ export default {
 			// 设置文章内容
 			if (this.from == 'edit') {
 				this.article.content = uni.getStorageSync('posts-content');
-				this.article.sourceContent = uni.getStorageSync('posts-content-source');
+				this.article.formatContent = uni.getStorageSync('posts-content');
+				this.article.originalContent = uni.getStorageSync('posts-content-source');
 			}
 			if (this.articleStatus.selectValue != 'INTIMATE') {
 				this.article.password = '';
@@ -651,8 +667,7 @@ export default {
 										delta: 1
 									});
 								}
-
-								uni.$emit('refresh-article-list');
+								// uni.$emit('refresh-article-list');
 							}, 1000);
 						} else {
 							uni.$tm.toast('保存失败，请重试!');
@@ -662,13 +677,12 @@ export default {
 						}
 					})
 					.catch(err => {
-						uni.$tm.toast('保存失败，请重试!');
+						uni.$tm.toast(`保存失败，${err.message}!`);
 						if (isChangeStatus) {
 							this.article.status = this.article.status == 'DRAFT' ? 'PUBLISHED' : 'DRAFT';
 						}
 					});
 			} else {
-				this.article.content = this.article.sourceContent = uni.getStorageInfoSync();
 				this.$httpApi.admin
 					.createPosts(this.article)
 					.then(res => {
@@ -678,12 +692,9 @@ export default {
 							uni.setStorageSync('posts-content', '');
 							uni.setStorageSync('posts-content-source', '');
 							setTimeout(() => {
-								if (isBack) {
-									uni.navigateBack({
-										delta: 1
-									});
-								}
-
+								uni.navigateBack({
+									delta: 2
+								});
 								uni.$emit('refresh-article-list');
 							}, 1000);
 						} else {
@@ -691,7 +702,7 @@ export default {
 						}
 					})
 					.catch(err => {
-						uni.$tm.toast('发布失败，请重试!');
+						uni.$tm.toast(`发布失败：${err.message}`);
 					});
 			}
 		},

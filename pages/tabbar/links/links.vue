@@ -7,9 +7,9 @@
 			<tm-skeleton model="listAvatr"></tm-skeleton>
 			<tm-skeleton model="listAvatr"></tm-skeleton>
 		</view>
-		<view v-else class="bg-white">
+		<view v-else class="content">
 			<!-- 空数据 -->
-			<view v-if="result.length == 0" class="empty flex flex-center"><tm-empty icon="icon-shiliangzhinengduixiang-" label="啊偶,博主还没有朋友呢~"></tm-empty></view>
+			<view v-if="result.length == 0" class="content-empty flex flex-center"><tm-empty icon="icon-shiliangzhinengduixiang-" label="啊偶,博主还没有朋友呢~"></tm-empty></view>
 
 			<!-- 如果只有一个分组：使用列表的形式 result.length == 1 -->
 			<view v-else-if="result.length == 1" class="flex flex-col pb-24">
@@ -190,7 +190,7 @@ export default {
 							};
 						});
 
-						this.result = _result.reverse();
+						// this.result = _result.reverse();
 						setTimeout(() => {
 							this.loading = 'success';
 						}, 500);
@@ -245,17 +245,24 @@ export default {
 	min-height: 100vh;
 	display: flex;
 	flex-direction: column;
+	background-color: #fafafd;
 }
 .loading-wrap {
 	padding: 24rpx;
 	min-height: 100vh;
 }
 
-.empty {
-	width: 100vw;
-	height: 60vh;
-}
+.content {
+	padding: 0 24rpx;
+	padding-top: 24rpx;
 
+	.content-empty {
+		height: 60vh;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+}
 .link-card {
 	border-bottom: 2rpx solid #f5f5f5;
 	background-color: #ffffff;

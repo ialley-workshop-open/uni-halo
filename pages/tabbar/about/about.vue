@@ -5,7 +5,7 @@
 			<image class="avatar" :src="$utils.checkAvatarUrl(bloggerInfo.avatar)" mode="aspectFill" @click="miniProfileCard.show = true"></image>
 			<view class="profile">
 				<view class="author mt-24 text-size-g text-weight-b">{{ bloggerInfo.nickname }}</view>
-				<view class="desc mt-24 text-size-m">{{ bloggerInfo.description || '一个爱凑热闹的、喜欢捣鼓前端的博主。' }}</view>
+				<view class="desc mt-24 text-size-m">{{ bloggerInfo.description || '这个博主很懒，竟然没写介绍~' }}</view>
 			</view>
 			<image v-if="calcWaveUrl" :src="calcWaveUrl" mode="scaleToFill" class="gif-wave"></image>
 		</view>

@@ -11,7 +11,10 @@
  */
 
 import HaloConfig from '@/config/halo.config.js';
-
+import {
+	logTypes,
+	logUtils
+} from '@/utils/halo.logs.js'
 const utils = {
 	/**
 	 * 检查是否为http/https链接
@@ -30,14 +33,29 @@ const utils = {
 
 	// 检查封面图
 	checkThumbnailUrl: function(thumbnail) {
-		if (!thumbnail) return HaloConfig.defaultThumbnailUrl + `&r=${new Date().getTime()}`;
+		if (!HaloConfig.defaultThumbnailUrl) {
+			// logUtils.saveLog(logTypes.config, {
+			// 	path: 'checkThumbnailUrl',
+			// 	page: 'checkThumbnailUrl',
+			// 	msg: '未配置默认的封面图，配置参数【HaloConfig.defaultThumbnailUrl】'
+			// })
+		}
+		let _url = HaloConfig.defaultThumbnailUrl
+		if (_url) {
+			_url = _url.indexOf('?') !== -1 ? _url : _url + `&r=${new Date().getTime()}`
+		}
+		if (!thumbnail) return _url;
 		if (!this.checkIsUrl(thumbnail)) return HaloConfig.apiUrl + thumbnail;
 		return thumbnail
 	},
 
 	// 检查图片
 	checkImageUrl: function(image) {
-		if (!image) return HaloConfig.defaultImageUrl + `&r=${new Date().getTime()}`;
+		let _url = HaloConfig.defaultImageUrl
+		if (_url) {
+			_url = _url.indexOf('?') !== -1 ? _url : _url + `&r=${new Date().getTime()}`
+		}
+		if (!image) return _url;
 		if (!this.checkIsUrl(image)) return HaloConfig.apiUrl + image;
 		return image
 	},
@@ -46,7 +64,11 @@ const utils = {
 	checkAvatarUrl: function(avatar, isAdmin = false) {
 		if (isAdmin) return HaloConfig.author.avatar;
 		if (!avatar) {
-			return HaloConfig.defaultAvatarUrl + `&r=${new Date().getTime()}`;
+			let _url = HaloConfig.defaultAvatarUrl
+			if (_url) {
+				_url = _url.indexOf('?') !== -1 ? _url : _url + `&r=${new Date().getTime()}`
+			}
+			return _url;
 		}
 		if (!this.checkIsUrl(avatar)) return HaloConfig.apiUrl + avatar;
 		return avatar

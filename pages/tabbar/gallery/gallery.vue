@@ -26,7 +26,7 @@
 					<template v-slot:left="{ hdata }">
 						<tm-translate animation-name="fadeUp">
 							<view class="round-3 shadow-2 overflow white">
-								<tm-images :previmage="true" :src="hdata.item.image"></tm-images>
+								<tm-images :previmage="false" :src="hdata.item.image" @click="fnPreview(hdata.item)"></tm-images>
 								<view class="pa-10 text-size-s">
 									<view class="text-overflow-2">
 										<tm-tags color="bg-gradient-amber-accent" :shadow="0" :dense="true" size="s" model="fill">{{ hdata.item.team }}</tm-tags>
@@ -51,7 +51,7 @@
 					<template v-slot:right="{ hdata }">
 						<tm-translate animation-name="fadeUp">
 							<view class="round-3 shadow-2 overflow white">
-								<tm-images :previmage="true" :src="hdata.item.image"></tm-images>
+								<tm-images :previmage="false" :src="hdata.item.image" @click="fnPreview(hdata.item)"></tm-images>
 								<view class="pa-10 text-size-s">
 									<view class="text-overflow-2">
 										<tm-tags :shadow="0" :dense="true" color="bg-gradient-amber-accent" size="s" model="fill">{{ hdata.item.team }}</tm-tags>
@@ -282,6 +282,9 @@ export default {
 		},
 		// 预览
 		fnPreview(item, index) {
+			if (!index) {
+				index = this.dataList.findIndex(x => x.id == item.id);
+			}
 			uni.previewImage({
 				current: index,
 				urls: this.dataList.map(x => x.image),
@@ -293,7 +296,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .app-page {
 	width: 100vw;
 	min-height: 100vh;

@@ -190,14 +190,12 @@ export default {
 							};
 						});
 
-						// this.result = _result.reverse();
+						this.result = _result.reverse();
 						setTimeout(() => {
 							this.loading = 'success';
 						}, 500);
 					} else {
-						setTimeout(() => {
-							this.loading = 'error';
-						}, 500);
+						this.loading = 'error';
 					}
 				})
 				.catch(err => {

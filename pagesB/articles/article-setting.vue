@@ -404,13 +404,10 @@ export default {
 		const from = this.$Route.query.from;
 		this.postsId = postsId;
 		this.postTitle = postTitle || '';
-		this.isEdit = isEdit;
+		this.isEdit = isEdit == 1 ? true : false;
 		this.from = from;
 		this.createTime = uni.$tm.dayjs(new Date().getTime()).format('YYYY-MM-DD HH:mm:ss');
 		this.fnGetSettings();
-
-		console.log(uni.getStorageSync('posts-content'));
-		console.log(uni.getStorageSync('posts-content-source'));
 	},
 	onPullDownRefresh() {
 		if (this.isEdit == false) {
@@ -591,7 +588,6 @@ export default {
 				})
 				.catch(err => {
 					this.$tm.toast('数据加载失败，请重试！');
-					console.log(err);
 					this.loading = 'error';
 				})
 				.finally(() => {

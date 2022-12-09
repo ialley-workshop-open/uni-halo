@@ -5,6 +5,7 @@
  */
 function sleep(wait=500){
 	let timid = null;
+	if(wait==0) return Promise.resolve(true)
 	clearTimeout(timid);
 	return new Promise((res,rej)=>{
 		timid = setTimeout(function() {

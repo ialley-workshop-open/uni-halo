@@ -136,9 +136,8 @@ export default {
 	},
 
 	computed: {
-		// 获取博主信息
 		bloggerInfo() {
-			let blogger = this.$tm.vx.getters().blogger.getBlogger;
+			let blogger = this.$tm.vx.getters().getBlogger;
 			blogger.avatar = this.$utils.checkAvatarUrl(blogger.avatar, true);
 			return blogger;
 		}
@@ -150,13 +149,6 @@ export default {
 
 	created() {
 		this.fnQuery();
-		this.$httpApi
-			.getOptionList()
-			.then(result => {
-				console.log('配置列表：');
-				console.log(result);
-			})
-			.catch(err => {});
 	},
 	onPullDownRefresh() {
 		this.isLoadMore = false;
@@ -177,7 +169,6 @@ export default {
 		}
 	},
 	methods: {
-		// 查询数据
 		fnQuery() {
 			this.fnGetBanner();
 			this.fnGetArticleList();

@@ -11,7 +11,7 @@
 				<view class="title">{{ result.title }}</view>
 				<view class="detail">
 					<view class="author">
-						<text class="author-name">{{ author.name }}</text>
+						<text class="author-name">{{ author.nickname }}</text>
 						<text class="author-time">发布于：{{ { d: result.createTime, f: 'yyyy年MM月dd日 星期w' } | formatTime }}</text>
 					</view>
 
@@ -238,7 +238,7 @@ export default {
 		},
 		// 获取博主信息
 		bloggerInfo() {
-			let blogger = this.$tm.vx.getters().blogger.getBlogger;
+			let blogger = this.$tm.vx.getters().getBlogger;
 			blogger.avatar = this.$utils.checkAvatarUrl(blogger.avatar, true);
 			return blogger;
 		}

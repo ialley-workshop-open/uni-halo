@@ -1,10 +1,7 @@
 <template>
 	<view @click="$emit('click',$event)" :gutter="gutter" class="tm--row" :class="[preatClass]" >
 		<view   class="tm--row--body" :style="style" :class="[customClass]">
-			<view  v-show="chuliWsok==true">
-				<slot></slot>
-			</view>
-			
+			<slot></slot>
 		</view>
 	</view>
 </template>
@@ -64,30 +61,34 @@
 				width_px:0,
 				children_num:0,
 				style:'',
-				chuliWsok:false,//处理完宽度计算信息再进行显示内部内容。
 			};
 		},
-		async mounted() {
-			let t = this;
-			
-			await this.$Querey('.tm--row',this).then(preantw=>{
-				t.width_px = preantw[0].width;
-				// #ifndef H5
-				t.children_num = t.$children.length;
-				// #endif
-				// #ifdef H5
-				t.children_num = t.$children[0].$children[0].$children[0].$children.length;
-				// #endif
-				t.style = uni.$tm.objToString({
-					'justify-content':t.justify,
-					'align-items':t.align,
-					'width':t.width,
-					'height':!t.height?'default':(uni.upx2px(t.height)+'px')
-				},';');
-				
-				t.chuliWsok = true;
-			}).catch(e=>{})
-			
+		updated() {
+			this.getContinaRect()
+		},
+		mounted() {
+			this.getContinaRect()
+		},
+		methods:{
+			getContinaRect(){
+				let t = this;
+				this.$Querey('.tm--row',this).then(preantw=>{
+					t.width_px = preantw[0].width;
+					// #ifndef H5
+					t.children_num = t.$children.length;
+					// #endif
+					// #ifdef H5
+					t.children_num = t.$children[0].$children[0].$children[0].$children.length;
+					// #endif
+					t.style = uni.$tm.objToString({
+						'justify-content':t.justify,
+						'align-items':t.align,
+						'width':t.width,
+						'height':!t.height?'default':(uni.upx2px(t.height)+'px')
+					},';');
+					
+				}).catch(e=>{})
+			}
 		}
 	}
 </script>

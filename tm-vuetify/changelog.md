@@ -1,3 +1,23 @@
+## 2.0.1（2022-12-8）
+* 修复 tm-icons在小程序下可能图标与文字无法对齐
+* 优化 tm-album性能,修复可能在嵌套组件中,无法计算宽高信息.
+* 优化 tm-dragList性能
+* 优化 tm-row性能
+* 优化 tm-segTabs性能
+* 优化 tm-sheet性能
+* 优化 tm-slider,tm-sliders性能
+* 优化 tm-more性能
+* 优化 tm-propress性能,修复可能在嵌套组件中,无法计算宽高信息.
+* 优化 tm-dialog，tm-poup,动效及样式
+* 微调 tm-button
+* 美化了tm-calendar，tm-calendar-view，选中改成圆形，范围改成椭圆形。
+* 修复 tm-countdown 完成的时机逻辑有误，修改后默认为完成状态。
+* 增强 tm-upload 新增showSort属性，用于上传的文件排序功能。
+* 修复 tm-swiper圆角失效。
+* 修复 tm-weekbar日期问题。
+* 修复 tm-dragGrid 动态修改数据后的判断逻辑问题。
+* 优化 tm-grouplist 渲染性能，现在已经是秒渲染。
+* 修复$tm.vx.getters()下的属性丢失。
 ## 2.0.0（2022-6-7）
 * tm-card修复点击操作按钮时返回的参数非index，而是项目标题。修复动态配置一些属性不生效的问题。
 * tm-dropDownMenu 优化，当重置项时，默认将使用你初始的选中数据来进行填充，默认选中。

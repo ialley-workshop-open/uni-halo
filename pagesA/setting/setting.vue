@@ -189,7 +189,7 @@ export default {
 		this.fnSetPageTitle('应用设置');
 	},
 	created() {
-		this.appSettings = uni.$tm.vx.getters().setting.getSettings;
+		this.appSettings = uni.$tm.vx.getters().getSettings;
 		this.fnHandleFormatSelect();
 		uni.showLoading({
 			title: '加载中...',

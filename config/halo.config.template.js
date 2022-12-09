@@ -14,14 +14,17 @@ export default {
 	showAbout: true, // 显示关于项目入口
 	uni_halo_logo: 'https://b.925i.cn/uni_halo/uni_halo_logo.png', // uni-halo的logo
 
-	apiUrl: '', // Api基础域名（您的halo博客基础域名或者是Halo后台管理系统api地址）
-	apiAuthorization: '', // Halo中-系统-博客设置-切换到高级选项-API设置-Access key 
+	apiUrl: '', // Api基础域名 [必填] ：你的Halo博客基础域名
+	apiAuthorization: '', // Api认证key [必填]： Halo中-系统-博客设置-切换到高级选项-API设置-Access key
 
-	title: '', // 博客标题
-	miniCodeImageUrl: '', // 小程序码地址
+	title: '', // 博客标题 [建议必填]：在某些页面没有设置具体的页面名称时候，使用该值显示
+	miniCodeImageUrl: '', // 小程序的太阳码/二维码的图片地址 [建议必填]：主要用于文章详情页面的生成海报的功能
+	aboutProfileImageUrl: '', // 关于页面中的资料卡背景图 [建议必填]
 
-	start: { // 首次启动页配置
-		title: 'uni-halo', // 标题
+	// 启动页面的配置（页面地址`/pagesA/start/start`）
+	start: {
+		use: true, // 是否使用首次启动页：用户第一次使用你的应用会显示否则不显示
+		title: 'uni-halo', // 启动页面中的文字标题
 		bg: '', // 留空则使用默认 开屏首页背景，可以是颜色值或者图片图片地址
 		logo: 'https://b.925i.cn/uni_halo/uni_halo_logo.png', // logo
 		desc1: '全新UI，准备出发', // 描述信息1
@@ -29,12 +32,17 @@ export default {
 		btnText: '全新触发' // 按钮文字
 	},
 
+	// 博主信息 
 	author: {
-		name: '', // 昵称
-		avatar: '', // 头像地址
-		motto: '', // 格言
+		use: true, // 是否启用这里配置的信息，不启用则获取PC端博客设置的信息
+		nickname: '', // 昵称
+		avatar: '', // 头像
+		email: '', // 邮箱
+		description: '', // 介绍
 	},
 
+	// 社交信息(将会在`/pagesA/contact/contact`页面中展示)
+	// 具体的某个参数值留空则不展示
 	social: {
 		qq: "", // qq号
 		wechat: "", // 微信号

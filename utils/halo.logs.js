@@ -10,8 +10,8 @@ export const logTypesMap = {
 	BASE_CONFIG: '基础配置'
 }
 export const logUtils = {
-
 	/**
+	 * 保存日志信息
 	 * @param {Object} type 日志类型
 	 * @param {Object} msg 日志信息
 	 */

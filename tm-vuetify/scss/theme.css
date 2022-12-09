@@ -9,20 +9,20 @@
 /**用户自定主题,默认主题，不可删除，可通过工具生成覆盖**/
 @import "./theme/amber.css";
 @import "./theme/blue.css";
-@import "./theme/brown.css";
+/* @import "./theme/brown.css"; */
 @import "./theme/cyan.css";
 @import "./theme/green.css";
-@import "./theme/indigo.css";
-@import "./theme/lime.css";
+/* @import "./theme/indigo.css"; */
+/* @import "./theme/lime.css"; */
 @import "./theme/orange.css";
-@import "./theme/pink.css";
-@import "./theme/purple.css";
+/* @import "./theme/pink.css"; */
+/* @import "./theme/purple.css"; */
 @import "./theme/red.css";
 /**组件库，必要的主题，不可删除**/
-@import "./theme/teal.css";
+/* @import "./theme/teal.css"; */
 @import "./theme/yellow.css";
 @import "./theme/blue-grey.css";
 @import "./theme/deep-orange.css";
-@import "./theme/deep-purple.css";
+/*@import "./theme/deep-purple.css";*/
 @import "./theme/light-blue.css";
-@import "./theme/light-green.css";
+/*@import "./theme/light-green.css"; */

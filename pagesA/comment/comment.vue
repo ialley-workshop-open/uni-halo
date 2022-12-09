@@ -67,7 +67,7 @@ export default {
 	computed: {
 		// 评论游客信息
 		wxLoginVisitorUser() {
-			return uni.$tm.vx.getters().user.getWxLoginInfo;
+			return uni.$tm.vx.getters().getWxLoginInfo;
 		}
 	},
 	onLoad() {

@@ -1,7 +1,7 @@
 <template>
 	<view class="app-page pb-24">
 		<!-- 博主信息 -->
-		<view class="blogger-info">
+		<view class="blogger-info" :style="calcProfileStyle">
 			<image class="avatar" :src="$utils.checkAvatarUrl(bloggerInfo.avatar)" mode="aspectFill" @click="miniProfileCard.show = true"></image>
 			<view class="profile">
 				<view class="author mt-24 text-size-g text-weight-b">{{ bloggerInfo.nickname }}</view>
@@ -168,7 +168,19 @@ export default {
 	},
 	computed: {
 		bloggerInfo() {
-			return this.$tm.vx.getters().blogger.getBlogger;
+			return this.$tm.vx.getters().getBlogger;
+		},
+		calcProfileStyle() {
+			let _imgUrlOr = getApp().globalData.aboutProfileImageUrl;
+			if (this.$utils.checkIsUrl(_imgUrlOr)) {
+				return {
+					backgroundImage: `url(${_imgUrlOr})`
+				};
+			} else {
+				return {
+					background: _imgUrlOr
+				};
+			}
 		},
 		calcWaveUrl() {
 			return getApp().globalData.waveImageUrl;
@@ -437,10 +449,8 @@ export default {
 	position: relative;
 	width: 100%;
 	height: 600rpx;
-	background-image: url('@/static/summer.jpg');
 	background-size: cover;
 	background-repeat: no-repeat;
-	// box-shadow: 0rpx 2rpx 24rpx rgba(0, 0, 0, 0.05);
 	&:before {
 		content: '';
 		width: 100%;

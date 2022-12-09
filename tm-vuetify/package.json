@@ -1,7 +1,7 @@
 {
   "id": "tm-vuetify",
   "displayName": "tmUI-vuetify",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "tm-vuetify是一个新势力由主题驱动的UI组件库,相比其它优势大,组件全,设计趋势紧跟未来。具有主题生成，主题实时切换，暗黑实时切换,lottie动画,图表等新颖功能,tmui TMUI",
   "keywords": [
     "tmUI-vuetify",

@@ -253,10 +253,10 @@
 				this.$emit('change',elList);
 			},
 			inits() {
+				this.grid = this.list.length;
 				if(this.grid==0) return;
 				this.$nextTick(async function() {
 					let p = await this.$Querey(".tm-dragGrid", this).catch(e => {})
-					this.grid = this.list.length;
 					this.listData = [];
 					//组件的宽度
 					this.w = uni.upx2px(this.width) || p[0].width || 300;

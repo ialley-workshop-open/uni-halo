@@ -134,8 +134,10 @@
 				let day = nwod.getDate();
 				let week = nwod.getDay();
 				let new_weekDay = [nwod];
+				
 				let timcha = Math.abs(week-7);
 				let zcha = Math.abs(7-timcha);
+				
 				let weekCn=["周日","周一","周二","周三","周四","周五","周六"];
 				for(let i=1;i<zcha;i++){
 					let d = new Date(year,month,day-i);
@@ -157,9 +159,17 @@
 					}
 					weekDay.push(sc);
 				}
+				
 				weekDay.sort(function(a, b){return a.week - b.week}); 
+				
 				weekDay.push(weekDay[0])
 				weekDay.splice(0,1)
+				if(weekDay.length==8){
+					weekDay.splice(0,1)
+					weekDay.unshift(weekDay[weekDay.length-1])
+					weekDay.splice(weekDay.length-1,1)
+				}
+				
 				let t=  this;
 				this.timeList = [];
 				this.$nextTick(function(){

@@ -19,16 +19,16 @@ class vuex {
 		let t = this;
 		const g = this.store.getters
 		let keys = Object.keys(g);
-		
+		console.log(keys)
 		let k = keys.map((el,index)=>{
 			let f = el.split('/');
 			let tst = {}
 			if(f.length==1){
 				tst[el]=g[el]
 			}else{
-				
-				tst[f[0]]={}
-				tst[f[0]][f[1]] = g[el]
+				tst[f[1]]=g[el]
+				// tst[f[0]+'_'+f[1]]=g[el]
+				// tst[f[0]][f[1]] = g[el]
 				
 			}
 			return tst

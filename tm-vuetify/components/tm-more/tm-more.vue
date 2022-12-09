@@ -109,17 +109,11 @@ import tmIcons from "@/tm-vuetify/components/tm-icons/tm-icons.vue"
 	mounted() {
 		this.$nextTick(function(){
 			this.downOpen = this.open;
-			
-			let t = this;
-			
-			t.$Querey('.tm-more-content',t).then(syninfo=>{
-				if (syninfo[0].height - 40 <= t.hs) {
-					t.show = false;
-				}
-			}).catch(e => {});
-			
-			
+			this.getRect()
 		})
+	},
+	updated() {
+		this.getRect()
 	},
 	computed: {
 		hs: function() {
@@ -131,6 +125,14 @@ import tmIcons from "@/tm-vuetify/components/tm-icons/tm-icons.vue"
 		}
 	},
 	methods: {
+		getRect(){
+			let t = this;
+			t.$Querey('.tm-more-content',t,0).then(syninfo=>{
+				if (syninfo[0].height - 40 <= t.hs) {
+					t.show = false;
+				}
+			}).catch(e => {});
+		},
 		openMore() {
 			this.$emit('click');
 			if (this.disabled) return;

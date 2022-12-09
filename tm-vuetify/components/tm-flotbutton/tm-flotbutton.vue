@@ -20,6 +20,7 @@
 					@touchcancel="$emit('touchcancel', $event)"
 					:open-type="openType"
 					@click="click"
+					:padding="[0,0]"
 					 :showValue="showText" vertical :label="label" :fontSize="fontSize"
 						 :iconSize="iconSize" :theme="color_tmeme" round="rouned" :font-color="fontColor"  :bgcolor="bgcolor"
 						:size="size" :width="width" :height="width" :icon="icon" fab>

@@ -1,5 +1,5 @@
 <template>
-	<view class="tm-button " :class="[block ? 'd-block' : 'd-inline-block ']">
+	<view class="tm-button " :class="[block ? 'd-block' : 'd-inline-block ']" hover-class="opacity-6">
 		<view
 			class="flex-center tm-button-btn fulled-height"
 			:class="[block ? '' : customDense_puted ? '' : 'ma-10', block ? 'd-block' : 'd-inline-block', black_tmeme ? 'bk' : '', customStyleTm]"
@@ -54,7 +54,7 @@
 					<block v-if="vtype == true">
 						<text
 							v-if="!fab && icon"
-							:class="[`${prefx_computed} ${icon}`, fontColor ? `text-${colors.color}` : '', black_tmeme ? 'opacity-6' : '', 'px-12']"
+							:class="[`${prefx_computed} ${icon}`, fontColor ? `text-${colors.color}` : '', black_tmeme ? 'opacity-6' : '', 'px-12','flex-shrink']"
 							:style="{
 								fontSize: `${icon_size.px}px`,
 								lineHeight:'normal'
@@ -62,7 +62,7 @@
 						></text>
 						<text
 							v-if="fab && icon && !loading && !titl"
-							:class="[`${prefx_computed} ${icon}`, fontColor ? `text-${colors.color}` : '', black_tmeme ? 'opacity-6' : '']"
+							:class="[`${prefx_computed} ${icon}`, fontColor ? `text-${colors.color}` : '', black_tmeme ? 'opacity-6' : '','flex-shrink']"
 							:style="{
 								fontSize: `${icon_size.px}px`,
 								lineHeight:'normal'
@@ -70,7 +70,7 @@
 						></text>
 						<text
 							v-if="fab && icon && !loading && titl"
-							:class="[`${prefx_computed} ${icon}`, fontColor ? `text-${color_tmeme}` : '', black_tmeme ? 'opacity-6' : '']"
+							:class="[`${prefx_computed} ${icon}`, fontColor ? `text-${color_tmeme}` : '', black_tmeme ? 'opacity-6' : '','flex-shrink']"
 							:style="{
 								fontSize: `${icon_size.px}px`,
 								lineHeight:'normal'
@@ -80,7 +80,7 @@
 					<block v-if="vtype == false"><tm-icons :size="icon_size.upx" :name="icon"></tm-icons></block>
 				</slot>
 
-				<view v-if="!fab || showValue" class="d-inline-block tm-button-label flex-shrink" :style="{ fontSize: font_size }" :class="[fontColor ? `text-${colors.color}` : '']">
+				<view v-if="!fab || showValue" class="d-inline-block tm-button-label flex-shrink" :style="{ fontSize: font_size }" :class="[fontColor ? `text-${colors.color}` : '',vertical ? 'full ' : '',]">
 					<slot name="default" :data="label">{{ label }}</slot>
 				</view>
 			</button>
@@ -556,11 +556,13 @@ export default {
 		line-height: 88upx;
 		height: 88upx;
 		vertical-align: middle;
+		
 		// #ifdef H5
 		transition: all 0.3s;
 		// #endif
 		.tm-button-label {
 			vertical-align: middle;
+			
 		}
 		&::after {
 			border: none;
@@ -671,6 +673,7 @@ export default {
 		}
 		&.showValue {
 			line-height: inherit !important;
+			padding: 0 !important;
 		}
 
 		&.noGutter {

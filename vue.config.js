@@ -8,7 +8,7 @@ module.exports = {
 		disableHostCheck: true,
 		proxy: {
 			"/api": {
-				target: "https://b.925i.cn",
+				target: 'https://b.925i.cn',
 				changeOrigin: true,
 				secure: true,
 				pathRewrite: {

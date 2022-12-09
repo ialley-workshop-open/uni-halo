@@ -45,14 +45,11 @@ export default {
 		},
 	},
 	actions: {
-		// 登录
-		adminLogin({
-			commit
-		}, data) {
+		adminLogin(context, data) {
 			return new Promise((resolve, reject) => {
 				User.login(data).then((res) => {
 					if (res.status == 200) {
-						commit("setAdminToken", res.data);
+						context.commit("setAdminToken", res.data);
 						resolve(res)
 					} else {
 						reject(err)
@@ -72,11 +69,8 @@ export default {
 				})
 			}
 		},
-		// 登出
-		adminLogout({
-			commit
-		}) {
-			commit("setAdminToken", null);
+		adminLogout(context) {
+			context.commit("setAdminToken", null);
 		}
 	},
 };

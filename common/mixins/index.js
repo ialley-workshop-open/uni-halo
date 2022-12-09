@@ -24,7 +24,7 @@ export default {
 			computed: {
 				// 获取全局应用设置
 				globalAppSettings() {
-					return uni.$tm.vx.getters().setting.getSettings;
+					return uni.$tm.vx.getters().getSettings;
 				}
 			},
 			created() {

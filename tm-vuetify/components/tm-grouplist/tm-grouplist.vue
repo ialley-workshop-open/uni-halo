@@ -6,7 +6,7 @@
 			<view v-if="title&&title!='true'" class="px-32 py-16  text-weight-b " :class="[`text-size-${fontSize}`,titleTheme, black_tmeme ? 'bk' : '']">
 				<slot name="title" :title="title">{{ title }}</slot>
 			</view>
-			<view  v-show="chuliWsok==true">
+			<view  >
 				<slot></slot>
 			</view>
 		</view>
@@ -77,6 +77,20 @@ export default {
 			return this.$tm.vx.state().tmVuetify.black;
 		}
 	},
+	provide(){
+		let t = this;
+		return {
+			GroupListStyles:()=>{
+				return {
+					margin: [0,0],
+					padding: [32,24],
+					shadow: 0,
+					round: 0,
+					borderBottom: true
+				}
+			}
+		}
+	},
 	data() {
 		return {
 			targ:'tm-grouplist',
@@ -99,47 +113,7 @@ export default {
 	},
 	methods: {
 		inits(){
-			let t = this;
-			this.$nextTick(function () {
-				let ch = this.$children;
-				// #ifdef H5
-					ch = [];
-					let cld = this.$children[0].$children
-					
-					while(cld){
-						if(cld[0].$children.length>0){
-							let ods = cld[0].$children;
-							ch =ods[ods.length-1].$children;
-							
-							break;
-						}else{
-							cld = cld[0]?.$children
-						}
-						
-					}
-				// #endif
-				
-						
-				ch.forEach((item,index)=>{
-					
-					if(item.$options.name==="tm-listitem"){
-						item.setConfig({
-							margin: [0,0],
-							padding: [32,24],
-							shadow: 0,
-							round: 0,
-							borderBottom: index===ch.length-1?false:t.borderBottom
-						})
-					}
-				})
-				
-				// #ifndef H5
-					setTimeout(function() {
-						t.chuliWsok = true;
-					}, 30);
-				// #endif
-				
-			})
+			
 		},
 		// 事件一定是子项目tm-listitem为group模式时，才会触发。
 		change(vue_uid) {

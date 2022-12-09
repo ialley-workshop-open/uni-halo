@@ -48,12 +48,21 @@
 						:key="index"><text class="text-size-s py-16">{{item}}</text>
 						</tm-col>
 						<!-- #endif -->
-						<tm-col :round="(item.start||item.end||item.checked)?4:0" @click="day_danxuanclick(item,index)"
-						:color="item.beginEnd?(item.checked===true||item.start||item.end?color_tmeme+(black_tmeme?' bk ':''):(item.guocheng?color_tmeme+' text  opacity-7 '+(black_tmeme?'bk':''):'')):''" 
+						<tm-col 
+						@click="day_danxuanclick(item,index)"
+						color="" 
 						:custom-class="isSelectedDateClass(item)"
-						align="middle" width="14.28%" v-for="(item,index) in nowData"
-						:key="index">
-							<view class="tm-calendarView-col flex-center flex-col" :class="[black&&!item.beginEnd?' opacity-2 ':'']">
+						justify="center" width="14.28%" 
+						v-for="(item,index) in nowData"
+						:key="index"
+						>
+							<view  class="tm-calendar-col flex-center flex-col "
+							 :style="[mode=='rang'?{width:'100%',height:'90rpx'}:{width:'90rpx',height:'90rpx',overflow: 'hidden','border-radius': '50% !important'}]"
+							:class="[
+								item.start?'round-l-24':'',
+								item.end?'round-r-24':'',
+								item.beginEnd?(item.checked===true||item.start||item.end?color_tmeme+(black_tmeme?' bk ':''):(item.guocheng?color_tmeme+' text  opacity-7 '+(black_tmeme?'bk':''):'')):'',
+								black_tmeme&&!item.beginEnd?' opacity-2 ':'']">
 								<text class="text-size-n"
 								:class="[
 									!item.nowMonth&&!item.guocheng&&!item.checked&&!item.start&&!item.end?(black_tmeme?'text-grey-darken-3':'text-grey-lighten-1'):'',
@@ -65,10 +74,10 @@
 								<view class="text-size-xs  text_bl"
 								>
 								<block v-if="item.start">
-									开始
+									始
 								</block>
 								<block v-if="item.end">
-									结束
+									-止
 								</block>
 								
 								<block v-if="!item.start&&!item.end">

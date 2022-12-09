@@ -12,7 +12,6 @@
 			@touchstart="touchstart"
 			@touchmove.stop.prevent="touchsmove"
 			@touchend="touchsend"
-			
 			@mousedown="touchstart"
 			@mousemove.stop.prevent="touchsmove"
 			@mouseup="touchsend"

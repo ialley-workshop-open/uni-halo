@@ -13,7 +13,7 @@
 	 * @property {Number} wait 延时
 	 * @property {String} animation-name = [fadeUp|fadeDown|fadeLeft|fadeRight|zoomIn|zoomOut|fadeIn|fadeOut] 动画效果名称.
 	 * @property {String|Boolean} auto = [true|false] 默认:true,是否自动播放动画.
-	 * @example <tm-translate wait="500" animation-name="fadeUp"><tm-upload></tm-upload></tm-translate>
+	 * @example <tm-translate wait="500" animation-name="fadeDown"><tm-upload></tm-upload></tm-translate>
 	 */
 	export default {
 		name:"tm-translate",

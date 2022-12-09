@@ -27,7 +27,7 @@
 export default {
 	computed: {
 		bloggerInfo() {
-			return this.$tm.vx.getters().blogger.getBlogger;
+			return this.$tm.vx.getters().getBlogger;
 		}
 	}
 };

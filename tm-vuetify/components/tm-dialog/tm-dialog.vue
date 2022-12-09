@@ -302,19 +302,19 @@ export default {
 .tm-dialog {
 	width: 100%;
 	z-index: 600;
-	background-color: rgba(0, 0, 0, 0.35);
+	background-color: rgba(0, 0, 0, 0.3);
 	left: 0;
 	top: 0;
 	
-	backdrop-filter: blur(10px);
-	transition: all 0.35s;
+	backdrop-filter: blur(3px);
+	transition: all 0.24s;
 	.success {
-		animation: success 0.35s linear;
+		animation: success 0.24s ease;
 		
 		// transform: scale(1);
 	}
 	.clickover {
-		animation: clickover 0.35s linear;
+		animation: clickover 0.24s ease;
 	}
 }
 @keyframes clickover {

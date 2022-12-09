@@ -10,6 +10,7 @@
  *  修改时间：
  */
 import Blogger from '@/api/blogger.js'
+import HaloConfig from '@/config/halo.config.js';
 export default {
 	state: {
 		blogger: {},
@@ -25,18 +26,17 @@ export default {
 		},
 	},
 	actions: {
-		//通过actions提交更新数据
-		fnGetBlogger({
-			commit
-		}) {
-			Blogger.getBloggerInfo().then((res) => {
-				console.log('获取博主信息成功：');
-				console.log(res);
-				commit("setBlogger", res.data);
-			}).catch((err) => {
-				console.log('哈哈，获取博主信息失败啦！');
-				console.log(err);
-			});
+		fnGetBlogger(context) {
+			if (HaloConfig.author.use) {
+				context.commit("setBlogger", HaloConfig.author);
+			} else {
+				Blogger.getBloggerInfo().then((res) => {
+					context.commit("setBlogger", res.data);
+				}).catch((err) => {
+					// 如果失败，则加载默认配置信息
+					context.commit("setBlogger", HaloConfig.author);
+				});
+			}
 		},
 	},
 };

@@ -197,4 +197,5 @@ export default {
 	chinaPost,
 	password,
 	password2,
+	bankCard
 }

@@ -25,7 +25,7 @@
 					<view v-if="title" class="d-inline-block  "
 					:style="{fontSize:title_size}"
 						:class="[titleClass,black_tmeme?'bk  text-grey-lighten-3':'']">
-						<text v-if="required" class="text-red">*</text>
+						<text v-if="_required" class="text-red">*</text>
 						<slot name="default" :title="title">
 							{{title}}
 						</slot>
@@ -368,6 +368,9 @@
 			};
 		},
 		computed: {
+			_required(){
+				return this.required
+			},
 			height_rpx:function(){
 				return this.height;
 			},
@@ -430,7 +433,7 @@
 				set:function(val){
 					this.$emit('input', val)
 					this.$emit('update:value', val)
-					if (this.required) {
+					if (this._required) {
 						this.$nextTick(function(){
 							this.verifyInput();
 						})

@@ -64,14 +64,10 @@ export default {
 @import './common/icons/mphtmliconfont.css';
 
 /* #ifndef MP-WEIXIN */
-@import './common/markdown/markdown.scss'; //引入markdown呈现
+@import './common/markdown/markdown.scss';
 /* #endif */
 
 page {
-	// background-color: #f3f5f7;
-	// background-color: #f7f7f7;
-	// background-color: #ffffff;
 	background-color: #fafafa;
-	// background-color: #f4f5f5;
 }
 </style>

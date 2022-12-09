@@ -191,10 +191,10 @@
 		},
 		mounted() {
 			let t = this;
-			uni.$tm.sleep(30).then(()=>{
-				t.setInits();
-				
-			})
+			t.setInits();
+		},
+		updated() {
+			this.setInits();
 		},
 		methods: {
 			setInits() {

@@ -54,13 +54,21 @@
 						:key="index+'_acv'"><text class="text-size-s py-16">{{item}}</text>
 						</tm-col>
 						<!-- #endif -->
-						<tm-col :round="(item.start||item.end||item.checked)?4:0" @click="day_danxuanclick(item,index)"  
-						:color="item.beginEnd?(item.checked===true||item.start||item.end?color_tmeme+(black_tmeme?' bk ':''):(item.guocheng?color_tmeme+' text  opacity-7 '+(black_tmeme?'bk':''):'')):''" 
+						<tm-col 
+						@click="day_danxuanclick(item,index)"  
+						color="" 
 						:custom-class="isSelectedDateClass(item)"
-						align="middle" width="14.28%" v-for="(item,index) in nowData"
-						:key="index">
-						
-							<view  class="tm-calendar-col flex-center flex-col py-4" :class="[black_tmeme&&!item.beginEnd?' opacity-2 ':'']">
+						justify="center" width="14.28%" 
+						v-for="(item,index) in nowData"
+						:key="index"
+						>
+							<view  class="tm-calendar-col flex-center flex-col "
+							 :style="[mode=='rang'?{width:'100%',height:'90rpx'}:{width:'90rpx',height:'90rpx',overflow: 'hidden','border-radius': '50% !important'}]"
+							:class="[
+								item.start?'round-l-24':'',
+								item.end?'round-r-24':'',
+								item.beginEnd?(item.checked===true||item.start||item.end?color_tmeme+(black_tmeme?' bk ':''):(item.guocheng?color_tmeme+' text  opacity-7 '+(black_tmeme?'bk':''):'')):'',
+								black_tmeme&&!item.beginEnd?' opacity-2 ':'']">
 								
 								<text class="text-size-n "
 								:class="[
@@ -70,19 +78,14 @@
 									!item.beginEnd?'text-grey-lighten-3':''
 								]"
 								>{{item.day}}</text>
-								<!-- 
-								 !item.nowMonth&&!item.guocheng&&!item.checked&&!item.start&&!item.end?(black?'text-grey-darken-3':'text-grey-lighten-1'):'',
-								 item.checked||item.start||item.end?'text-white':(item.guocheng?'':'text-grey-lighten-1'),
-								 item.guocheng?'text-'+color:'',
-								 !item.beginEnd?'text-grey-lighten-3':'',
-								 -->
+
 								<view class="text-size-xs  text_bl"
 								>
 								<block v-if="item.start">
-									开始
+									始
 								</block>
 								<block v-if="item.end">
-									结束
+									-止
 								</block>
 								
 								<block v-if="!item.start&&!item.end">
@@ -134,6 +137,11 @@
 	import tmRow from "@/tm-vuetify/components/tm-row/tm-row.vue"
 	import tmButton from "@/tm-vuetify/components/tm-button/tm-button.vue"
 	import tmPoup from "@/tm-vuetify/components/tm-poup/tm-poup.vue"
+	import * as dayjs from "@/tm-vuetify/tool/function/dayjs/dayjs.min.js"
+	const calendar = require("@/tm-vuetify/tool/function/dayjs/calendar.js")
+	dayjs.extend(calendar)
+	const DayJs = dayjs.default
+	
 	export default {
 		components:{tmIcons,tmCol,tmRow,tmButton,tmPoup},
 		name: "tm-calendar",
@@ -262,7 +270,7 @@
 				if(!this.cal) return;
 				// 自动更新默认的显示时间。
 				if(this.mode=='day'){
-					let d = new Date().toLocaleDateString().replace(/\//g,'-');
+					let d = DayJs().format("YYYY/MM/DD HH:mm:ss");
 					if(this.defaultValue){
 						d = this.defaultValue;
 					}
@@ -343,10 +351,9 @@
 		},
 		methods: {
 			watchRangeTime(){
-				
-				let d = new Date().toLocaleDateString().replace(/\//g,'-');
+				let d =   DayJs().format("YYYY/MM/DD HH:mm:ss")
 				if(this.defaultValue){
-					d = this.defaultValue;
+					d = DayJs(this.defaultValue).format("YYYY/MM/DD HH:mm:ss");
 				}
 				this.cal = new this.$tm.calendar({value:d,start:this.timeStart,end:this.timeEnd})
 				if(this.txt){
@@ -366,8 +373,8 @@
 					if(this.bingStart&&this.bingEnd){
 						
 						this.fanxuanxuanwuBydate(
-						new Date(this.bingStart.replace(/-/g,'/')),
-						new Date(this.bingEnd.replace(/-/g,'/')),
+						DayJs(this.bingStart),
+						DayJs(this.bingEnd),
 						)
 					}
 				}
@@ -609,13 +616,14 @@
 			// 通过外围 时间默认的选中
 			fanxuanxuanwuBydate(start,end){
 				if(!start||!end) return;
+				// .format("YYYY/MM/DD HH:mm:ss")
 				
 				this.$nextTick(function(){
-					if(start.getTime()>end.getTime()) return;
+					if(start.valueOf()>end.valueOf()) return;
 					// 获取开始月份的数据。
-					let sobj = new this.$tm.calendar({value:start.toLocaleDateString().replace(/\//g,'-')});
+					let sobj = new this.$tm.calendar({value:start.format("YYYY/MM/DD HH:mm:ss")});
 					// 获取结束月份的数据。
-					let eobj = new this.$tm.calendar({value:end.toLocaleDateString().replace(/\//g,'-')});
+					let eobj = new this.$tm.calendar({value:end.format("YYYY/MM/DD HH:mm:ss")});
 					function findItemToindex_only(obj,type){
 						let item=null;
 						for(let i=0;i<obj.length;i++){
@@ -657,7 +665,7 @@
 					this.start = start_obj
 					this.end = end_obj
 					// 如果结束和开始相等。
-					if(start.getTime()==end.getTime()){
+					if(start.valueOf()==end.valueOf()){
 						this.start = {...this.start,start:true,end:true}
 						this.end = {...this.end,start:true,end:true}
 					}

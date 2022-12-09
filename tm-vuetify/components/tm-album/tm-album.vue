@@ -159,7 +159,10 @@
 			}
 		},
 		async mounted() {
-			await this.setInits();
+			this.setInits();
+		},
+		updated() {
+			this.setInits();
 		},
 		methods: {
 			//处理数据，以标准化。
@@ -186,20 +189,16 @@
 			async setInits(){
 				this.$nextTick(async function() {
 					let t = this;
-					this.$tm.sleep(150).then(async function(){
-						let p = await t.$Querey('.tm-album',t).catch(e =>{});
-						if (!p[0]) return;
-						let grid = t.grid || 1;
-						let size = (p[0].width+t.gutter)/grid;
-						let gutter = t.gutter*2
-						let ratio = 750/uni.upx2px(750);
-						let blv = size * ratio - gutter;
-						t.alb_body_size = size * ratio;
-						t.alb_wk_body_size = p[0].width*ratio+t.gutter*2+(grid*2);
-						t.alb_size = blv;
-					})
-					
-					
+					let p = await t.$Querey('.tm-album',t,0).catch(e =>{});
+					if (!p[0]) return;
+					let grid = t.grid || 1;
+					let size = (p[0].width+t.gutter)/grid;
+					let gutter = t.gutter*2
+					let ratio = 750/uni.upx2px(750);
+					let blv = size * ratio - gutter;
+					t.alb_body_size = size * ratio;
+					t.alb_wk_body_size = p[0].width*ratio+t.gutter*2+(grid*2);
+					t.alb_size = blv;
 				
 				});
 			},

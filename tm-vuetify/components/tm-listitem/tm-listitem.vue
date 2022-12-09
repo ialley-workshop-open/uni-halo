@@ -1,6 +1,6 @@
 <!-- 列表项目，类似单元格。 -->
 <template>
-	<view class="tm-listitem ">
+	<view class="tm-listitem " :hover-class="url?'opacity-6':''">
 		<view
 
 			@click="click"
@@ -280,9 +280,15 @@ export default {
 				return this.$tm.vx.state().tmVuetify.color;
 			}
 			return this.leftIconColor;
+		},
+		groupPublickStyle:function(){
+			if(!this.GroupListStyles) return null
+			return this.GroupListStyles()
 		}
 	},
-
+	inject:{
+		GroupListStyles:{default:null}
+	},
 	data() {
 		return {
 			pz_theme: {
@@ -296,13 +302,25 @@ export default {
 		};
 	},
 	created() {
-		this.pz_themeCus = {
-			margin: this.margin,
-			padding: this.padding,
-			shadow: this.shadow,
-			round: this.round,
-			borderBottom: this.borderBottom
-		};
+		if(this.groupPublickStyle){
+			this.pz_themeCus = {
+				margin: this.groupPublickStyle.margin,
+				padding: this.groupPublickStyle.padding,
+				shadow: this.groupPublickStyle.shadow,
+				round: this.groupPublickStyle.round,
+				borderBottom: this.groupPublickStyle.borderBottom||this.borderBottom
+			};
+		}else{
+			this.pz_themeCus = {
+				margin: this.margin,
+				padding: this.padding,
+				shadow: this.shadow,
+				round: this.round,
+				borderBottom: this.borderBottom
+			};
+		}
+		
+		
 	},
 	mounted() {
 		

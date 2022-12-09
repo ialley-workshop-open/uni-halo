@@ -53,7 +53,7 @@
 				return ps;
 			},
 			isfinish:function(){
-				if(this.now == this.time) return true;
+				if(this.now == this.time||this.now==0) return true;
 				return false;
 			}
 		},

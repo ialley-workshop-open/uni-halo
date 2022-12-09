@@ -77,7 +77,7 @@
 </template>
 
 <script>
-import AppKeys from '@/config//keys.js';
+import AppKeys from '@/config/keys.js';
 import SheetConfig from '@/config/sheets.config.js';
 
 import tmSkeleton from '@/tm-vuetify/components/tm-skeleton/tm-skeleton.vue';

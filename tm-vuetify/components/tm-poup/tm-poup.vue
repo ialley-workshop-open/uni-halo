@@ -232,7 +232,7 @@
 				this.aniData = '';
 				let aniData = uni.createAnimation({
 					duration:240,
-					timingFunction: 'linear',
+					timingFunction: 'ease',
 				})
 				this.aniData = aniData;
 				if(pos=='bottom'){
@@ -327,15 +327,15 @@
 			pointer-events: none;
 		}
 		&.blur {
-			backdrop-filter: blur(10px);
+			backdrop-filter: blur(3px);
 		}
 
 		&.on {
-			animation: opta 1s linear;
+			animation: opta 1s ease;
 		}
 
 		&.off {
-			animation: opta_off 0.35s linear;
+			animation: opta_off 0.24s ease;
 		}
 		.tm-poup-wk {
 			position: absolute;
@@ -393,7 +393,7 @@
 
 	@keyframes opta {
 		from {
-			opacity: 0.6;
+			opacity: 0.3;
 		}
 
 		to {
@@ -495,7 +495,7 @@
 	@keyframes Centerleft {
 		from {
 			transform: scale(0.65);
-			opacity: 0.65;
+			opacity: 0.3;
 		}
 
 		to {
@@ -512,7 +512,7 @@
 
 		to {
 			transform: scale(0.65);
-			opacity: 0.65;
+			opacity: 0.3;
 
 		}
 	}

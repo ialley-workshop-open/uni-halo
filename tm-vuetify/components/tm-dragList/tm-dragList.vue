@@ -140,7 +140,6 @@
 			jishunTopData() {
 				this.$nextTick(async function() {
 					this.listData = [];
-
 					let p = await this.$Querey(".tm-dragList", this).catch(e => {})
 					this.w = uni.upx2px(this.width) || p[0].width;
 					this.h = uni.upx2px(this.height)

@@ -24,17 +24,13 @@ export default {
 	mutations: {
 		setSettings(state, data) {
 			state.settings = data;
-			console.log('设置：', data);
 			setAppSettings(data)
 		},
 	},
 	actions: {
 		// 设置默认的数据
-		updateDefaultAppSettings({
-			commit
-		}) {
-			console.log(_DefaultAppSettings);
-			commit('setSettings', JSON.parse(JSON.stringify(_DefaultAppSettings)))
+		updateDefaultAppSettings(context) {
+			context.commit('setSettings', JSON.parse(JSON.stringify(_DefaultAppSettings)))
 		},
 		// 检查并设置默认的数据
 		checkAndSetDefaultAppSettings(context) {

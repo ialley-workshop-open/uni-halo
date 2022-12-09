@@ -297,6 +297,20 @@
 				this.barLeft_1 = rdl_1 >= this.sliderWidth || rdl_1 < 0 ? this.sliderWidth : rdl_1;
 			});
 		},
+		updated() {
+			this.$nextTick(async function() {
+				await this.getwidth();
+			
+				if (Math.abs(this.value[1]) > Math.abs(this.max)) {
+					this.isError = true;
+					return;
+				}
+				let rdl = this.sliderWidth * (Math.abs(this.value[0]) / Math.abs(this.max));
+				this.barLeft = rdl >= this.sliderWidth || rdl < 0 ? this.sliderWidth : rdl;
+				let rdl_1 = this.sliderWidth * (Math.abs(this.value[1]) / Math.abs(this.max));
+				this.barLeft_1 = rdl_1 >= this.sliderWidth || rdl_1 < 0 ? this.sliderWidth : rdl_1;
+			});
+		},
 		methods: {
 			barStart(e) {
 				if (this.disabled || this.isError) return;
@@ -407,7 +421,7 @@
 			},
 			
 			async getwidth() {
-				let res = await this.$Querey('.tm-slider-id', this).catch(e=>{});
+				let res = await this.$Querey('.tm-slider-id', this,0).catch(e=>{});
 				res[0].width = res[0].width||uni.upx2px(this.width);
 				res[0].height = res[0].height||uni.upx2px(this.height);
 				

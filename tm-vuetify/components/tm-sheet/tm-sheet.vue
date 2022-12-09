@@ -25,7 +25,7 @@
 		]"
 		
 	>
-		<view class="fulled" v-if="showSheet">
+		<view class="fulled" >
 			<slot name="default"></slot>
 		</view>
 	</view>
@@ -151,25 +151,7 @@ export default {
 			return this.$tm.vx.state().tmVuetify.black;
 		}
 	},
-	data() {
-		return {
-			showSheet:true,
-		};
-	},
-	created() {
-		// #ifdef APP-VUE || APP-PLUS || MP
-		this.showSheet = false;
-		// #endif
-	},
-	mounted() {
-		let t= this;
-		
-		// #ifdef APP-VUE || APP-PLUS || MP
-		setTimeout(function() {
-			t.showSheet = true;
-		}, 30);
-		// #endif
-	}
+
 };
 </script>
 <style lang="scss" scoped>

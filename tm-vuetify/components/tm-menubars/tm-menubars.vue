@@ -22,7 +22,6 @@
 							<text class="iconfont icon-angle-left" :class="[`text-${fontColorTheme}`]" :style="{ fontSize: '28rpx' }"></text>
 						</navigator>
 					</block>
-
 					<slot name="left" :data="{ style: widths, isTransparent: isTransparent, title: title }"></slot>
 				</view>
 				<view class="center flex-center text-size-g text-overflow text-align-center" :class="[`text-${fontColorTheme}`]">
@@ -36,6 +35,7 @@
 			</view>
 		</view>
 	</view>
+	
 </template>
 
 <script>
@@ -60,6 +60,9 @@
 	export default {
 		components: {
 			tmIcons
+		},
+		options:{
+			multipleSlots: true
 		},
 		name: 'tm-menubars',
 		props: {

@@ -120,7 +120,7 @@ export default {
 	computed: {
 		// 获取博主信息
 		bloggerInfo() {
-			let blogger = this.$tm.vx.getters().blogger.getBlogger;
+			let blogger = this.$tm.vx.getters().getBlogger;
 			blogger.avatar = this.$utils.checkAvatarUrl(blogger.avatar, true);
 			return blogger;
 		}

@@ -55,6 +55,7 @@ const store = new Vuex.Store({
 		// $tm:state=>{
 		// 	return $tm;
 		// }
+		
 	},
 	mutations: {
 		setTmVuetifyColor(state, color) {

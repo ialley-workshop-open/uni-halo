@@ -185,7 +185,7 @@ export default {
 	computed: {
 		// 获取博主信息
 		bloggerInfo() {
-			return this.$tm.vx.getters().blogger.getBlogger;
+			return this.$tm.vx.getters().getBlogger;
 		}
 	},
 	onLoad() {
@@ -193,7 +193,6 @@ export default {
 	},
 	created() {
 		this.fnGetData();
-		console.log(this.bloggerInfo);
 	},
 	onPullDownRefresh() {
 		this.isLoadMore = false;

@@ -1,5 +1,5 @@
 <template>
-	<view class="tm-upload flex-start " id="tm-upload">
+	<view class="tm-upload flex-start relative" id="tm-upload">
 		<view v-for="(item,index) in list" :key="index" class="tm-upload-item  " :class="[grid!=1?'ma-4':'']" :style="{
 			width:itemWidth+'px',
 			height:itemHeight+'px'
@@ -31,9 +31,18 @@
 			<!-- 上传的进度。 -->
 			<view v-if="item.progress>0&&item.progress!=100&&!disabled" class="tm-upload-pro green"
 				:style="{width:item.progress+'%'}"></view>
+			<!-- 上传的排序。 -->
+			<view v-if="showSort" class="absolute  l-0 fulled flex-between" :class="[disabled?'b-0':'b-40']" :style="{height:'46rpx'}">
+				<view @click.stop="prevSort(item,index,'prev')" class="round-r-24 flex-center px-16 py-6" :class="[index==0?'opacity-0':'']" style="background-color: rgba(0, 0, 0, 0.3);">
+					<tm-icons name="icon-angle-left" size="24" :color="color_tmeme"></tm-icons>
+				</view>
+				<view @click.stop="prevSort(item,index,'next')" class="round-l-24 flex-center px-16 py-6" :class="[index==list.length-1?'opacity-0':'']" style="background-color: rgba(0, 0, 0, 0.3);">
+					<tm-icons name="icon-angle-right" size="24" :color="color_tmeme"></tm-icons>
+				</view>
+			</view>
 		</view>
 
-		<view  @click="addfile" v-if="list.length<max&&!disabled&&showSheet" class="tm-upload-item  ma-4 grey-lighten-4 " :class="[`round-${round}`]" :style="{
+		<view  @click="addfile" v-if="list.length<max&&!disabled" class="tm-upload-item  ma-4 grey-lighten-4 " :class="[`round-${round}`]" :style="{
 			width:itemWidth+'px',
 			height:itemHeight+'px'
 		}">
@@ -79,6 +88,10 @@
 		components:{tmIcons},
 		name: "tm-upload",
 		props: {
+			showSort:{
+				type:Boolean|String,
+				default:false
+			},
 			model:{
 				type:String,
 				default:'scaleToFill'
@@ -216,8 +229,7 @@
 				itemWidth: 0,
 				itemHeight: 0,
 				list: [],
-				//兼容app使用.
-				showSheet:true,
+				
 				upObje:null,
 			};
 		},
@@ -228,13 +240,51 @@
 		},
 		async mounted() {
 			let t = this;
+			if (typeof t.filelist === 'object' && Array.isArray(t.filelist)) {
+				let plist = [...t.filelist];
+				plist.forEach((item, index) => {
+					let url = "";
+					if (typeof item === 'string') {
+						url = item;
+					} else if (typeof item === 'object') {
+						url = item[t.urlKey]
+					}
+					t.list.push({
+						url: url,
+						status: "上传成功",
+						progress: 100,
+						fileId: t.$tm.guid(),
+						statusCode: 3,
+						data: item,
+					})
+				})
 			
-			this.$nextTick(async function(){
+			}
+			this.getRect()
 				
-				this.$Querey('.tm-upload', this,30).then(o=>{
-						// #ifdef APP-VUE || APP-PLUS  || MP
-						t.showSheet = true;
-						// #endif
+
+		},
+		updated() {
+			this.getRect()
+		},
+		methods: {
+			prevSort(item,index,type){
+				if((index==0&&type=='prev')||(index==this.list.length-1&&type=='next')){
+					return;
+				}
+				let nowindex = type=='prev'?index-1:index+1
+				let nowItem = this.list[index];
+				let newnowItem = this.list[nowindex];
+				let nowfilelist= [...this.list]
+				nowfilelist.splice(index,1,newnowItem)
+				nowfilelist.splice(nowindex,1,nowItem)
+				this.list = [...nowfilelist]
+				this.$emit('update:filelist', nowfilelist);
+			},
+			getRect(){
+				let t = this;
+				this.$Querey('.tm-upload', this,0).then(o=>{
+						if(!o[0].width&&t.maxWidth) return;
 						t.maxWidth = o[0].width||t.width;
 						let itemWidth = (t.maxWidth - (parseInt(t.grid) - 1) * uni.upx2px(12)) / parseInt(t.grid);
 						t.itemWidth = itemWidth;
@@ -242,33 +292,8 @@
 						if (t.imgHeight > 0) {
 							t.itemHeight = parseInt(uni.upx2px(t.imgHeight));
 						}
-						
-						if (typeof t.filelist === 'object' && Array.isArray(t.filelist)) {
-							let plist = [...t.filelist];
-							plist.forEach((item, index) => {
-								let url = "";
-								if (typeof item === 'string') {
-									url = item;
-								} else if (typeof item === 'object') {
-									url = item[t.urlKey]
-								}
-								t.list.push({
-									url: url,
-									status: "上传成功",
-									progress: 100,
-									fileId: t.$tm.guid(),
-									statusCode: 3,
-									data: item,
-								})
-							})
-						
-						}
 					})
-				})
-				
-
-		},
-		methods: {
+			},
 			errorFile(item,index){
 				let id = item;
 				id['loaderror'] = true;

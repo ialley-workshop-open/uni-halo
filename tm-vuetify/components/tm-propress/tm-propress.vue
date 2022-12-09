@@ -166,19 +166,25 @@ export default {
 	destroyed() {
 		clearInterval(this.tmiddd)
 	},
-	async mounted() {
-		
-		this.$nextTick(async function(){
-			let p = await this.$Querey(".tm-propress",this).catch(e=>{})
-			
-			this.width_upx = p[0].width+'px';
-			if(this.loading){
-				await this.startAni();
-			}
-		})
+	mounted() {
+		this.getRect()
 		
 	},
+	updated() {
+		this.getRect()
+	},
 	methods: {
+		getRect(){
+			let t =this
+			this.$Querey(".tm-propress",this,0).then((p)=>{
+				if(!p) return;
+				if(!p[0].width) return;
+				t.width_upx = p[0].width+'px';
+				if(t.loading){
+					t.startAni();
+				}
+			}).catch(e=>{})
+		},
 		async startAni(){
 			// clearInterval(this.tmiddd)
 			let t = this;

@@ -160,7 +160,7 @@ export default {
 		padding: 0;
 		.left {
 			width: 100%;
-			height: 300rpx;
+			height: 340rpx;
 			.thumbnail {
 				::v-deep uni-image {
 					border-radius: 6rpx 6rpx 0 0 !important;
@@ -188,7 +188,7 @@ export default {
 		flex-direction: column;
 		.left {
 			width: 100%;
-			height: 260rpx;
+			height: 340rpx;
 			order: 2;
 			margin-top: 24rpx;
 		}

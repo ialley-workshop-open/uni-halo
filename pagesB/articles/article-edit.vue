@@ -540,10 +540,10 @@ export default {
 			if (this.form.id) {
 				this.$Router.push({
 					path: '/pagesB/articles/article-setting',
-					query: { postsId: this.form.id, postTitle: this.form.title, isEdit: true, from: 'edit' }
+					query: { postsId: this.form.id, postTitle: this.form.title, isEdit: 1, from: 'edit' }
 				});
 			} else {
-				this.$Router.push({ path: '/pagesB/articles/article-setting', query: { postsId: '', postTitle: '', isEdit: false, from: 'edit' } });
+				this.$Router.push({ path: '/pagesB/articles/article-setting', query: { postsId: '', postTitle: '', isEdit: 0, from: 'edit' } });
 			}
 
 			return;

@@ -271,6 +271,7 @@ export default {
 		fnOnBack() {
 			if (this.isSaved) {
 				uni.navigateBack();
+				return;
 			}
 			uni.$eShowModal({
 				title: '提示',

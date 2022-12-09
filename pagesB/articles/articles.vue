@@ -306,7 +306,7 @@ export default {
 		},
 		// 设置文章信息
 		fnOnSetArticle(article, index) {
-			this.$Router.push({ path: '/pagesB/articles/article-setting', query: { postsId: article.id, postTitle: article.title, isEdit: true, from: 'list' } });
+			this.$Router.push({ path: '/pagesB/articles/article-setting', query: { postsId: article.id, postTitle: article.title, isEdit: 1, from: 'list' } });
 		},
 		// 删除文章
 		fnOnDelArticle(article, index) {

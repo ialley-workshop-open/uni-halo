@@ -33,7 +33,7 @@
 				</view>
 			</view>
 			<view v-if="useActions" class="">
-				<tm-button size="s" text theme="blue" @click="$emit('on-comment', { type: 'user', comment: comment })">回复</tm-button>
+				<tm-button v-if="!disallowComment" size="s" text theme="blue" @click="$emit('on-comment', { type: 'user', comment: comment })">回复</tm-button>
 				<tm-button size="s" text theme="grey" @click="$emit('on-copy', comment.content)">复制</tm-button>
 			</view>
 		</view>
@@ -58,6 +58,10 @@ export default {
 		classItem: {
 			type: Array,
 			default: () => []
+		},
+		disallowComment: {
+			type: Boolean,
+			default: false
 		},
 		useActions: {
 			type: Boolean,

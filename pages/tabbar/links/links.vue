@@ -40,7 +40,7 @@
 								<!-- 色彩版本 -->
 								<view
 									v-if="!globalAppSettings.links.useSimple"
-									class="info flex pa-36"
+									class="info flex pt-24 pb-24 pl-12 pr-12"
 									:class="{ 'border-b-1': linkIndex != team.children.length - 1 || index == result.length - 1 }"
 									@click="fnOnLinkEvent(link)"
 								>

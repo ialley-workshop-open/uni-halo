@@ -41,6 +41,14 @@ export default {
 		description: '', // 介绍
 	},
 
+	// 版权信息（用于文章详情）
+	copyright: {
+		use: true, // 是否使用版权描述
+		author: '', // 版权归属说明
+		description: '', // 版权描述
+		violation: '', // 侵权处理说明
+	},
+
 	// 社交信息(将会在`/pagesA/contact/contact`页面中展示)
 	// 具体的某个参数值留空则不展示
 	social: {

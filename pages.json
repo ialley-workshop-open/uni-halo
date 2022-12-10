@@ -215,6 +215,24 @@
 					"navigationBarTitleText": "设置",
 					"enablePullDownRefresh": false
 				}
+			}, {
+				"path": "tags/tags",
+				"style": {
+					"navigationBarTitleText": "",
+					"enablePullDownRefresh": false
+				}
+			}, {
+				"path": "tag-detail/tag-detail",
+				"style": {
+					"navigationBarTitleText": "标签详情",
+					"enablePullDownRefresh": true,
+					"app-plus": {
+						"pullToRefresh": {
+							"color": "#03a9f4",
+							"style": "circle"
+						}
+					}
+				}
 			}]
 		},
 		{

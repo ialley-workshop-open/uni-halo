@@ -44,47 +44,47 @@ export default {
 			color: var(--main);
 			line-height: 24px;
 			position: relative;
-			font-size:1.25em;
+			font-size:1.2em;
 			`,
 		h2: `
 			color: var(--main);
 			line-height: 24px;
 			position: relative;
 			margin: 22px 0 16px;
-			font-size: 1.2em;
+			font-size: 1.16em;
 		`,
 		h3: `
 		    color: var(--main);
 		    line-height: 24px;
 		    position: relative;
 			margin: 26px 0 18px;
-			font-size: 1.3em;
+			font-size: 1.14em;
 		`,
 		h4: `
 			color: var(--main);
 		    line-height: 24px;
 		    margin-bottom: 18px;
 		    position: relative;
-			font-size: 1.18em;
+			font-size: 1.2em;
 		`,
 		h5: `
 			color: var(--main);
 		    line-height: 24px;
 		    margin-bottom: 14px;
 		    position: relative;
-			font-size: 1em;
+			font-size: 16px;
 		`,
 		h6: `
 			color: #303133;
 			line-height: 24px;
 			margin-bottom: 14px;
 			position: relative;
-			font-size: 1em;
+			font-size: 14px;
 		`,
 		p: `
 		    line-height: 1.65;
 		    margin-bottom: 14px;
-			font-size: 15px;
+			font-size: 14px;
 		`,
 		'code': `  `,
 		strong: 'font-weight: 700;color: rgb(248, 57, 41);',

@@ -11,14 +11,11 @@
 				<view class="title">{{ result.title }}</view>
 				<view class="detail">
 					<view class="author">
-						<text class="author-name">{{ author.nickname }}</text>
-						<text class="author-time">发布于：{{ { d: result.createTime, f: 'yyyy年MM月dd日 星期w' } | formatTime }}</text>
+						<text class="author-name">博主：{{ author.nickname }}</text>
+						<text class="author-time">时间：{{ { d: result.createTime, f: 'yyyy年MM月dd日 星期w' } | formatTime }}</text>
 					</view>
 
 					<view class="cover" v-if="result.thumbnail"><image class="cover-img" mode="aspectFill" :src="calcUrl(result.thumbnail)"></image></view>
-					<!-- <view class="mt-24">
-						<text class="category-tag" v-for="(item, index) in result.tags" :key="index">{{ item.name }}</text>
-					</view> -->
 					<view class="count" :class="{ 'no-thumbnail': !result.thumbnail }">
 						<view class="count-item">
 							<text class="value">{{ result.visits }}</text>
@@ -41,13 +38,21 @@
 			</view>
 			<!-- 分类 -->
 			<view class="category">
-				<view class="">
-					分类：
-					<text class="category-tag" v-for="(item, index) in result.categories" :key="index">{{ item.name }}</text>
+				<view class="category-type">
+					<text class="text-weight-b">分类：</text>
+					<text v-if="result.categories.length == 0" class="category-tag is-empty">未选择分类</text>
+					<block v-else>
+						<text class="category-tag" v-for="(item, index) in result.categories" :key="index" @click="fnToCate(item)">{{ item.name }}</text>
+					</block>
 				</view>
-				<view class="mt-18">
-					标签：
-					<text class="category-tag" v-for="(item, index) in result.tags" :key="index">{{ item.name }}</text>
+				<view class="mt-18 category-type">
+					<text class="text-weight-b">标签：</text>
+					<text v-if="result.tags.length == 0" class="category-tag is-empty">未选择标签</text>
+					<block v-else>
+						<text class="category-tag" :style="{ backgroundColor: item.color }" v-for="(item, index) in result.tags" :key="index" @click="fnToTag(item)">
+							{{ item.name }}
+						</text>
+					</block>
 				</view>
 			</view>
 			<!-- 广告区域 -->
@@ -88,10 +93,20 @@
 					<!-- #endif -->
 				</view>
 
-				<!-- 免责声明：todo -->
+				<!-- 版权声明 -->
+				<view v-if="copyright.use" class="copyright-wrap bg-white mt-24 pa-24 round-4">
+					<view class="copyright-title text-weight-b">版权信息</view>
+					<view class="copyright-content mt-12  grey-lighten-5 text-grey-darken-2 round-4 pt-12 pb-12 pl-24 pr-24 ">
+						<view v-if="copyright.author" class="copyright-text text-size-s ">版权归属：{{ copyright.author }}</view>
+						<view v-if="copyright.description" class="copyright-text text-size-s mt-12">版权说明：{{ copyright.description }}</view>
+						<view v-if="copyright.violation" class="copyright-text text-size-s mt-12 text-red">侵权处理：{{ copyright.violation }}</view>
+					</view>
+				</view>
 
 				<!-- 评论展示区域 -->
-				<view class="comment-wrap mt-24 pa-24 round-4"><commentList :postId="result.id" :post="result" @on-comment-detail="fnOnShowCommentDetail"></commentList></view>
+				<view class="comment-wrap bg-white mt-24 pa-24 round-4">
+					<commentList :disallowComment="result.disallowComment" :postId="result.id" :post="result" @on-comment-detail="fnOnShowCommentDetail"></commentList>
+				</view>
 			</view>
 
 			<!-- 返回顶部 -->
@@ -228,6 +243,9 @@ export default {
 		};
 	},
 	computed: {
+		copyright() {
+			return getApp().globalData.copyright;
+		},
 		calcUrl() {
 			return url => {
 				if (this.$utils.checkIsUrl(url)) {
@@ -304,6 +322,9 @@ export default {
 		},
 
 		fnToComment() {
+			if (this.result.disallowComment) {
+				return uni.$tm.toast('文章已开启禁止评论！');
+			}
 			this.$Router.push({
 				path: '/pagesA/comment/comment',
 				query: {
@@ -598,6 +619,16 @@ export default {
 				.catch(err => {
 					this.commentDetail.loading = 'error';
 				});
+		},
+		fnToCate(category) {
+			uni.navigateTo({
+				url: `/pagesA/category-detail/category-detail?slug=${category.slug}&name=${category.name}`
+			});
+		},
+		fnToTag(tag) {
+			uni.navigateTo({
+				url: `/pagesA/tag-detail/tag-detail?id=${tag.id}&slug=${tag.slug}&name=${tag.name}`
+			});
 		}
 	}
 };
@@ -646,7 +677,7 @@ export default {
 			&-name {
 			}
 			&-time {
-				margin-left: 12rpx;
+				margin-left: 36rpx;
 			}
 		}
 
@@ -711,12 +742,18 @@ export default {
 	box-shadow: 0rpx 4rpx 24rpx rgba(0, 0, 0, 0.03);
 	// border: 2rpx solid #f8f8f8;
 	font-size: 28rpx;
+	&-type {
+		line-height: 55rpx;
+	}
 	&-tag {
 		background-color: #5bb8fa;
 		color: #fff;
 		padding: 6rpx 12rpx;
 		border-radius: 6rpx;
 		font-size: 24rpx;
+		&.is-empty {
+			background-color: #607d8b;
+		}
 	}
 }
 .category-tag + .category-tag {
@@ -725,11 +762,27 @@ export default {
 .content {
 	margin-top: 24rpx;
 }
-.ad-wrap {
+.evan-markdown,
+.ad-wrap,
+.copyright-wrap,
+.comment-wrap {
 	box-shadow: 0rpx 0rpx 24rpx rgba(0, 0, 0, 0.03);
 }
-.comment-wrap {
-	background-color: #fff;
+.copyright-title {
+	position: relative;
+	box-sizing: border-box;
+	padding-left: 24rpx;
+	font-size: 30rpx;
+	&:before {
+		content: '';
+		position: absolute;
+		left: 0rpx;
+		top: 8rpx;
+		width: 8rpx;
+		height: 26rpx;
+		background-color: rgb(3, 174, 252);
+		border-radius: 6rpx;
+	}
 }
 .poup-head {
 	border-bottom: 2rpx solid #f5f5f5;
@@ -753,6 +806,9 @@ export default {
 	width: 100%;
 	min-height: 60vh;
 	overflow: hidden;
+}
+.copyright-text {
+	line-height: 1.7;
 }
 .poster-loading {
 	width: 100%;

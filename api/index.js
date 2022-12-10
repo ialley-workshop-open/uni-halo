@@ -16,6 +16,7 @@ import archive from './archive.js'
 import article from './article.js'
 import blogger from './blogger.js'
 import category from './category.js'
+import tag from './tag.js'
 import comment from './comment.js'
 import journal from './journal.js'
 import link from './link.js'
@@ -44,6 +45,7 @@ const ApiManager = {
 	...article,
 	...blogger,
 	...category,
+	...tag,
 	...comment,
 	...journal,
 	...link,

@@ -12,7 +12,6 @@
 				<!-- <text class="filter-item">全部</text> -->
 			</view>
 		</view>
-		<!-- <view v-if="disallowComment" class="disallow-comment"><tm-empty icon="icon-shiliangzhinengduixiang-" label="文章已开启禁止评论"></tm-empty></view> -->
 		<!-- 内容区域 -->
 		<view class="comment-list_content">
 			<view v-if="loading != 'success'" class="loading-wrap flex">
@@ -27,9 +26,22 @@
 				</view>
 			</view>
 			<block v-else>
+				<tm-alerts
+					v-if="disallowComment && dataList.length !== 0"
+					color="red"
+					text
+					:margin="[0, 0]"
+					:shadow="0"
+					label="Ծ‸Ծ博主已设置该文章禁止评论!"
+					:round="3"
+					close
+				></tm-alerts>
 				<view class="empty pt-50" v-if="dataList.length == 0">
-					<tm-empty icon="icon-shiliangzhinengduixiang-" label="暂无评论">
-						<tm-button theme="bg-gradient-light-blue-accent" size="m" v-if="!disallowComment" @click="fnToComment(null)">抢沙发</tm-button>
+					<tm-empty v-if="disallowComment" icon="icon-shiliangzhinengduixiang-" label="暂无评论">
+						<text class="text-red text-size-s">- 文章已开启禁止评论 -</text>
+					</tm-empty>
+					<tm-empty v-else icon="icon-shiliangzhinengduixiang-" label="暂无评论">
+						<tm-button theme="bg-gradient-light-blue-accent" size="m" @click="fnToComment(null)">抢沙发</tm-button>
 					</tm-empty>
 				</view>
 				<block v-else>
@@ -40,6 +52,7 @@
 							:isChild="false"
 							:comment="comment"
 							:postId="postId"
+							:disallowComment="disallowComment"
 							@on-copy="fnCopyContent"
 							@on-comment="fnToComment"
 							@on-todo="fnToDo"
@@ -54,6 +67,7 @@
 									:isChild="true"
 									:comment="childComment"
 									:postId="postId"
+									:disallowComment="disallowComment"
 									@on-copy="fnCopyContent"
 									@on-comment="fnToComment"
 									@on-todo="fnToDo"
@@ -74,9 +88,11 @@
 <script>
 import tmEmpty from '@/tm-vuetify/components/tm-empty/tm-empty.vue';
 import tmButton from '@/tm-vuetify/components/tm-button/tm-button.vue';
+import tmAlerts from '@/tm-vuetify/components/tm-alerts/tm-alerts.vue';
+
 export default {
 	name: 'comment-list',
-	components: { tmEmpty, tmButton },
+	components: { tmEmpty, tmButton, tmAlerts },
 	props: {
 		// 是否禁用评论
 		disallowComment: {
@@ -200,7 +216,7 @@ export default {
 		position: relative;
 		box-sizing: border-box;
 		padding-left: 24rpx;
-		font-size: 34rpx;
+		font-size: 30rpx;
 		font-weight: bold;
 
 		&:before {
@@ -209,7 +225,7 @@ export default {
 			left: 0rpx;
 			top: 8rpx;
 			width: 8rpx;
-			height: 30rpx;
+			height: 26rpx;
 			background-color: rgb(3, 174, 252);
 			border-radius: 6rpx;
 		}

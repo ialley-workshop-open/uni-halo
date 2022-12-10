@@ -7,7 +7,7 @@
 			<tm-skeleton model="listAvatr"></tm-skeleton>
 		</view>
 		<block v-else>
-			<view class="empty" v-if="dataList.length == 0"><tm-empty icon="icon-shiliangzhinengduixiang-" label="该分类下暂无文章"></tm-empty></view>
+			<view class="empty" v-if="dataList.length == 0"><tm-empty icon="icon-shiliangzhinengduixiang-" label="该标签下暂无文章"></tm-empty></view>
 			<block v-else>
 				<block v-for="(article, index) in dataList" :key="article.createTime">
 					<!-- 文章卡片 -->
@@ -85,9 +85,9 @@ export default {
 			}
 			this.loadMoreText = '加载中...';
 			this.$httpApi
-				.getCategoryPostList(this.slug, this.queryParams)
+				.getTagPostsList(this.slug, this.queryParams)
 				.then(res => {
-					this.fnSetPageTitle(`分类：${this.pageTitle} （共${res.data.total}篇）`);
+					this.fnSetPageTitle(`标签：${this.pageTitle} （共${res.data.total}篇）`);
 					this.result = res.data;
 					if (this.isLoadMore) {
 						this.dataList = this.dataList.concat(res.data.content);

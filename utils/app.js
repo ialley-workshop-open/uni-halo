@@ -13,6 +13,7 @@ export const checkPlatform = (name) => {
 // 默认的应用设置
 export const _DefaultAppSettings = {
 	showStartPage: false, // 是否每次启动都显示启动页
+	isAvatarRadius: false, // 评论头像是否圆形
 	banner: {
 		useDot: true,
 		dotPosition: 'right'
@@ -47,7 +48,6 @@ export const _DefaultAppSettings = {
 		showAdmin: false, // 显示后台登录入口
 		showAllCount: true, // 默认显示所有的统计信息（关于页面） 
 	},
-
 	// 文章配置
 	article: {
 

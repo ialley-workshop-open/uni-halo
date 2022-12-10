@@ -97,7 +97,7 @@ export default {
 	},
 
 	onLoad() {
-		this.fnSetPageTitle('我的个人信息');
+		this.fnSetPageTitle('个人资料');
 	},
 	created() {
 		this.fnGetData();

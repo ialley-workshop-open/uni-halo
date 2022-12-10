@@ -146,13 +146,12 @@ export default {
 	},
 	computed: {
 		bloggerInfo() {
-			return this.$tm.vx.getters().blogger.getBlogger;
+			return this.$tm.vx.getters().getBlogger;
 		}
 	},
 	created() {
 		// this.fnGetData();
 		this.fnSetPageTitle('欢迎登录工作台');
-		console.log(this.bloggerInfo);
 	},
 	onPullDownRefresh() {
 		uni.stopPullDownRefresh();

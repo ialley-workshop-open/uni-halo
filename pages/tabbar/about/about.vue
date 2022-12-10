@@ -1,7 +1,7 @@
 <template>
 	<view class="app-page pb-24">
 		<!-- 博主信息 -->
-		<view class="blogger-info" :style="calcProfileStyle">
+		<view class="blogger-info" :style="[calcProfileStyle]">
 			<image class="avatar" :src="$utils.checkAvatarUrl(bloggerInfo.avatar)" mode="aspectFill" @click="miniProfileCard.show = true"></image>
 			<view class="profile">
 				<view class="author mt-24 text-size-g text-weight-b">{{ bloggerInfo.nickname }}</view>

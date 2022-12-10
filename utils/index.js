@@ -42,7 +42,11 @@ const utils = {
 		}
 		let _url = HaloConfig.defaultThumbnailUrl
 		if (_url) {
-			_url = _url.indexOf('?') !== -1 ? _url : _url + `&r=${new Date().getTime()}`
+			if (_url.indexOf('?') == -1) {
+				_url += `&next-v=${new Date().getTime()}`
+			} else {
+				_url += `?next-v=${new Date().getTime()}`
+			}
 		}
 		if (!thumbnail) return _url;
 		if (!this.checkIsUrl(thumbnail)) return HaloConfig.apiUrl + thumbnail;
@@ -53,7 +57,11 @@ const utils = {
 	checkImageUrl: function(image) {
 		let _url = HaloConfig.defaultImageUrl
 		if (_url) {
-			_url = _url.indexOf('?') !== -1 ? _url : _url + `&r=${new Date().getTime()}`
+			if (_url.indexOf('?') == -1) {
+				_url += `&next-v=${new Date().getTime()}`
+			} else {
+				_url += `?next-v=${new Date().getTime()}`
+			}
 		}
 		if (!image) return _url;
 		if (!this.checkIsUrl(image)) return HaloConfig.apiUrl + image;
@@ -66,7 +74,11 @@ const utils = {
 		if (!avatar) {
 			let _url = HaloConfig.defaultAvatarUrl
 			if (_url) {
-				_url = _url.indexOf('?') !== -1 ? _url : _url + `&r=${new Date().getTime()}`
+				if (_url.indexOf('?') == -1) {
+					_url += `&next-v=${new Date().getTime()}`
+				} else {
+					_url += `?next-v=${new Date().getTime()}`
+				}
 			}
 			return _url;
 		}

@@ -60,9 +60,7 @@
 						<view>
 							<tm-groupcheckbox name="categoryIds">
 								<tm-checkbox :dense="true" :name="item.id" v-for="(item, index) in categories" :key="index" v-model="item.checked">
-									<template v-slot:default="{ checkData }">
-										<tm-button :flat="true" size="s" :theme="checkData.checked ? 'light-blue' : 'grey-lighten-4'" :plan="true">{{ item.name }}</tm-button>
-									</template>
+									<tm-button v-slot:default :flat="true" size="s" :theme="item.checked ? 'light-blue' : 'grey-lighten-4'" :plan="true">{{ item.name }}</tm-button>
 								</tm-checkbox>
 							</tm-groupcheckbox>
 						</view>
@@ -76,9 +74,7 @@
 						<view>
 							<tm-groupcheckbox name="tagIds">
 								<tm-checkbox :dense="true" :name="item.id" v-for="(item, index) in tags" :key="index" v-model="item.checked">
-									<template v-slot:default="{ checkData }">
-										<tm-button :flat="true" size="s" :theme="checkData.checked ? 'light-blue' : 'grey-lighten-4'" :plan="true">{{ item.name }}</tm-button>
-									</template>
+									<tm-button v-slot:default :flat="true" size="s" :theme="item.checked ? 'light-blue' : 'grey-lighten-4'" :plan="true">{{ item.name }}</tm-button>
 								</tm-checkbox>
 							</tm-groupcheckbox>
 						</view>

@@ -177,7 +177,7 @@ export default {
 	},
 	computed: {
 		journalInfo() {
-			return uni.$tm.vx.getters().journal.getJournalInfo;
+			return uni.$tm.vx.getters().getJournalInfo;
 		}
 	},
 	onLoad() {

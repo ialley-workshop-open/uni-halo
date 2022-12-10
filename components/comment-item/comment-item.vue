@@ -1,8 +1,22 @@
 <template>
 	<view class=" comment-item flex flex-col mt-30 pt-24" :class="{ 'child-comment-item': isChild, 'no-solid': !useSolid, classItem }">
 		<view class="comment-item_user flex">
-			<image v-if="comment.isAdmin" class="user-avatar" :src="bloggerInfo.avatar" mode="aspectFill" @error="fnOnImageError(comment)"></image>
-			<image v-else class="user-avatar" :src="comment.avatar" mode="aspectFill" @error="fnOnImageError(comment)"></image>
+			<image
+				v-if="comment.isAdmin"
+				class="user-avatar"
+				:class="{ 'is-radius': globalAppSettings.isAvatarRadius }"
+				:src="bloggerInfo.avatar"
+				mode="aspectFill"
+				@error="fnOnImageError(comment)"
+			></image>
+			<image
+				v-else
+				class="user-avatar"
+				:class="{ 'is-radius': globalAppSettings.isAvatarRadius }"
+				:src="comment.avatar"
+				mode="aspectFill"
+				@error="fnOnImageError(comment)"
+			></image>
 			<view class="user-info pl-14">
 				<view class="author">
 					<text class="mr-6 text-grey-darken-1 text-size-m">{{ comment.author }}</text>
@@ -11,7 +25,7 @@
 					<tm-tags v-else :dense="true" color="bg-gradient-light-blue-lighten " size="xs" model="fill">游客</tm-tags>
 				</view>
 				<view class="flex mt-4">
-					<view v-if="false" class="text-size-s text-grey mr-12">IP属地：浙江省杭州市</view>
+					<view v-if="false" class="text-size-s text-grey mr-12">IP属地：暂无信息</view>
 					<view class="time text-size-xs text-grey">
 						<text class="">{{ $tm.dayjs(comment.createTime).format('YYYY年MM月DD日') }}</text>
 						<text class="ml-12">{{ $tm.dayjs(comment.createTime).fromNow(true) }}前</text>
@@ -25,7 +39,6 @@
 		</view>
 
 		<view class="comment-item_content mt-12" :class="{ 'has-bg': useContentBg, 'not-ml': isChild }" @click="$emit('on-detail', comment)" v-html="comment.content"></view>
-
 		<!-- 	<view v-if="useActions" class="comment-item_info text-size-s text-grey">
 			<text v-if="false" @click="$emit('on-todo')">点赞</text>
 			<text @click="$emit('on-comment', { type: 'user', comment: comment })">回复</text>
@@ -111,10 +124,13 @@ export default {
 		.user-avatar {
 			width: 70rpx;
 			height: 70rpx;
-			border-radius: 50%;
 			box-sizing: border-box;
-			border: 4rpx solid #ffffff;
 			box-shadow: 0rpx 2rpx 24rpx rgba(0, 0, 0, 0.05);
+			border: 4rpx solid #ffffff;
+			border-radius: 12rpx;
+			&.is-radius {
+				border-radius: 50%;
+			}
 		}
 		.user-info {
 			width: 0;

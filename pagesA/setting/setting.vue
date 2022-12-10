@@ -9,8 +9,8 @@
 					<view class="sheet-content">内容区域</view>
 				</tm-sheet> -->
 			<tm-sheet :shadow="6" :padding="[12, 24]" :margin="[24, 24]">
-				<view class="py-12 px-24 mx-12 round-3 border-b-1 grey text">
-					<text class="text-size-n text-weight-b ">布局</text>
+				<view class="py-12 px-24 mx-12 round-3  grey text">
+					<text class="text-size-n text-weight-b text-grey-darken-3">布局</text>
 					<text class="text-grey text-size-xs px-10 ml-12">应用以及文章列表布局设置</text>
 				</view>
 				<view class="sheet-content">
@@ -54,7 +54,7 @@
 			</tm-sheet>
 
 			<tm-sheet v-if="false" :shadow="24" :padding="[12, 24]" :margin="[24, 24]">
-				<view class="py-12 px-24 mx-12 round-3 border-b-1 grey text">
+				<view class="py-12 px-24 mx-12 round-3 grey text">
 					<text class="text-size-n text-weight-b ">外观</text>
 					<text class="text-grey text-size-xs px-10">设置应用主题色/暗黑模式等</text>
 				</view>
@@ -65,19 +65,11 @@
 			</tm-sheet>
 
 			<tm-sheet :shadow="6" :padding="[12, 24]" :margin="[24, 24]">
-				<view class="py-12 px-24 mx-12 round-3 border-b-1 grey text">
-					<text class="text-size-n text-weight-b ">功能</text>
+				<view class="py-12 px-24 mx-12 round-3 grey text">
+					<text class="text-size-n text-weight-b text-grey-darken-3">功能</text>
 					<text class="text-grey text-size-xs px-10  ml-12">一些常用的功能性设置</text>
 				</view>
 				<view class="sheet-content">
-					<view class="mx-32 my-24 border-b-1  pb-24 flex-between">
-						<text class="text-size-m">显示完整统计</text>
-						<tm-switch v-model="appSettings.about.showAllCount" color="light-blue" :text="['是', '否']"></tm-switch>
-					</view>
-					<view class="mx-32 my-24 border-b-1  pb-24 flex-between">
-						<text class="text-size-m ">链接直接打开</text>
-						<tm-switch v-model="appSettings.contact.isLinkCopy" color="light-blue" :text="['是', '否']"></tm-switch>
-					</view>
 					<view class="mx-32 my-24 border-b-1  pb-24 flex-between">
 						<text class="text-size-m ">图库瀑布流模式</text>
 						<tm-switch v-model="appSettings.gallery.useWaterfull" color="light-blue" :text="['是', '否']"></tm-switch>
@@ -85,6 +77,10 @@
 					<view class="mx-32 my-24 border-b-1  pb-24 flex-between">
 						<text class="text-size-m ">友链简洁模式</text>
 						<tm-switch v-model="appSettings.links.useSimple" color="light-blue" :text="['是', '否']"></tm-switch>
+					</view>
+					<view class="mx-32 my-24 border-b-1  pb-24 flex-between">
+						<text class="text-size-m">是否圆形头像</text>
+						<tm-switch v-model="appSettings.isAvatarRadius" color="light-blue" :text="['是', '否']"></tm-switch>
 					</view>
 					<view class="mx-32 my-24 border-b-1  pb-24 flex-between">
 						<text class="text-size-m ">轮播图指示器</text>
@@ -103,6 +99,15 @@
 								:label="item.name"
 							></tm-radio>
 						</tm-groupradio>
+					</view>
+
+					<view class="mx-32 my-24 border-b-1  pb-24 flex-between">
+						<text class="text-size-m">显示完整统计</text>
+						<tm-switch v-model="appSettings.about.showAllCount" color="light-blue" :text="['是', '否']"></tm-switch>
+					</view>
+					<view class="mx-32 my-24 border-b-1  pb-24 flex-between">
+						<text class="text-size-m ">链接直接打开</text>
+						<tm-switch v-model="appSettings.contact.isLinkCopy" color="light-blue" :text="['是', '否']"></tm-switch>
 					</view>
 					<view class="mx-32 my-24 border-b-1  pb-24 flex-between">
 						<text class="text-size-m ">显示后台入口</text>
@@ -189,7 +194,7 @@ export default {
 		this.fnSetPageTitle('应用设置');
 	},
 	created() {
-		this.appSettings = uni.$tm.vx.getters().getSettings;
+		this.appSettings = Object.assign({}, _DefaultAppSettings, uni.$tm.vx.getters().getSettings);
 		this.fnHandleFormatSelect();
 		uni.showLoading({
 			title: '加载中...',
@@ -247,6 +252,7 @@ export default {
 		// 保存
 		fnOnSave() {
 			this.isSaved = true;
+			console.log('this.appSettings', this.appSettings);
 			this.$tm.vx.commit('setting/setSettings', this.appSettings);
 			uni.$tm.toast('保存成功，部分设置在重启后生效！');
 		},

@@ -33,42 +33,44 @@
 			<!-- 如果大于一个分组：使用联系人的索引形式 result.length > 1 -->
 			<block v-else>
 				<block v-for="(team, index) in result" :key="index">
-					<view class="grey-lighten-4 text  text-size-s text-weight-b px-32 py-12">{{ team.title }}</view>
-					<block v-for="(link, linkIndex) in team.children" :key="link.id">
-						<tm-translate animation-name="fadeUp" :wait="(linkIndex + 1) * 30">
-							<!-- 色彩版本 -->
-							<view
-								v-if="!globalAppSettings.links.useSimple"
-								class="info flex pa-36"
-								:class="{ 'border-b-1': linkIndex != team.children.length - 1 }"
-								@click="fnOnLinkEvent(link)"
-							>
-								<view class="link-logo">
-									<cache-image class="link-logo_img" radius="12rpx" :url="link.logo" :fileMd5="link.logo" mode="aspectFill"></cache-image>
-								</view>
-								<view class="flex flex-col pl-30 info-detail">
-									<view class="link-card_name text-size-l text-weight-b text-red">{{ link.name }}</view>
-									<view class="poup-tag ml--10 mt-6">
-										<tm-tags color="bg-gradient-amber-accent" :shadow="0" size="s" model="fill">ID：{{ link.id }}</tm-tags>
-										<tm-tags color=" bg-gradient-light-blue-lighten" :shadow="0" size="s" model="fill">{{ link.team }}</tm-tags>
+					<tm-translate animation-name="fadeUp" :wait="(index + 1) * 50">
+						<view class="grey-lighten-4 text  text-size-s text-weight-b px-32 py-12">{{ team.title }}</view>
+						<block v-for="(link, linkIndex) in team.children" :key="link.id">
+							<tm-translate animation-name="fadeUp" :wait="(linkIndex + 1) * 50">
+								<!-- 色彩版本 -->
+								<view
+									v-if="!globalAppSettings.links.useSimple"
+									class="info flex pa-36"
+									:class="{ 'border-b-1': linkIndex != team.children.length - 1 || index == result.length - 1 }"
+									@click="fnOnLinkEvent(link)"
+								>
+									<view class="link-logo">
+										<cache-image class="link-logo_img" radius="12rpx" :url="link.logo" :fileMd5="link.logo" mode="aspectFill"></cache-image>
 									</view>
-									<view class="link-card_desc text-overflow text-size-s mt-4">博客简介：{{ link.description || '这个博主很懒，没写简介~' }}</view>
-								</view>
-							</view>
-							<!-- 简洁版本 -->
-							<view v-else class="link-card flex ml-24 mr-24 pt-24 pb-24" @click="fnOnLinkEvent(link)">
-								<image class="logo shadow-6" :src="link.logo" mode="aspectFill"></image>
-								<view class="info pl-24">
-									<view class="name text-size-g">{{ link.name }}</view>
-									<view class="desc mt-12 text-size-s text-grey-darken-1">{{ link.description }}</view>
-									<view v-if="false" class="link mt-12 text-size-m text-grey-darken-1">
-										<text class="iconfont icon-link mr-6 text-size-s"></text>
-										{{ link.url }}
+									<view class="flex flex-col pl-30 info-detail">
+										<view class="link-card_name text-size-l text-weight-b text-red">{{ link.name }}</view>
+										<view class="poup-tag ml--10 mt-6">
+											<tm-tags color="bg-gradient-amber-accent" :shadow="0" size="s" model="fill">ID：{{ link.id }}</tm-tags>
+											<tm-tags color=" bg-gradient-light-blue-lighten" :shadow="0" size="s" model="fill">{{ link.team }}</tm-tags>
+										</view>
+										<view class="link-card_desc text-overflow text-size-s mt-4">博客简介：{{ link.description || '这个博主很懒，没写简介~' }}</view>
 									</view>
 								</view>
-							</view>
-						</tm-translate>
-					</block>
+								<!-- 简洁版本 -->
+								<view v-else class="link-card flex ml-24 mr-24 pt-24 pb-24" @click="fnOnLinkEvent(link)">
+									<image class="logo shadow-6" :src="link.logo" mode="aspectFill"></image>
+									<view class="info pl-24">
+										<view class="name text-size-g">{{ link.name }}</view>
+										<view class="desc mt-12 text-size-s text-grey-darken-1">{{ link.description }}</view>
+										<view v-if="false" class="link mt-12 text-size-m text-grey-darken-1">
+											<text class="iconfont icon-link mr-6 text-size-s"></text>
+											{{ link.url }}
+										</view>
+									</view>
+								</view>
+							</tm-translate>
+						</block>
+					</tm-translate>
 				</block>
 			</block>
 

@@ -157,7 +157,7 @@ export default {
 	}
 	&.tb_image_text {
 		flex-direction: column;
-		padding: 0;
+		padding: 24rpx;
 		.left {
 			width: 100%;
 			height: 340rpx;
@@ -169,7 +169,8 @@ export default {
 		}
 		.right {
 			padding-left: 0;
-			padding: 24rpx;
+			padding: 24rpx 0;
+			padding-bottom: 0;
 			width: 100%;
 			.foot {
 				justify-content: flex-start;

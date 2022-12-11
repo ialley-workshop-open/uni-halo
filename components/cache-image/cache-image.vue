@@ -1,5 +1,5 @@
 <template>
-	<view class="cache-image">
+	<view class="cache-image-wrap">
 		<view v-if="loadStatus == 'loading'" class="img-loading" :style="[imgStyle, loadStyle]">
 			<!-- <text class="img-load-icon iconfont icon-loading"></text>
 			<text class="img-load-text">{{ loadText }}</text> -->
@@ -145,7 +145,7 @@ export default {
 </script>
 
 <style scoped lang="scss">
-.cache-image {
+.cache-image-wrap {
 	width: 100%;
 	height: 100%;
 }

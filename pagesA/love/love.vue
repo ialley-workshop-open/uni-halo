@@ -141,6 +141,7 @@ export default {
 	background-size: cover;
 	background-repeat: no-repeat;
 	background-position: 50% 50%;
+
 	&::before {
 		position: absolute;
 		left: 0;
@@ -148,7 +149,7 @@ export default {
 		right: 0;
 		bottom: 0;
 		content: '';
-		background-color: rgba(0, 0, 0, 0.07);
+		background-color: rgba(255, 255, 255, 0.1);
 		background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAKUlEQVQImU3IMREAIAgAwJfNkQCEsH8cijjpMf6vnXlQaIiJFx+omEBfmqIEZLe2jzcAAAAASUVORK5CYII=);
 		z-index: 0;
 		backdrop-filter: blur(4rpx);

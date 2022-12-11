@@ -1,14 +1,21 @@
 <template>
 	<view class="app-page">
 		<view v-if="loading != 'success'" class="loading-wrap">
-			<tm-skeleton model="card"></tm-skeleton>
-			<tm-skeleton model="card"></tm-skeleton>
-			<tm-skeleton model="card"></tm-skeleton>
-			<tm-skeleton model="card"></tm-skeleton>
+			<view v-if="loading == 'loading'" class="loading">
+				<view class="loading-icon flex flex-center"><text class="e-loading-icon iconfont icon-loading"></text></view>
+				<view class="loadig-text ">相册正在努力加载中啦~</view>
+			</view>
+			<tm-empty v-else icon="icon-shiliangzhinengduixiang-" color="red" label="啊偶,加载失败了呢~">
+				<tm-button theme="red" :shadow="0" size="m" @click="fnRefresh()">刷新试试</tm-button>
+			</tm-empty>
 		</view>
 		<!-- 内容区域 -->
 		<view v-else class="app-page-content">
-			<view v-if="dataList.length == 0" class="content-empty flex flex-center"><tm-empty icon="icon-shiliangzhinengduixiang-" label="相册暂时还没有数据~"></tm-empty></view>
+			<view v-if="dataList.length == 0" color="light-blue" class="content-empty flex flex-center">
+				<tm-empty icon="icon-shiliangzhinengduixiang-" label="相册暂时还没有数据~">
+					<tm-button :shadow="0" size="m" theme="light-blue" @click="fnRefresh()">刷新试试</tm-button>
+				</tm-empty>
+			</view>
 			<block v-else>
 				<swiper
 					class="swiper-album"
@@ -49,7 +56,11 @@
 						<text class="icon"><text class="iconfont icon-arrow-left"></text></text>
 						<text class="text">上一张</text>
 					</view>
-					<view class="refresh" @click="fnRefresh()">刷新</view>
+					<view class="refresh" @click="fnRefresh()">
+						<text class="refresh-text">点击</text>
+						<text class="refresh-heart iconfont icon-diagnose"></text>
+						<text class="refresh-text">刷新</text>
+					</view>
 					<view class="next" @click="fnChange(true)">
 						<text class="text">下一张</text>
 						<text class="icon"><text class="iconfont icon-arrow-right"></text></text>
@@ -62,14 +73,15 @@
 
 <script>
 import LoveConfig from '@/config/love.config.js';
-import tmSkeleton from '@/tm-vuetify/components/tm-skeleton/tm-skeleton.vue';
+import throttle from '@/utils/throttle.js';
+import tmButton from '@/tm-vuetify/components/tm-button/tm-button.vue';
 import tmFlotbutton from '@/tm-vuetify/components/tm-flotbutton/tm-flotbutton.vue';
 import tmTranslate from '@/tm-vuetify/components/tm-translate/tm-translate.vue';
 import tmEmpty from '@/tm-vuetify/components/tm-empty/tm-empty.vue';
 
 export default {
 	components: {
-		tmSkeleton,
+		tmButton,
 		tmFlotbutton,
 		tmTranslate,
 		tmEmpty
@@ -82,7 +94,7 @@ export default {
 				size: 99,
 				page: 0,
 				sort: 'takeTime',
-				team: LoveConfig.photoKeyName
+				team: LoveConfig.albumKeyName
 			},
 			result: {},
 			dataList: [],
@@ -113,11 +125,6 @@ export default {
 			this.fnGetData();
 		},
 		fnGetData() {
-			uni.showLoading({
-				mask: true,
-				title: '加载中...'
-			});
-
 			this.loading = 'loading';
 			this.$httpApi
 				.getPhotoListByPage(this.queryParams)
@@ -131,11 +138,7 @@ export default {
 								return item;
 							});
 							this.dataList = _list;
-							// this.fnCacheDataList(_list);
-							// this.dataList = this.dataList.concat(_list);
-
 							this.swiperIndex = 0;
-							uni.hideLoading();
 						}
 					} else {
 						this.loading = 'error';
@@ -168,23 +171,24 @@ export default {
 			});
 		},
 		fnOnChange(e) {
-			console.log('e', e);
 			this.swiperIndex = e.detail.current;
 		},
 		fnChange(isNext) {
-			if (isNext) {
-				if (this.swiperIndex == this.dataList.length - 1) {
-					this.swiperIndex = 0;
+			throttle(() => {
+				if (isNext) {
+					if (this.swiperIndex == this.dataList.length - 1) {
+						this.swiperIndex = 0;
+					} else {
+						this.swiperIndex += 1;
+					}
 				} else {
-					this.swiperIndex += 1;
+					if (this.swiperIndex == 0) {
+						this.swiperIndex = this.dataList.length - 1;
+					} else {
+						this.swiperIndex -= 1;
+					}
 				}
-			} else {
-				if (this.swiperIndex == 0) {
-					this.swiperIndex = this.dataList.length - 1;
-				} else {
-					this.swiperIndex -= 1;
-				}
-			}
+			});
 		}
 	}
 };
@@ -210,18 +214,42 @@ export default {
 		rgba(7, 179, 155, 0.1) 86%,
 		rgba(109, 186, 130, 0.1)
 	);
-	color: #55423b;
 }
 .app-page-content {
+}
+.loading-wrap {
+	width: 100vw;
+	height: 60vh;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	box-sizing: border-box;
+	padding: 36rpx;
+
+	::v-deep {
+		.tm-icons {
+			margin-right: -20rpx;
+		}
+	}
+}
+.e-loading-icon {
+	font-size: 120rpx;
+	// color: #f88ca2;
+	color: #56bbf9;
+}
+
+.loadig-text {
+	margin-top: 28rpx;
+	font-size: 28rpx;
+	// color: #f88ca2;
+	color: #56bbf9;
 }
 .content-empty {
 	width: 100%;
 	height: 60vh;
 }
-.loading-wrap {
-	box-sizing: border-box;
-	padding: 0 24rpx;
-}
+
 .swiper-album {
 	width: 100vw;
 	height: calc(100vh - 24rpx - 144rpx);
@@ -286,7 +314,7 @@ export default {
 	}
 }
 .tabbar {
-	width: 80vw;
+	width: 90vw;
 	position: fixed;
 	left: 50%;
 	bottom: 40rpx;
@@ -300,18 +328,49 @@ export default {
 	// background-color: rgba(0, 0, 0, 0.5);
 	background-color: #ffffff;
 	color: #333;
-	box-shadow: 0rpx 4rpx 24rpx rgba(0, 0, 0, 0.07);
+	box-shadow: 0rpx 4rpx 24rpx rgba(0, 0, 0, 0.05);
+	.refresh {
+		animation: refreshAni 6s ease-in-out infinite;
+		color: #56bbf9;
+		&-heart {
+			font-size: 42rpx;
+			color: inherit;
+			margin: 0 6rpx;
+		}
+		&-text {
+			font-size: 24rpx;
+		}
+	}
 	.pre {
 		color: #56bbf9;
+		transition: transform 0.1s ease-in-out;
+		&:hover {
+			transform: scale(1.05);
+		}
 		.text {
 			padding-left: 12rpx;
 		}
 	}
 	.next {
 		color: #f88ca2;
+		transition: transform 0.1s ease-in-out;
+		&:hover {
+			transform: scale(1.03);
+		}
 		.text {
 			padding-right: 12rpx;
 		}
+	}
+}
+@keyframes refreshAni {
+	0% {
+		color: #f88ca2;
+	}
+	50% {
+		color: #56bbf9;
+	}
+	100% {
+		color: #f88ca2;
 	}
 }
 </style>

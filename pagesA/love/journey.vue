@@ -2,20 +2,28 @@
 	<view class="app-page">
 		<view class="page-title">我们的故事</view>
 		<view class="html-typed" v-html="html">内容渲染</view>
+
+		<scroll-btn bottom="60rpx" :scrollTop.sync="scrollTop"></scroll-btn>
 	</view>
 </template>
 
 <script>
 import LoveConfig from '@/config/love.config.js';
+import ScrollBtn from '@/components/scroll-btn/scroll-btn.vue';
 export default {
+	components: { ScrollBtn },
 	data() {
 		return {
+			scrollTop: 0,
 			html: '',
 			timer: null
 		};
 	},
 	created() {
 		this.fnInit();
+	},
+	onPageScroll(e) {
+		this.scrollTop = e.scrollTop;
 	},
 	onBackPress() {
 		clearTimeout(this.timer);

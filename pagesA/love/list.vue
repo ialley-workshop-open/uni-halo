@@ -70,14 +70,18 @@
 				</view>
 			</block>
 		</view>
+		<scroll-btn :scrollTop.sync="scrollTop"></scroll-btn>
 	</view>
 </template>
 
 <script>
 import LoveConfig from '@/config/love.config.js';
+import ScrollBtn from '@/components/scroll-btn/scroll-btn.vue';
 export default {
+	components: { ScrollBtn },
 	data() {
 		return {
+			scrollTop: 0,
 			loveConfig: LoveConfig,
 			list: []
 		};
@@ -100,6 +104,9 @@ export default {
 	},
 	created() {
 		this.fnGetList();
+	},
+	onPageScroll(e) {
+		this.scrollTop = e.scrollTop;
 	},
 	methods: {
 		fnGetList() {
@@ -164,9 +171,8 @@ export default {
 		rgba(7, 179, 155, 0.1) 86%,
 		rgba(109, 186, 130, 0.1)
 	);
-	// background: rgba(247, 246, 242, 1);
-	// color: #55423b;
 }
+
 .love-card {
 	width: 100%;
 	display: flex;
@@ -182,10 +188,8 @@ export default {
 	background-color: rgba(255, 199, 184, 0.9);
 	margin-bottom: 52rpx;
 	box-shadow: 0rpx 4rpx 24rpx rgba(0, 0, 0, 0.1);
-	transition: transform 0.5s ease-in-out;
-	&:hover {
-		transform: translateY(-6rpx);
-	}
+	animation: loveCardAni 3s ease-in-out infinite;
+
 	.head {
 		display: flex;
 		.avatar {
@@ -247,6 +251,17 @@ export default {
 		color: #f88ca2;
 	}
 }
+@keyframes loveCardAni {
+	0% {
+		transform: scale(1);
+	}
+	50% {
+		transform: scale(1.03);
+	}
+	100% {
+		transform: scale(1);
+	}
+}
 .list {
 	display: flex;
 	flex-direction: column;
@@ -286,13 +301,9 @@ export default {
 	// background-color: #faf8eb;
 	background-color: #ffffff;
 	margin-bottom: 36rpx;
-	box-shadow: 0rpx 4rpx 24rpx rgba(0, 0, 0, 0.1);
-	transition: transform 0.3s ease-in-out;
+	box-shadow: 0rpx 4rpx 24rpx rgba(0, 0, 0, 0.05);
 	animation: cardAni 3s ease-in-out infinite;
 	animation-delay: var(--delay);
-	&:hover {
-		transform: translateY(-8rpx);
-	}
 	.head {
 		width: 100%;
 		display: flex;
@@ -309,6 +320,7 @@ export default {
 				font-size: 24rpx;
 				line-height: 100rpx;
 				text-align: center;
+				color: #55423b;
 				&.finish {
 					background-color: #bfe9ef;
 				}
@@ -328,7 +340,7 @@ export default {
 			&-desc {
 				margin-top: 8rpx;
 				font-size: 26rpx;
-				color: rgba(96, 77, 68, 1);
+				color: #555;
 				text-overflow: ellipsis;
 				overflow: hidden;
 				white-space: nowrap;
@@ -388,6 +400,7 @@ export default {
 		width: 0;
 		flex-grow: 1;
 		line-height: 1.5;
+		color: #333;
 	}
 }
 </style>

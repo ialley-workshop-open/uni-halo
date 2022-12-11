@@ -23,7 +23,7 @@ export default {
 	methods: {
 		fnInit() {
 			clearTimeout(this.timer);
-			const _html = LoveConfig.story;
+			const _html = LoveConfig.journey;
 			let _index = 0;
 			const _typing = () => {
 				this.timer = setTimeout(() => {

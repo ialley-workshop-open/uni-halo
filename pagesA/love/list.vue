@@ -99,14 +99,38 @@ export default {
 		}
 	},
 	created() {
-		this.fnFormatList();
+		this.fnGetList();
 	},
 	methods: {
-		fnFormatList() {
-			this.list = LoveConfig.loveList.map(item => {
-				item['open'] = false;
-				return item;
-			});
+		fnGetList() {
+			if (LoveConfig.loveList.useApi && LoveConfig.loveList.api) {
+				uni.request({
+					url: LoveConfig.loveList.api,
+					header: {
+						ContentType: 'application/json'
+					},
+					method: 'GET',
+					dataType: 'json',
+					success: res => {
+						if (res.statusCode == 200 && res.data.status == 200) {
+							this.list = res.data.data.map(item => {
+								item['open'] = false;
+								return item;
+							});
+						} else {
+							uni.$tm.toast('数据请求失败，请检查接口！');
+						}
+					},
+					fail: err => {
+						uni.$tm.toast('数据请求失败，请检查接口！');
+					}
+				});
+			} else {
+				this.list = LoveConfig.loveList.data.map(item => {
+					item['open'] = false;
+					return item;
+				});
+			}
 		},
 		fnOnItemOpen(item) {
 			item.open = !item.open;
@@ -141,7 +165,7 @@ export default {
 		rgba(109, 186, 130, 0.1)
 	);
 	// background: rgba(247, 246, 242, 1);
-	color: #55423b;
+	// color: #55423b;
 }
 .love-card {
 	width: 100%;

@@ -40,27 +40,15 @@
 		</view>
 		<!-- 功能导航 -->
 		<view class="list-wrap">
-			<view class="list-item" @click="fnToPage('journey')">
-				<view class="left"><image class="icon" src="https://b.925i.cn/uni_halo_love/diandian.png" mode="aspectFit"></image></view>
-				<view class="right">
-					<view class="name">关于我们</view>
-					<view class="desc">我们一起度过的那些经历</view>
+			<block v-for="(nav, index) in loveConfig.nav" :key="index">
+				<view v-if="nav.use" class="list-item" @click="fnToPage(nav.key)">
+					<view class="left"><image class="icon" :src="nav.iconImageUrl" mode="aspectFit"></image></view>
+					<view class="right">
+						<view class="name">{{ nav.title }}</view>
+						<view class="desc">{{ nav.desc }}</view>
+					</view>
 				</view>
-			</view>
-			<view class="list-item" @click="fnToPage('album')">
-				<view class="left"><image class="icon" src="https://b.925i.cn/uni_halo_love/diandian.png" mode="aspectFit"></image></view>
-				<view class="right">
-					<view class="name">恋爱相册</view>
-					<view class="desc">定格了我们的那些小美好</view>
-				</view>
-			</view>
-			<view class="list-item" @click="fnToPage('list')">
-				<view class="left"><image class="icon" src="https://b.925i.cn/uni_halo_love/diandian.png" mode="aspectFit"></image></view>
-				<view class="right">
-					<view class="name">恋爱清单</view>
-					<view class="desc">你我之间的约定我们都在努力实现</view>
-				</view>
-			</view>
+			</block>
 		</view>
 	</view>
 </template>

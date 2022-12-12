@@ -15,10 +15,10 @@ export default {
 	girl: {
 		name: '未知女主',
 		avatar: 'https://b.925i.cn/uni_halo_love/love_girl.png',
-		birthday: '2022-07-25', // 生日
+		birthday: '2022-04-19', // 生日
 	},
 	timeTitle: '这是我们一起走过的',
-	loveStartDate: '2022-05-20 13:14:20', // 恋爱开始时间 
+	loveStartDate: '2022-04-10 13:14:20', // 恋爱开始时间 
 
 	nav: [{
 			key: 'journey',

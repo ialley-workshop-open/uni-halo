@@ -20,12 +20,11 @@ export default {
 		}
 	},
 	data() {
-		return { _scrollTop: 0 };
+		return { timer: null, _scrollTop: 0 };
 	},
 	watch: {
 		scrollTop(val) {
 			this._scrollTop = val;
-			console.log('监听1：', val);
 			this.$forceUpdate();
 		}
 	},
@@ -35,11 +34,18 @@ export default {
 	methods: {
 		fnScroll() {
 			throttle(() => {
+				this.$emit('on-status', false);
 				const isTop = this._scrollTop >= 180;
-				this._scrollTop = isTop ? 0 : 999999;
+				this._scrollTop = isTop ? 0 : 999999999999;
 				uni.pageScrollTo({
 					duration: 500,
-					scrollTop: this._scrollTop
+					scrollTop: this._scrollTop,
+					success: () => {
+						clearTimeout(this.timer);
+						this.timer = setTimeout(() => {
+							this.$emit('on-status', true);
+						}, 500);
+					}
 				});
 				this.$emit('update:scrollTop', this._scrollTop);
 			});

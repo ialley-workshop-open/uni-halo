@@ -1,15 +1,11 @@
 <template>
-	<view style="overflow: hidden;position: fixed;width: 100%;height: 100%;pointer-events: none; top: 0;">
-		<view class="danmu-li" v-for="(item, index) in listData" :class="item.type" :style="item.style" :key="index">
+	<view class="barrage-wrap" :class="[type]">
+		<view class="danmu-li" v-for="(item, index) in listData" :class="[type, item.type]" :style="[item.style]" :key="index">
 			<view class="danmu-inner">
 				<view class="user-box">
-					<view class="user-img">
-						<view class="img-box">
-							<image :src="item.avatar || 'https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=317894666,3379114684&fm=26&gp=0.jpg'"></image>
-						</view>
-					</view>
-					<view class="user-text cl1">{{ item.nickName }}</view>
-					<view class="user-status cl1">{{ item.text }}</view>
+					<view class="user-img"><image class="avatar" :src="item.item.avatar"></image></view>
+					<view class="user-text cl1">{{ item.item.author }}</view>
+					<view class="user-status cl1">{{ item.item.content }}</view>
 				</view>
 			</view>
 		</view>
@@ -22,6 +18,12 @@ export default {
 		type: {
 			type: String,
 			default: 'rightToLeft'
+		},
+		list: {
+			type: Array,
+			default() {
+				return [];
+			}
 		},
 		minTime: {
 			type: Number,
@@ -43,34 +45,35 @@ export default {
 			//轨道高度
 			type: Number,
 			default: 40
-		},
-		noStacked: {
-			//不允许堆叠(暂不可用)
-			type: Array,
-			default() {
-				return [];
-			}
 		}
 	},
 	data() {
 		return {
+			closeTimer: null,
 			listData: []
 		};
 	},
 	mounted() {
-		this.hrackNum = Math.floor((this.maxTop - this.minTop) / this.hrackH);
+		//leftBottom 使用参数
+		if (this.type === 'leftBottom') {
+			this.hrackNum = Math.floor(this.maxTop / this.hrackH);
+		}
 	},
 	methods: {
 		add(obj) {
+			console.log('加载弹幕中...');
+			this.isShow = true;
+			this.showFlag = true;
 			let data = {
-				item: obj.item,
+				...obj,
 				id: Date.parse(new Date()),
 				time: Math.ceil(Math.floor(Math.random() * (this.maxTime - this.minTime + 1) + this.minTime)),
 				type: this.type
 			};
 			if (this.type === 'leftBottom') {
+				console.log('leftBottom，加载弹幕中...');
 				let objData = {
-					item: data.item,
+					item: data,
 					type: 'leftBottomEnter',
 					style: {
 						transition: `all 0.5s`,
@@ -88,7 +91,7 @@ export default {
 					} else if (this.listData[i].status === 'reset') {
 						//重置
 						this.listData[i].style.transition = 'none';
-						this.listData[i].style.bottom = 0;
+						this.listData[i].style.bottom = '6px';
 						this.listData[i].status = 'reuse';
 					} else if (this.listData[i].status === 'recycle') {
 						//回收
@@ -105,8 +108,16 @@ export default {
 				if (listLen < hrackNum + 2) {
 					this.listData.push(objData);
 				}
-			} else if (this.type === 'rightToLeft' || this.type === 'leftToRight') {
-				let objData = this.horStacked(data);
+			} else if (this.type === 'rightToLeft') {
+				let objData = {
+					item: data.item,
+					type: 'rightToLeft',
+					style: {
+						animationDuration: `${data.time}s`,
+						top: `${Math.ceil(Math.random() * (this.maxTop - this.minTop + 1) + this.minTop)}px`
+					},
+					delTime: Date.parse(new Date()) + data.time * 1200
+				};
 				for (let i in this.listData) {
 					if (this.listData[i].delTime <= Date.parse(new Date())) {
 						this.repaint(i, objData.type);
@@ -118,16 +129,40 @@ export default {
 				this.listData.push(objData);
 			}
 		},
-		horStacked(data) {
-			return {
-				item: data.item,
-				type: this.type,
-				style: {
-					animationDuration: `${data.time}s`,
-					top: `${Math.ceil(Math.random() * (this.maxTop - this.minTop + 1) + this.minTop)}px`
+		async remove(options = {}) {
+			options = Object.assign(
+				{},
+				{
+					duration: 5000, // 延迟关闭的时间
+					speed: 1000 // 弹幕消失的速度
 				},
-				delTime: Date.parse(new Date()) + data.time * 1200
+				options
+			);
+
+			const _fnHandleRemove = item => {
+				return new Promise(resolve => {
+					setTimeout(() => {
+						item['type'] = 'leftBottomExitLeft';
+						// this.$forceUpdate();
+						resolve();
+					}, options.speed);
+				});
 			};
+			const _fnHandleLoop = item => {
+				return new Promise(resolve => {
+					setTimeout(async () => {
+						for (var i = 0; i < this.listData.length; i++) {
+							await _fnHandleRemove(this.listData[i]);
+						}
+						resolve();
+					}, options.duration);
+				});
+			};
+
+			await _fnHandleLoop();
+			setTimeout(() => {
+				this.listData = [];
+			}, 100);
 		},
 		repaint(index, type) {
 			setTimeout(() => {
@@ -137,8 +172,8 @@ export default {
 	}
 };
 </script>
-<style></style>
-<style lang="scss">
+
+<style lang="scss" scoped>
 @keyframes leftBottomEnter {
 	0% {
 		transform: translateY(100%);
@@ -163,6 +198,17 @@ export default {
 	}
 }
 
+@keyframes leftBottomExitLeft {
+	0% {
+		transform: translateX(0%);
+		opacity: 1;
+	}
+
+	100% {
+		transform: translateX(-200%);
+		opacity: 0;
+	}
+}
 @keyframes leftToRight {
 	0% {
 		transform: translateX(-100%);
@@ -182,13 +228,32 @@ export default {
 		transform: translateX(-100%);
 	}
 }
-
+.barrage-wrap {
+	position: fixed;
+	width: 100%;
+	height: 100%;
+	pointer-events: none;
+	top: 0;
+	z-index: 99;
+	transition: all 1s ease-in-out;
+	&.leftBottom {
+		top: initial;
+		bottom: 130rpx;
+	}
+}
 .danmu-li {
 	position: absolute;
 	width: 100%;
 	transform: translateX(100%);
 	animation-timing-function: linear;
+	transition: transform 0.5s ease-in-out;
 
+	&.is-hide {
+		transform: translateX(-100%) !important;
+	}
+	&.leftBottom {
+		left: 24rpx;
+	}
 	&.leftBottomEnter {
 		animation-name: leftBottomEnter;
 	}
@@ -196,53 +261,59 @@ export default {
 		animation-name: leftBottomExit;
 		animation-fill-mode: forwards;
 	}
-
+	&.leftBottomExitLeft {
+		animation-name: leftBottomExitLeft;
+		animation-fill-mode: forwards;
+	}
 	&.rightToLeft {
 		animation-name: rightToLeft;
 	}
 
 	&.leftToRight {
-		animation-name: leftToRight;
+		animation-name: rightToLeft;
 	}
 
 	.danmu-inner {
 		display: inline-block;
-
+		font-size: 24rpx;
 		.user-box {
 			display: flex;
-			padding: 3rpx 40rpx 3rpx 10rpx;
+			padding: 6rpx 40rpx 6rpx 10rpx;
 			background: rgba(0, 0, 0, 0.3);
 			border-radius: 32rpx;
 			align-items: center;
 
 			.user-img {
-				.img-box {
-					display: flex;
-
-					image {
-						width: 58rpx;
-						height: 58rpx;
-						background: rgba(55, 55, 55, 1);
-						border-radius: 50%;
-					}
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				.avatar {
+					width: 42rpx;
+					height: 42rpx;
+					background: rgba(55, 55, 55, 1);
+					border-radius: 50%;
 				}
 			}
 
 			.user-status {
 				margin-left: 10rpx;
 				white-space: nowrap;
-				font-size: 28rpx;
 				font-weight: 400;
 				color: rgba(255, 255, 255, 1);
+				max-width: 320rpx;
+				text-overflow: ellipsis;
+				overflow: hidden;
+				white-space: nowrap;
 			}
 
 			.user-text {
+				max-width: 100rpx;
 				margin-left: 10rpx;
-				// white-space: nowrap;
-				font-size: 28rpx;
 				font-weight: 400;
-				width: 80rpx;
 				color: rgba(255, 255, 255, 1);
+				text-overflow: ellipsis;
+				overflow: hidden;
+				white-space: nowrap;
 			}
 		}
 	}

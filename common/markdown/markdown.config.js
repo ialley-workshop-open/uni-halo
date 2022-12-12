@@ -65,14 +65,14 @@ export default {
 		    line-height: 24px;
 		    margin-bottom: 18px;
 		    position: relative;
-			font-size: 1.2em;
+			font-size: 1.12em;
 		`,
 		h5: `
 			color: var(--main);
 		    line-height: 24px;
 		    margin-bottom: 14px;
 		    position: relative;
-			font-size: 16px;
+			font-size: 1.1em;
 		`,
 		h6: `
 			color: #303133;
@@ -90,7 +90,7 @@ export default {
 		strong: 'font-weight: 700;color: rgb(248, 57, 41);',
 		video: 'width: 100%',
 	},
-	containStyle: 'font-family: Optima-Regular, Optima, PingFangSC-light, PingFangTC-light, "PingFang SC", Cambria, Cochin, Georgia, Times, "Times New Roman", serif;padding:12px;font-size: 16px;color: #606266;word-spacing: 0.8px;letter-spacing: 0.8px;border-radius: 6px;background-color:#FFFFFF;',
+	containStyle: 'font-family: Optima-Regular, Optima, PingFangSC-light, PingFangTC-light, "PingFang SC", Cambria, Cochin, Georgia, Times, "Times New Roman", serif;padding:12px;font-size: 14px;color: #606266;word-spacing: 0.8px;letter-spacing: 0.8px;border-radius: 6px;background-color:#FFFFFF;',
 
 	loadingGif: HaloConfig.loadingGifUrl,
 	emptyGif: HaloConfig.loadingEmptyUrl,

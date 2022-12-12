@@ -35,6 +35,11 @@ export const _DefaultAppSettings = {
 		timeout: 3, // 屏蔽广告时长，时间到后自动恢复展示（单位小时）
 		disabled: false, // 是否屏蔽广告（看广告可以关闭应用内设置的广告）
 	},
+	// 评论弹幕（文章详情）
+	barrage: {
+		use: true, // 是否启用
+		type: 'leftBottom' // 弹幕类型
+	},
 	gallery: {
 		// 是否使用瀑布流
 		useWaterfull: true

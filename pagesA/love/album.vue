@@ -303,7 +303,8 @@ export default {
 	&-desc {
 		margin-top: 24rpx;
 		line-height: 1.6;
-		font-size: 28rpx;
+		font-size: 30rpx;
+		color: rgba(26, 26, 26, 0.9);
 		&.is-empty {
 			display: flex;
 			align-items: center;

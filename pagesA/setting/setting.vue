@@ -79,6 +79,10 @@
 						<tm-switch v-model="appSettings.links.useSimple" color="light-blue" :text="['是', '否']"></tm-switch>
 					</view>
 					<view class="mx-32 my-24 border-b-1  pb-24 flex-between">
+						<text class="text-size-m">启用评论弹幕</text>
+						<tm-switch v-model="appSettings.barrage.use" color="light-blue" :text="['是', '否']"></tm-switch>
+					</view>
+					<view class="mx-32 my-24 border-b-1  pb-24 flex-between">
 						<text class="text-size-m">是否圆形头像</text>
 						<tm-switch v-model="appSettings.isAvatarRadius" color="light-blue" :text="['是', '否']"></tm-switch>
 					</view>

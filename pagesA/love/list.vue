@@ -1,6 +1,6 @@
 <template>
-	<view class="app-page">
-		<view class="love-card">
+	<view class="app-page" @touchstart="fnOnTouchstart" @touchend="fnOnTouchend" @touchcancel="fnOnTouchend">
+		<view class="love-card" :class="{ ani: isDoAni }">
 			<view class="head">
 				<image class="avatar" :src="loveConfig.boy.avatar" mode="scaleToFill"></image>
 				<view class="love-days">
@@ -31,7 +31,7 @@
 		</view>
 		<view v-else class="list">
 			<block v-for="(item, index) in list" :key="index">
-				<view class="card" :style="{ '--delay': calcCardDelay(index) }">
+				<view class="card" :class="{ ani: isDoAni }" :style="{ '--delay': calcCardDelay(index) }">
 					<view class="head">
 						<view class="status">
 							<view v-if="!item.finish" class="text">进行中</view>
@@ -70,7 +70,7 @@
 				</view>
 			</block>
 		</view>
-		<scroll-btn :scrollTop.sync="scrollTop"></scroll-btn>
+		<scroll-btn :scrollTop.sync="scrollTop" @on-status="fnOnScrollStatus"></scroll-btn>
 	</view>
 </template>
 
@@ -81,6 +81,7 @@ export default {
 	components: { ScrollBtn },
 	data() {
 		return {
+			isDoAni: true,
 			scrollTop: 0,
 			loveConfig: LoveConfig,
 			list: []
@@ -142,6 +143,15 @@ export default {
 		fnOnItemOpen(item) {
 			item.open = !item.open;
 			this.$forceUpdate();
+		},
+		fnOnScrollStatus(isEnd) {
+			this.isDoAni = isEnd;
+		},
+		fnOnTouchstart() {
+			this.isDoAni = false;
+		},
+		fnOnTouchend() {
+			this.isDoAni = true;
 		}
 	}
 };
@@ -188,7 +198,9 @@ export default {
 	background-color: rgba(255, 199, 184, 0.9);
 	margin-bottom: 52rpx;
 	box-shadow: 0rpx 4rpx 24rpx rgba(0, 0, 0, 0.1);
-	animation: loveCardAni 3s ease-in-out infinite;
+	&.ani {
+		animation: loveCardAni 3s ease-in-out infinite;
+	}
 
 	.head {
 		display: flex;
@@ -302,8 +314,10 @@ export default {
 	background-color: #ffffff;
 	margin-bottom: 36rpx;
 	box-shadow: 0rpx 4rpx 24rpx rgba(0, 0, 0, 0.05);
-	animation: cardAni 3s ease-in-out infinite;
 	animation-delay: var(--delay);
+	&.ani {
+		animation: cardAni 3s ease-in-out infinite;
+	}
 	.head {
 		width: 100%;
 		display: flex;

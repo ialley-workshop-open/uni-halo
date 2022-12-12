@@ -143,6 +143,7 @@ export default {
 						this.result = res.data;
 						this.dataList = res.data.content;
 						this.loading = 'success';
+						this.$emit('on-loaded', this.dataList);
 					} else {
 						this.loading = 'error';
 					}

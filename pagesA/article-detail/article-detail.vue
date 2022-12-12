@@ -105,10 +105,18 @@
 
 				<!-- 评论展示区域 -->
 				<view class="comment-wrap bg-white mt-24 pa-24 round-4">
-					<commentList :disallowComment="result.disallowComment" :postId="result.id" :post="result" @on-comment-detail="fnOnShowCommentDetail"></commentList>
+					<commentList
+						:disallowComment="result.disallowComment"
+						:postId="result.id"
+						:post="result"
+						@on-comment-detail="fnOnShowCommentDetail"
+						@on-loaded="fnOnCommentLoaded"
+					></commentList>
 				</view>
 			</view>
 
+			<!-- 弹幕效果 -->
+			<barrage ref="barrage" :maxTop="240" type="leftBottom"></barrage>
 			<!-- 返回顶部 -->
 			<tm-flotbutton :offset="[16, 80]" icon="icon-angle-up" color="bg-gradient-light-blue-accent" @click="fnToTopPage()"></tm-flotbutton>
 			<tm-flotbutton :actions="btnOption.actions" actions-pos="left" :show-text="true" color="bg-gradient-orange-accent" @change="fnOnFlotButtonChange"></tm-flotbutton>
@@ -190,6 +198,7 @@ import commentList from '@/components/comment-list/comment-list.vue';
 import commentItem from '@/components/comment-item/comment-item.vue';
 
 import rCanvas from '@/components/r-canvas/r-canvas.vue';
+import barrage from '@/components/barrage/barrage.vue';
 export default {
 	components: {
 		tmSkeleton,
@@ -200,7 +209,8 @@ export default {
 		mpHtml,
 		commentList,
 		commentItem,
-		rCanvas
+		rCanvas,
+		barrage
 	},
 	data() {
 		return {
@@ -629,6 +639,48 @@ export default {
 			uni.navigateTo({
 				url: `/pagesA/tag-detail/tag-detail?id=${tag.id}&slug=${tag.slug}&name=${tag.name}`
 			});
+		},
+		async fnOnCommentLoaded(data) {
+			const _list = [];
+			const _handleData = list => {
+				return new Promise(resolve => {
+					if (list.length == 0) {
+						resolve();
+					} else {
+						list.forEach(item => {
+							_list.push(item);
+							if (item.children && item.children.length != 0) {
+								_handleData(item.children);
+							}
+							resolve();
+						});
+					}
+				});
+			};
+			await _handleData(data);
+			if (this.globalAppSettings.barrage.use) {
+				this.$nextTick(() => {
+					_handleAddBarrage();
+				});
+			}
+			const _handleRemove = () => {
+				this.$refs['barrage'].remove({
+					duration: 5000, // 延迟关闭的时间
+					speed: 1000 // 弹幕消失的速度
+				});
+			};
+			let index = 0;
+			const _handleAddBarrage = () => {
+				setTimeout(() => {
+					this.$refs['barrage'].add(_list[index]);
+					index += 1;
+					if (index < _list.length - 1) {
+						_handleAddBarrage();
+					} else {
+						_handleRemove();
+					}
+				}, 1000);
+			};
 		}
 	}
 };

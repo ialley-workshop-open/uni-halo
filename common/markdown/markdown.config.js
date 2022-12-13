@@ -64,7 +64,7 @@ export default {
 			color: var(--main);
 		    line-height: 24px;
 		    margin-bottom: 18px;
-		    position: relative;
+		    position: relative; 
 			font-size: 1.12em;
 		`,
 		h5: `

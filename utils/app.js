@@ -35,11 +35,6 @@ export const _DefaultAppSettings = {
 		timeout: 3, // 屏蔽广告时长，时间到后自动恢复展示（单位小时）
 		disabled: false, // 是否屏蔽广告（看广告可以关闭应用内设置的广告）
 	},
-	// 评论弹幕（文章详情）
-	barrage: {
-		use: true, // 是否启用
-		type: 'leftBottom' // 弹幕位置（rightToLeft leftBottom）
-	},
 	gallery: {
 		// 是否使用瀑布流
 		useWaterfull: true
@@ -61,19 +56,17 @@ export const _DefaultAppSettings = {
 	contact: {
 		// 链接是否使用复制的方式，否则直接在内部打开（小程序需要配置对应链接的业务域名）
 		isLinkCopy: true,
-	},
-
+	}
 }
-// 应用设置存储key值
-export const _AppSettingsKey = 'APP_GLOBAL_SETTINGS';
+
 /**
  * 获取应用设置
  */
 export const getAppSettings = () => {
-	let _appSettings = uni.getStorageSync(_AppSettingsKey)
+	let _appSettings = uni.getStorageSync('APP_GLOBAL_SETTINGS')
 	if (_appSettings) return JSON.parse(_appSettings)
 
-	uni.setStorageSync(_AppSettingsKey, JSON.stringify(_DefaultAppSettings))
+	uni.setStorageSync('APP_GLOBAL_SETTINGS', JSON.stringify(_DefaultAppSettings))
 	return _appSettings;
 }
 
@@ -81,5 +74,5 @@ export const getAppSettings = () => {
  * 保存应用设置
  */
 export const setAppSettings = (appSettings) => {
-	uni.setStorageSync(_AppSettingsKey, JSON.stringify(appSettings))
+	uni.setStorageSync('APP_GLOBAL_SETTINGS', JSON.stringify(appSettings))
 }

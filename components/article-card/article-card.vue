@@ -12,7 +12,7 @@
 		</view>
 		<view class="right">
 			<view class="title">
-				<text class="is-top" v-if="article.topped">置顶</text>
+				<text class="is-top bg-gradient-blue-accent" v-if="article.topped">置顶</text>
 				<text class="title-text text-overflow">{{ article.title }}</text>
 			</view>
 			<view class="content text-overflow-2">{{ article.summary }}</view>
@@ -33,8 +33,10 @@
 </template>
 
 <script>
+import tmTags from '@/tm-vuetify/components/tm-tags/tm-tags.vue';
 export default {
 	name: 'article-card',
+	components: { tmTags },
 	props: {
 		from: {
 			type: String,
@@ -253,6 +255,7 @@ export default {
 		box-sizing: border-box;
 		.title {
 			display: flex;
+			align-items: center;
 			font-size: 30rpx;
 			color: var(--main-text-color);
 			.is-top {
@@ -264,8 +267,9 @@ export default {
 				white-space: nowrap;
 				vertical-align: 4rpx;
 				color: #fff;
-				background-image: -webkit-linear-gradient(0deg, #3ca5f6 0, #a86af9 100%);
-				border-radius: 4rpx 12rpx;
+				// background-image: -webkit-linear-gradient(0deg, #3ca5f6 0, #a86af9 100%);
+				border-radius: 6rpx 12rpx;
+				box-shadow: none !important;
 			}
 			&-text {
 				color: #303133;

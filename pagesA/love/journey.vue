@@ -3,7 +3,7 @@
 		<view class="page-title">我们的故事</view>
 		<view class="html-typed" v-html="html">内容渲染</view>
 
-		<scroll-btn bottom="60rpx" :scrollTop.sync="scrollTop"></scroll-btn>
+		<scroll-btn bottom="160rpx" :scrollTop.sync="scrollTop"></scroll-btn>
 	</view>
 </template>
 
@@ -76,6 +76,7 @@ export default {
 		rgba(7, 179, 155, 0.1) 86%,
 		rgba(109, 186, 130, 0.1)
 	);
+	color: rgba(26, 26, 26, 1);
 }
 .page-title {
 	font-size: 42rpx;

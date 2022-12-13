@@ -14,7 +14,7 @@
 <script>
 export default {
 	props: {
-		//rightToLeft leftToRight leftBottom
+		// rightToLeft leftToRight leftBottom
 		type: {
 			type: String,
 			default: 'rightToLeft'
@@ -53,6 +53,7 @@ export default {
 			listData: []
 		};
 	},
+
 	mounted() {
 		//leftBottom 使用参数
 		if (this.type === 'leftBottom') {
@@ -61,7 +62,6 @@ export default {
 	},
 	methods: {
 		add(obj) {
-			console.log('加载弹幕中...');
 			this.isShow = true;
 			this.showFlag = true;
 			let data = {
@@ -71,7 +71,6 @@ export default {
 				type: this.type
 			};
 			if (this.type === 'leftBottom') {
-				console.log('leftBottom，加载弹幕中...');
 				let objData = {
 					item: data,
 					type: 'leftBottomEnter',
@@ -110,7 +109,7 @@ export default {
 				}
 			} else if (this.type === 'rightToLeft') {
 				let objData = {
-					item: data.item,
+					item: data,
 					type: 'rightToLeft',
 					style: {
 						animationDuration: `${data.time}s`,
@@ -130,6 +129,16 @@ export default {
 			}
 		},
 		async remove(options = {}) {
+			if (this.type == 'rightToLeft') {
+				if (this.listData.length != 0) {
+					const last = this.listData[this.listData.length - 1];
+					setTimeout(() => {
+						this.listData = [];
+					}, last.item.time * 1200 + 1000);
+				}
+				return;
+			}
+
 			options = Object.assign(
 				{},
 				{
@@ -142,8 +151,8 @@ export default {
 			const _fnHandleRemove = item => {
 				return new Promise(resolve => {
 					setTimeout(() => {
-						item['type'] = 'leftBottomExitLeft';
-						// this.$forceUpdate();
+						// item['type'] = 'leftBottomExitLeft';
+						item['type'] = 'is-hide';
 						resolve();
 					}, options.speed);
 				});
@@ -162,7 +171,7 @@ export default {
 			await _fnHandleLoop();
 			setTimeout(() => {
 				this.listData = [];
-			}, 100);
+			}, options.duration + 200);
 		},
 		repaint(index, type) {
 			setTimeout(() => {
@@ -203,9 +212,12 @@ export default {
 		transform: translateX(0%);
 		opacity: 1;
 	}
-
+	50% {
+		transform: translateX(-50%);
+		opacity: 1;
+	}
 	100% {
-		transform: translateX(-200%);
+		transform: translateX(-100%);
 		opacity: 0;
 	}
 }
@@ -238,7 +250,12 @@ export default {
 	transition: all 1s ease-in-out;
 	&.leftBottom {
 		top: initial;
+		/* #ifdef H5 */
 		bottom: 130rpx;
+		/* #endif */
+		/* #ifndef H5 */
+		bottom: 36rpx;
+		/* #endif */
 	}
 }
 .danmu-li {
@@ -246,10 +263,11 @@ export default {
 	width: 100%;
 	transform: translateX(100%);
 	animation-timing-function: linear;
-	transition: transform 0.5s ease-in-out;
-
+	transition: all 0.5s ease-in-out;
+	opacity: 1;
 	&.is-hide {
-		transform: translateX(-100%) !important;
+		opacity: 0;
+		// transform: translateX(-100%) !important;
 	}
 	&.leftBottom {
 		left: 24rpx;

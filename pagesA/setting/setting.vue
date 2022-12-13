@@ -25,9 +25,10 @@
 						<tm-input
 							name="status"
 							required
-							title="首页布局"
-							placeholder="请选择首页布局"
+							title="首页文章布局"
+							placeholder="请选择首页文章布局"
 							disabled
+							align="right"
 							:value="homeLayout.selectLabel"
 							right-icon="icon-angle-right"
 						></tm-input>
@@ -43,9 +44,10 @@
 						<tm-input
 							name="status"
 							required
-							title="卡片样式"
+							title="文章卡片样式"
 							placeholder="请选择文章卡片样式"
 							disabled
+							align="right"
 							:value="articleCardStyle.selectLabel"
 							right-icon="icon-angle-right"
 						></tm-input>
@@ -78,10 +80,29 @@
 						<text class="text-size-m ">友链简洁模式</text>
 						<tm-switch v-model="appSettings.links.useSimple" color="light-blue" :text="['是', '否']"></tm-switch>
 					</view>
-					<view class="mx-32 my-24 border-b-1  pb-24 flex-between">
+					<view class="mx-32 mt-24 mb-0 border-b-1 pb-24 flex-between">
 						<text class="text-size-m">启用评论弹幕</text>
 						<tm-switch v-model="appSettings.barrage.use" color="light-blue" :text="['是', '否']"></tm-switch>
 					</view>
+					<tm-pickers
+						v-if="appSettings.barrage.use"
+						title="评论弹幕位置"
+						btn-color="light-blue"
+						:default-value.sync="barrage.selectDefault"
+						rang-key="name"
+						:list="barrage.list"
+						@confirm="fnOnBarrageConfirm"
+					>
+						<tm-input
+							name="status"
+							title="评论弹幕位置"
+							placeholder="请选择评论弹幕位置"
+							disabled
+							align="right"
+							:value="barrage.selectLabel"
+							right-icon="icon-angle-right"
+						></tm-input>
+					</tm-pickers>
 					<view class="mx-32 my-24 border-b-1  pb-24 flex-between">
 						<text class="text-size-m">是否圆形头像</text>
 						<tm-switch v-model="appSettings.isAvatarRadius" color="light-blue" :text="['是', '否']"></tm-switch>
@@ -177,7 +198,13 @@ export default {
 				selectLabel: '左图右文',
 				selectValue: 'lr_image_text'
 			},
-			dotPositionList: [{ name: '右边', value: 'right', checked: true }, { name: '下边', value: 'bottom', checked: false }]
+			dotPositionList: [{ name: '右边', value: 'right', checked: true }, { name: '下边', value: 'bottom', checked: false }],
+			barrage: {
+				list: [{ name: '顶部', value: 'rightToLeft' }, { name: '左下', value: 'leftBottom' }],
+				selectDefault: ['顶部'],
+				selectLabel: '顶部',
+				selectValue: 'rightToLeft'
+			}
 		};
 	},
 
@@ -223,6 +250,11 @@ export default {
 			this.articleCardStyle.selectDefault = [_articleCardStyle.name];
 			this.articleCardStyle.selectLabel = _articleCardStyle.name;
 			this.articleCardStyle.selectValue = _articleCardStyle.value;
+
+			const _barrage = this.fnFindObjInList(this.barrage.list, 'value', this.appSettings.barrage.type);
+			this.barrage.selectDefault = [_barrage.name];
+			this.barrage.selectLabel = _barrage.name;
+			this.barrage.selectValue = _barrage.value;
 		},
 		// 在集合中找匹配的对象
 		fnFindObjInList(list, key, value) {
@@ -253,10 +285,17 @@ export default {
 			this.articleCardStyle.selectValue = _select.value;
 			this.appSettings.layout.cardType = _select.value;
 		},
+		// 弹幕设置
+		fnOnBarrageConfirm(e) {
+			const _select = e[0].data;
+			this.barrage.selectDefault = [_select.name];
+			this.barrage.selectLabel = _select.name;
+			this.barrage.selectValue = _select.value;
+			this.appSettings.barrage.type = _select.value;
+		},
 		// 保存
 		fnOnSave() {
 			this.isSaved = true;
-			console.log('this.appSettings', this.appSettings);
 			this.$tm.vx.commit('setting/setSettings', this.appSettings);
 			uni.$tm.toast('保存成功，部分设置在重启后生效！');
 		},

@@ -34,14 +34,13 @@
 					:shadow="0"
 					label="Ծ‸Ծ博主已设置该文章禁止评论!"
 					:round="3"
-					close
 				></tm-alerts>
 				<view class="empty pt-50" v-if="dataList.length == 0">
 					<tm-empty v-if="disallowComment" icon="icon-shiliangzhinengduixiang-" label="暂无评论">
 						<text class="text-red text-size-s">- 文章已开启禁止评论 -</text>
 					</tm-empty>
 					<tm-empty v-else icon="icon-shiliangzhinengduixiang-" label="暂无评论">
-						<tm-button theme="bg-gradient-light-blue-accent" size="m" @click="fnToComment(null)">抢沙发</tm-button>
+						<tm-button theme="light-blue" :dense="true" :shadow="0" size="m" @click="fnToComment(null)">抢沙发</tm-button>
 					</tm-empty>
 				</view>
 				<block v-else>

@@ -116,7 +116,7 @@
 			</view>
 
 			<!-- 弹幕效果 -->
-			<barrage ref="barrage" :maxTop="240" type="leftBottom"></barrage>
+			<barrage ref="barrage" :maxTop="240" :type="globalAppSettings.barrage.type"></barrage>
 			<!-- 返回顶部 -->
 			<tm-flotbutton :offset="[16, 80]" icon="icon-angle-up" color="bg-gradient-light-blue-accent" @click="fnToTopPage()"></tm-flotbutton>
 			<tm-flotbutton :actions="btnOption.actions" actions-pos="left" :show-text="true" color="bg-gradient-orange-accent" @change="fnOnFlotButtonChange"></tm-flotbutton>
@@ -660,13 +660,15 @@ export default {
 			await _handleData(data);
 			if (this.globalAppSettings.barrage.use) {
 				this.$nextTick(() => {
-					_handleAddBarrage();
+					if (_list.length != 0) {
+						_handleAddBarrage();
+					}
 				});
 			}
 			const _handleRemove = () => {
 				this.$refs['barrage'].remove({
 					duration: 5000, // 延迟关闭的时间
-					speed: 1000 // 弹幕消失的速度
+					speed: 600 // 弹幕消失的速度
 				});
 			};
 			let index = 0;

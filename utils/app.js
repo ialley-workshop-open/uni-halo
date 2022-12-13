@@ -38,7 +38,7 @@ export const _DefaultAppSettings = {
 	// 评论弹幕（文章详情）
 	barrage: {
 		use: true, // 是否启用
-		type: 'leftBottom' // 弹幕类型
+		type: 'leftBottom' // 弹幕位置（rightToLeft leftBottom）
 	},
 	gallery: {
 		// 是否使用瀑布流
@@ -61,17 +61,19 @@ export const _DefaultAppSettings = {
 	contact: {
 		// 链接是否使用复制的方式，否则直接在内部打开（小程序需要配置对应链接的业务域名）
 		isLinkCopy: true,
-	}
-}
+	},
 
+}
+// 应用设置存储key值
+export const _AppSettingsKey = 'APP_GLOBAL_SETTINGS';
 /**
  * 获取应用设置
  */
 export const getAppSettings = () => {
-	let _appSettings = uni.getStorageSync('APP_GLOBAL_SETTINGS')
+	let _appSettings = uni.getStorageSync(_AppSettingsKey)
 	if (_appSettings) return JSON.parse(_appSettings)
 
-	uni.setStorageSync('APP_GLOBAL_SETTINGS', JSON.stringify(_DefaultAppSettings))
+	uni.setStorageSync(_AppSettingsKey, JSON.stringify(_DefaultAppSettings))
 	return _appSettings;
 }
 
@@ -79,5 +81,5 @@ export const getAppSettings = () => {
  * 保存应用设置
  */
 export const setAppSettings = (appSettings) => {
-	uni.setStorageSync('APP_GLOBAL_SETTINGS', JSON.stringify(appSettings))
+	uni.setStorageSync(_AppSettingsKey, JSON.stringify(appSettings))
 }

@@ -78,7 +78,7 @@
 					<block v-for="(item, index) in dataList" :key="index">
 						<tm-translate animation-name="fadeUp" :wait="(index + 1) * 50">
 							<view class="round-3 shadow-2 overflow white mb-24">
-								<tm-images :previmage="false" :src="item.image" @click="fnPreview(item, index)"></tm-images>
+								<tm-images :previmage="false" :src="item.image" @click="fnPreview(item)"></tm-images>
 								<view class="pa-24 text-size-m">
 									<view class="text-overflow-2">
 										<tm-tags :shadow="0" :dense="true" color="bg-gradient-amber-accent" size="s" model="fill">{{ item.team }}</tm-tags>
@@ -281,13 +281,11 @@ export default {
 			console.log('点击数据', data);
 		},
 		// 预览
-		fnPreview(item, index) {
-			if (!index) {
-				index = this.dataList.findIndex(x => x.id == item.id);
-			}
+		fnPreview(item) {
+			const index = this.cache.dataList.findIndex(x => x.id == item.id);
 			uni.previewImage({
 				current: index,
-				urls: this.dataList.map(x => x.image),
+				urls: this.cache.dataList.map(x => x.image),
 				indicator: 'number',
 				loop: true
 			});

@@ -1,6 +1,5 @@
 <template>
 	<view class="category-mini-card">
-		<!-- 	<image class="img" lazy-load :src="$utils.checkThumbnailUrl(category.thumbnail)" mode="aspectFill"></image> -->
 		<cache-image
 			class="img"
 			height="120rpx"
@@ -35,12 +34,13 @@ export default {
 	border-radius: 12rpx;
 	background-color: #fff;
 	overflow: hidden;
-	// border: 2rpx solid #f7f7f7;
 	box-shadow: 0rpx 2rpx 24rpx rgba(0, 0, 0, 0.03);
+	position: relative;
 	.img {
 		width: 100%;
 		height: 120rpx;
 		border: 6rpx 6rpx 0 0;
+		overflow: hidden;
 	}
 	.label {
 		position: absolute;
@@ -55,9 +55,13 @@ export default {
 		padding-right: 24rpx;
 	}
 	.name {
+		position: absolute;
+		bottom: 16rpx;
+		left: 0;
+		right: 0;
 		font-size: 24rpx;
 		text-align: center;
-		color: var(--main-text-color);
+		color: #333;
 	}
 }
 </style>

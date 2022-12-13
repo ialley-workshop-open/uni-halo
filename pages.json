@@ -110,7 +110,28 @@
 			}, {
 				"path": "love/love",
 				"style": {
-					"navigationBarTitleText": "",
+					"navigationBarTitleText": "恋爱日记",
+					"navigationStyle": "custom",
+					"enablePullDownRefresh": false,
+					"app-plus": {
+						"pullToRefresh": {
+							"color": "#03a9f4",
+							"style": "circle"
+						}
+					}
+				}
+			}, {
+				"path": "love/list",
+				"style": {
+					"navigationBarTitleText": "恋爱清单",
+					"enablePullDownRefresh": false,
+					"navigationStyle": "custom"
+				}
+
+			}, {
+				"path": "love/album",
+				"style": {
+					"navigationBarTitleText": "恋爱相册",
 					"enablePullDownRefresh": true,
 					"app-plus": {
 						"pullToRefresh": {
@@ -119,7 +140,13 @@
 						}
 					}
 				}
-
+			}, {
+				"path": "love/journey",
+				"style": {
+					"navigationBarTitleText": "我们的故事",
+					"navigationStyle": "custom",
+					"enablePullDownRefresh": false
+				}
 			}, {
 				"path": "archives/archives",
 				"style": {

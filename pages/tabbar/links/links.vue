@@ -13,16 +13,34 @@
 
 			<!-- 如果只有一个分组：使用列表的形式 result.length == 1 -->
 			<view v-else-if="result.length == 1" class="flex flex-col pb-24">
-				<block v-for="(item, index) in result[0].children" :key="index">
+				<block v-for="(link, index) in result[0].children" :key="index">
 					<tm-translate animation-name="fadeUp" :wait="(index + 1) * 50">
-						<view class="link-card one round-a-6 flex ma-24 mb-0 pa-24" @click="fnOnLinkEvent(item)">
-							<cache-image class="logo shadow-2" radius="12rpx" width="80rpx" height="80rpx" :url="item.logo" :fileMd5="item.logo" mode="aspectFill"></cache-image>
+						<!-- 色彩版本 -->
+						<view
+							v-if="!globalAppSettings.links.useSimple"
+							class="info flex pt-24 pb-24 pl-12 pr-12 border-b-1"
+							:class="{ 'border-b-1': index != team.children.length - 1 }"
+							@click="fnOnLinkEvent(link)"
+						>
+							<view class="link-logo"><cache-image class="link-logo_img" radius="12rpx" :url="link.logo" :fileMd5="link.logo" mode="aspectFill"></cache-image></view>
+							<view class="flex flex-col pl-30 info-detail">
+								<view class="link-card_name text-size-l text-weight-b text-red">{{ link.name }}</view>
+								<view class="poup-tag ml--10 mt-6">
+									<tm-tags color="bg-gradient-amber-accent" :shadow="0" size="s" model="fill">ID：{{ link.id }}</tm-tags>
+									<tm-tags color=" bg-gradient-light-blue-lighten" :shadow="0" size="s" model="fill">{{ link.team || '暂未分组' }}</tm-tags>
+								</view>
+								<view class="link-card_desc text-overflow text-size-s mt-4">博客简介：{{ link.description || '这个博主很懒，没写简介~' }}</view>
+							</view>
+						</view>
+						<!-- 简洁版本 -->
+						<view v-else class="link-card flex ml-24 mr-24 pt-24 pb-24" @click="fnOnLinkEvent(link)">
+							<image class="logo shadow-6" :src="link.logo" mode="aspectFill"></image>
 							<view class="info pl-24">
-								<view class="name text-size-g">{{ item.name }}</view>
-								<view class="desc mt-12 text-size-s text-grey-darken-1">{{ item.description }}</view>
-								<view class="link mt-12 text-size-m text-grey-darken-1">
+								<view class="name text-size-g">{{ link.name }}</view>
+								<view class="desc mt-12 text-size-s text-grey-darken-1">{{ link.description }}</view>
+								<view v-if="false" class="link mt-12 text-size-m text-grey-darken-1">
 									<text class="iconfont icon-link mr-6 text-size-s"></text>
-									{{ item.url }}
+									{{ link.url }}
 								</view>
 							</view>
 						</view>
@@ -51,7 +69,7 @@
 										<view class="link-card_name text-size-l text-weight-b text-red">{{ link.name }}</view>
 										<view class="poup-tag ml--10 mt-6">
 											<tm-tags color="bg-gradient-amber-accent" :shadow="0" size="s" model="fill">ID：{{ link.id }}</tm-tags>
-											<tm-tags color=" bg-gradient-light-blue-lighten" :shadow="0" size="s" model="fill">{{ link.team }}</tm-tags>
+											<tm-tags color=" bg-gradient-light-blue-lighten" :shadow="0" size="s" model="fill">{{ link.team || '暂未分组' }}</tm-tags>
 										</view>
 										<view class="link-card_desc text-overflow text-size-s mt-4">博客简介：{{ link.description || '这个博主很懒，没写简介~' }}</view>
 									</view>
@@ -86,7 +104,7 @@
 							<view class="poup-name text-size-lg text-weight-b">{{ detail.data.name }}</view>
 							<view class="poup-tag ml--10">
 								<tm-tags color="bg-gradient-amber-accent" size="n" model="fill">ID：{{ detail.data.id }}</tm-tags>
-								<tm-tags color="bg-gradient-light-blue-lighten" size="n" model="fill">{{ detail.data.team }}</tm-tags>
+								<tm-tags color="bg-gradient-light-blue-lighten" size="n" model="fill">{{ detail.data.team || '暂未分组' }}</tm-tags>
 							</view>
 							<view class="poup-link text-size-m" @click="fnCopyLink(detail.data)">
 								<text class="text-orange">{{ detail.data.url }}</text>

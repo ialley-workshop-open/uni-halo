@@ -36,3 +36,120 @@
 		transform: rotateZ(360deg);
 	}
 }
+
+// 自定义广告
+
+.ad-card {
+	position: relative;
+	box-sizing: border-box;
+	padding: 24rpx;
+	box-shadow: 0rpx 4rpx 24rpx rgba(0, 0, 0, 0.03);
+	background-color: #ffffff;
+	border-radius: 12rpx;
+
+	&.is-lr {
+		display: flex;
+		.ad-card_tip {
+			top: initial;
+			left: 288rpx;
+			bottom: 24rpx;
+			// right: 160rpx;
+			padding: 4rpx 20rpx;
+			background-color: transparent;
+			border: 2rpx solid #607d8b;
+			color: #607d8b;
+		}
+		.ad-card_cover {
+			width: 240rpx;
+			height: 180rpx;
+			animation: adLinkAni 1s ease-in-out infinite;
+		}
+		.ad-card_info {
+			width: 0;
+			flex-grow: 1;
+			padding-left: 24rpx;
+			&-title {
+				margin-top: 0;
+				width: 100%;
+				font-size: 30rpx;
+			}
+			&-link {
+				top: initial;
+				// right: 150rpx;
+				bottom: 0;
+				transform: scale(1);
+			}
+		}
+	}
+
+	&_tip {
+		position: absolute;
+		left: 36rpx;
+		top: 36rpx;
+		display: inline-flex;
+		box-sizing: border-box;
+		border-radius: 6rpx;
+		padding: 4rpx 10rpx;
+		background-color: rgba(0, 0, 0, 0.3);
+		color: #ffffff;
+		font-size: 24rpx;
+		z-index: 2;
+	}
+	&_cover {
+		width: 100%;
+		height: 300rpx;
+		border-radius: 6rpx;
+	}
+	&_info {
+		display: flex;
+		flex-direction: column;
+		box-sizing: border-box;
+		position: relative;
+		&-title {
+			width: calc(100% - 120rpx);
+			font-size: 28rpx;
+			font-weight: bold;
+			margin-top: 8rpx;
+			white-space: nowrap;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			color: #333;
+		}
+		&-desc {
+			margin-top: 6rpx;
+			font-size: 24rpx;
+			color: #616161;
+			line-height: 1.8;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			display: -webkit-box;
+			-webkit-box-orient: vertical;
+			-webkit-line-clamp: 2;
+		}
+		&-link {
+			position: absolute;
+			right: 0;
+			top: 6rpx;
+			display: inline-flex;
+			box-sizing: border-box;
+			border-radius: 6rpx;
+			padding: 4rpx 10rpx;
+			border: 2rpx solid #03a9f4;
+			color: #03a9f4;
+			font-size: 24rpx;
+			transform: scale(0.93);
+			// animation: adLinkAni 0.8s ease-in-out infinite;
+		}
+	}
+}
+@keyframes adLinkAni {
+	0% {
+		transform: scale(1);
+	}
+	50% {
+		transform: scale(1.02);
+	}
+	100% {
+		transform: scale(1);
+	}
+}

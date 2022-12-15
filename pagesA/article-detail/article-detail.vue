@@ -83,7 +83,7 @@
 					:copyByLongPress="true"
 				/>
 
-				<!-- 广告区域 -->
+				<!-- 广告区域：微信/decloud申请 -->
 				<view v-if="haloAdConfig.articleDetail.use" class="ad-wrap mt-24 mb-24 ">
 					<!-- #ifdef MP-WEIXIN -->
 					<ad v-if="haloAdConfig.unitId" :unit-id="haloAdConfig.unitId"></ad>
@@ -91,6 +91,17 @@
 					<!-- #ifndef MP-WEIXIN -->
 					<ad v-if="haloAdConfig.adpid" :adpid="haloAdConfig.adpid"></ad>
 					<!-- #endif -->
+				</view>
+
+				<!-- 广告区域：自定义广告位 -->
+				<view class="ad-card" v-if="haloAdConfig.articleDetail.custom.use">
+					<text class="ad-card_tip">广告</text>
+					<image class="ad-card_cover" :src="haloAdConfig.articleDetail.custom.cover" mode="scaleToFill"></image>
+					<view class="ad-card_info">
+						<view class="ad-card_info-title">{{ haloAdConfig.articleDetail.custom.title }}</view>
+						<view class="ad-card_info-desc">{{ haloAdConfig.articleDetail.custom.content }}</view>
+						<view v-if="haloAdConfig.articleDetail.custom.url" class="ad-card_info-link" @click="fnToWebview(haloAdConfig.articleDetail.custom)">立即查看</view>
+					</view>
 				</view>
 
 				<!-- 版权声明 -->
@@ -684,6 +695,16 @@ export default {
 					}
 				}, 1000);
 			};
+		},
+		fnToWebview(data) {
+			uni.navigateTo({
+				url:
+					'/pagesC/website/website?data=' +
+					JSON.stringify({
+						title: data.title,
+						url: data.url
+					})
+			});
 		}
 	}
 };

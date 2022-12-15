@@ -95,7 +95,7 @@
 
 				<!-- 版权声明 -->
 				<view v-if="copyright.use" class="copyright-wrap bg-white mt-24 pa-24 round-4">
-					<view class="copyright-title text-weight-b">版权信息</view>
+					<view class="copyright-title text-weight-b">版权声明</view>
 					<view class="copyright-content mt-12  grey-lighten-5 text-grey-darken-2 round-4 pt-12 pb-12 pl-24 pr-24 ">
 						<view v-if="copyright.author" class="copyright-text text-size-s ">版权归属：{{ copyright.author }}</view>
 						<view v-if="copyright.description" class="copyright-text text-size-s mt-12">版权说明：{{ copyright.description }}</view>
@@ -392,6 +392,8 @@ export default {
 		fnCreatePoster(callback) {
 			this.$nextTick(async () => {
 				const systemInfo = await uni.getSystemInfoSync();
+				const _bloggerAvatar = this.$utils.checkAvatarUrl(this.bloggerInfo.avatar, true);
+				const _articleCover = this.$utils.checkThumbnailUrl(this.result.thumbnail, true);
 				// 初始化
 				await this.$refs.rCanvas.init({
 					canvas_id: 'rCanvas',
@@ -416,11 +418,10 @@ export default {
 							icon: 'none'
 						});
 					});
-				console.log(this.$utils.checkAvatarUrl(this.bloggerInfo.avatar, true));
 				// 博主信息
 				await this.$refs.rCanvas
 					.drawImage({
-						url: this.$utils.checkAvatarUrl(this.bloggerInfo.avatar, true),
+						url: _bloggerAvatar,
 						x: 12,
 						y: 12,
 						w: 48,
@@ -467,7 +468,7 @@ export default {
 				// 文章封面图
 				await this.$refs.rCanvas
 					.drawImage({
-						url: this.$utils.checkThumbnailUrl(this.result.thumbnail),
+						url: _articleCover,
 						x: 12,
 						y: 75,
 						w: 312,

@@ -89,7 +89,8 @@ export default {
 	},
 	computed: {
 		calcLoveDays() {
-			const start = new Date(this.loveConfig.loveStartDate),
+			const formatStartDate = this.loveConfig.loveStartDate.replace(/-/g, '/');
+			const start = new Date(formatStartDate),
 				now = new Date();
 			const T = now.getTime() - start.getTime();
 			const i = 24 * 60 * 60 * 1000;

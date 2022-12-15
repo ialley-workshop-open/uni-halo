@@ -56,7 +56,7 @@ export default {
 	margin: 12rpx 24rpx;
 	margin-bottom: 24rpx;
 	padding: 16rpx;
-	box-shadow: 0rpx 2rpx 24rpx rgba(0, 0, 0, 0.05);
+	box-shadow: 0rpx 2rpx 24rpx rgba(0, 0, 0, 0.03);
 	&.lr_image_text {
 	}
 

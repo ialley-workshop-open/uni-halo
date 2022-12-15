@@ -11,7 +11,7 @@
 				<tm-empty icon="icon-shiliangzhinengduixiang-" label="博主还没有文章分类~"></tm-empty>
 			</view>
 			<block v-else>
-				<tm-sliderNav :list="categoryList" color="light-blue" rang-key="name" @change="fnOnCategoryChange"></tm-sliderNav>
+				<tm-sliderNav :list="categoryList" bg-color="white" color="light-blue" rang-key="name" @change="fnOnCategoryChange"></tm-sliderNav>
 				<scroll-view
 					class="right-content pt-12 pb-12"
 					:scroll-y="true"
@@ -20,6 +20,7 @@
 					:refresher-enabled="true"
 					:refresher-triggered="triggered"
 					:refresher-threshold="60"
+					refresher-background="#fafafa"
 					@refresherrefresh="fnGetData(true)"
 					@scrolltolower="fnGetData(false)"
 					@scroll="fnOnScroll"
@@ -235,6 +236,7 @@ export default {
 	height: 100vh;
 	background-color: #fff;
 	white-space: nowrap;
+	background-color: #fafafa;
 }
 .loading-wrap {
 	padding: 24rpx;

@@ -65,6 +65,7 @@ export default {
 	},
 
 	defaultThumbnailUrl: '', // 默认封面图地址 
+	defaultStaticThumbnailUrl: '', // 静态默认封面图（不可以是随机图地址）
 	defaultImageUrl: '', // 默认图片地址 
 	defaultAvatarUrl: '', // 默认头像地址
 

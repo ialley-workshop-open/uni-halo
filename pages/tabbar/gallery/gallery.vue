@@ -1,5 +1,5 @@
 <template>
-	<view class="app-page" :class="{ 'is-balck grey-darken-6': isBlackTheme }">
+	<view class="app-page">
 		<!-- 顶部切换 -->
 		<view class="e-fixed" v-if="category.list.length > 2">
 			<tm-tabs color="light-blue" v-model="category.activeIndex" :list="category.list" align="left" @change="fnOnCategoryChange"></tm-tabs>
@@ -9,14 +9,12 @@
 		<!-- 加载区域 -->
 		<view v-if="loading != 'success'" class="loading-wrap">
 			<tm-skeleton model="card"></tm-skeleton>
-			<tm-skeleton model="cardActions"></tm-skeleton>
-			<tm-skeleton model="list"></tm-skeleton>
-			<tm-skeleton model="listAvatr"></tm-skeleton>
-			<tm-skeleton model="listAvatr"></tm-skeleton>
-			<tm-skeleton model="listAvatr"></tm-skeleton>
+			<tm-skeleton model="card"></tm-skeleton>
+			<tm-skeleton model="card"></tm-skeleton>
+			<tm-skeleton model="card"></tm-skeleton>
 		</view>
 		<!-- 内容区域 -->
-		<view class="content" v-else :class="{ 'bg-white': dataList.length !== 0 }">
+		<view class="content" v-else>
 			<view v-if="dataList.length == 0" class="content-empty">
 				<!-- 空布局 -->
 				<tm-empty icon="icon-shiliangzhinengduixiang-" label="博主还没有分享图片~"></tm-empty>
@@ -25,7 +23,7 @@
 				<tm-flowLayout v-if="globalAppSettings.gallery.useWaterfull" @click="fnOnClick" ref="wafll">
 					<template v-slot:left="{ hdata }">
 						<tm-translate animation-name="fadeUp">
-							<view class="round-3 shadow-2 overflow white">
+							<view class="card round-3 overflow white">
 								<tm-images :previmage="false" :src="hdata.item.image" @click="fnPreview(hdata.item)"></tm-images>
 								<view class="pa-10 text-size-s">
 									<view class="text-overflow-2">
@@ -50,7 +48,7 @@
 					</template>
 					<template v-slot:right="{ hdata }">
 						<tm-translate animation-name="fadeUp">
-							<view class="round-3 shadow-2 overflow white">
+							<view class="card round-3  overflow white">
 								<tm-images :previmage="false" :src="hdata.item.image" @click="fnPreview(hdata.item)"></tm-images>
 								<view class="pa-10 text-size-s">
 									<view class="text-overflow-2">
@@ -301,7 +299,7 @@ export default {
 	display: flex;
 	flex-direction: column;
 	padding-bottom: 24rpx;
-	background-color: #fafafd;
+	background-color: #fafafa;
 
 	&.is-balck {
 		background-color: #212121;
@@ -322,5 +320,8 @@ export default {
 .loading-wrap {
 	box-sizing: border-box;
 	padding: 24rpx;
+}
+.card {
+	box-shadow: 0rpx 4rpx 24rpx rgba(0, 0, 0, 0.03);
 }
 </style>

@@ -32,7 +32,10 @@ const utils = {
 	},
 
 	// 检查封面图
-	checkThumbnailUrl: function(thumbnail) {
+	checkThumbnailUrl: function(thumbnail, mustRealUrl = false) {
+		if (!thumbnail && mustRealUrl) {
+			return HaloConfig.defaultStaticThumbnailUrl
+		}
 		if (!HaloConfig.defaultThumbnailUrl) {
 			// logUtils.saveLog(logTypes.config, {
 			// 	path: 'checkThumbnailUrl',

@@ -46,9 +46,9 @@ const utils = {
 		let _url = HaloConfig.defaultThumbnailUrl
 		if (_url) {
 			if (_url.indexOf('?') == -1) {
-				_url += `&next-v=${new Date().getTime()}`
-			} else {
 				_url += `?next-v=${new Date().getTime()}`
+			} else {
+				_url += `&next-v=${new Date().getTime()}`
 			}
 		}
 		if (!thumbnail) return _url;
@@ -61,9 +61,9 @@ const utils = {
 		let _url = HaloConfig.defaultImageUrl
 		if (_url) {
 			if (_url.indexOf('?') == -1) {
-				_url += `&next-v=${new Date().getTime()}`
-			} else {
 				_url += `?next-v=${new Date().getTime()}`
+			} else {
+				_url += `&next-v=${new Date().getTime()}`
 			}
 		}
 		if (!image) return _url;
@@ -78,9 +78,9 @@ const utils = {
 			let _url = HaloConfig.defaultAvatarUrl
 			if (_url) {
 				if (_url.indexOf('?') == -1) {
-					_url += `&next-v=${new Date().getTime()}`
-				} else {
 					_url += `?next-v=${new Date().getTime()}`
+				} else {
+					_url += `&next-v=${new Date().getTime()}`
 				}
 			}
 			return _url;

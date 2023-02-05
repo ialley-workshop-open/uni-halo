@@ -122,8 +122,8 @@ export default {
 		title: '', // 小程序分享标题[非必填]
 		desc: '', // 小程序分享描述[非必填]
 		imageUrl: '', // 小程序分享时候图片地址[非必填]
-		path: '/pages/start/start', // 分享路径[非必填] - 基本不需要修改
-		copyLink: '/pages/start/start', // 复制链接[非必填]  - 基本不需要修改
+		path: '/pages/index/index', // 分享路径[非必填] - 基本不需要修改
+		copyLink: '/pages/index/index', // 复制链接[非必填]  - 基本不需要修改
 		query: {}, // 分享参数[非必填]  - 基本不需要填写
 	},
 

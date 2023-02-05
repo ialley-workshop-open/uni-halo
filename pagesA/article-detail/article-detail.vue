@@ -12,10 +12,14 @@
 				<view class="detail">
 					<view class="author">
 						<text class="author-name">博主：{{ author.nickname }}</text>
-						<text class="author-time">时间：{{ { d: result.createTime, f: 'yyyy年MM月dd日 星期w' } | formatTime }}</text>
+						<text class="author-time">
+							时间：{{ { d: result.createTime, f: 'yyyy年MM月dd日 星期w' } | formatTime }}
+						</text>
 					</view>
 
-					<view class="cover" v-if="result.thumbnail"><image class="cover-img" mode="aspectFill" :src="calcUrl(result.thumbnail)"></image></view>
+					<view class="cover" v-if="result.thumbnail">
+						<image class="cover-img" mode="aspectFill" :src="calcUrl(result.thumbnail)"></image>
+					</view>
 					<view class="count" :class="{ 'no-thumbnail': !result.thumbnail }">
 						<view class="count-item">
 							<text class="value">{{ result.visits }}</text>
@@ -42,14 +46,27 @@
 					<text class="text-weight-b">分类：</text>
 					<text v-if="result.categories.length == 0" class="category-tag is-empty">未选择分类</text>
 					<block v-else>
-						<text class="category-tag" v-for="(item, index) in result.categories" :key="index" @click="fnToCate(item)">{{ item.name }}</text>
+						<text
+							class="category-tag"
+							v-for="(item, index) in result.categories"
+							:key="index"
+							@click="fnToCate(item)"
+						>
+							{{ item.name }}
+						</text>
 					</block>
 				</view>
 				<view class="mt-18 category-type">
 					<text class="text-weight-b">标签：</text>
 					<text v-if="result.tags.length == 0" class="category-tag is-empty">未选择标签</text>
 					<block v-else>
-						<text class="category-tag" :style="{ backgroundColor: item.color }" v-for="(item, index) in result.tags" :key="index" @click="fnToTag(item)">
+						<text
+							class="category-tag"
+							:style="{ backgroundColor: item.color }"
+							v-for="(item, index) in result.tags"
+							:key="index"
+							@click="fnToTag(item)"
+						>
 							{{ item.name }}
 						</text>
 					</block>
@@ -96,21 +113,39 @@
 				<!-- 广告区域：自定义广告位 -->
 				<view class="ad-card" v-if="haloAdConfig.articleDetail.custom.use">
 					<text class="ad-card_tip">广告</text>
-					<image class="ad-card_cover" :src="haloAdConfig.articleDetail.custom.cover" mode="scaleToFill"></image>
+					<image
+						class="ad-card_cover"
+						:src="haloAdConfig.articleDetail.custom.cover"
+						mode="scaleToFill"
+					></image>
 					<view class="ad-card_info">
 						<view class="ad-card_info-title">{{ haloAdConfig.articleDetail.custom.title }}</view>
 						<view class="ad-card_info-desc">{{ haloAdConfig.articleDetail.custom.content }}</view>
-						<view v-if="haloAdConfig.articleDetail.custom.url" class="ad-card_info-link" @click="fnToWebview(haloAdConfig.articleDetail.custom)">立即查看</view>
+						<view
+							v-if="haloAdConfig.articleDetail.custom.url"
+							class="ad-card_info-link"
+							@click="fnToWebview(haloAdConfig.articleDetail.custom)"
+						>
+							立即查看
+						</view>
 					</view>
 				</view>
 
 				<!-- 版权声明 -->
 				<view v-if="copyright.use" class="copyright-wrap bg-white mt-24 pa-24 round-4">
 					<view class="copyright-title text-weight-b">版权声明</view>
-					<view class="copyright-content mt-12  grey-lighten-5 text-grey-darken-2 round-4 pt-12 pb-12 pl-24 pr-24 ">
-						<view v-if="copyright.author" class="copyright-text text-size-s ">版权归属：{{ copyright.author }}</view>
-						<view v-if="copyright.description" class="copyright-text text-size-s mt-12">版权说明：{{ copyright.description }}</view>
-						<view v-if="copyright.violation" class="copyright-text text-size-s mt-12 text-red">侵权处理：{{ copyright.violation }}</view>
+					<view
+						class="copyright-content mt-12  grey-lighten-5 text-grey-darken-2 round-4 pt-12 pb-12 pl-24 pr-24 "
+					>
+						<view v-if="copyright.author" class="copyright-text text-size-s ">
+							版权归属：{{ copyright.author }}
+						</view>
+						<view v-if="copyright.description" class="copyright-text text-size-s mt-12">
+							版权说明：{{ copyright.description }}
+						</view>
+						<view v-if="copyright.violation" class="copyright-text text-size-s mt-12 text-red">
+							侵权处理：{{ copyright.violation }}
+						</view>
 					</view>
 				</view>
 
@@ -129,8 +164,19 @@
 			<!-- 弹幕效果 -->
 			<barrage ref="barrage" :maxTop="240" :type="globalAppSettings.barrage.type"></barrage>
 			<!-- 返回顶部 -->
-			<tm-flotbutton :offset="[16, 80]" icon="icon-angle-up" color="bg-gradient-light-blue-accent" @click="fnToTopPage()"></tm-flotbutton>
-			<tm-flotbutton :actions="btnOption.actions" actions-pos="left" :show-text="true" color="bg-gradient-orange-accent" @change="fnOnFlotButtonChange"></tm-flotbutton>
+			<tm-flotbutton
+				:offset="[16, 80]"
+				icon="icon-angle-up"
+				color="bg-gradient-light-blue-accent"
+				@click="fnToTopPage()"
+			></tm-flotbutton>
+			<tm-flotbutton
+				:actions="btnOption.actions"
+				actions-pos="left"
+				:show-text="true"
+				color="bg-gradient-orange-accent"
+				@change="fnOnFlotButtonChange"
+			></tm-flotbutton>
 		</block>
 
 		<!-- 评论详情 -->
@@ -138,7 +184,13 @@
 			<view class="pa-24">
 				<view class="poup-head pb-24">
 					<view class="poup-title text-align-center text-size-g text-weight-b mb-32">评论详情</view>
-					<comment-item :useContentBg="false" :useActions="false" :isChild="false" :comment="commentDetail.comment" :postId="result.id"></comment-item>
+					<comment-item
+						:useContentBg="false"
+						:useActions="false"
+						:isChild="false"
+						:comment="commentDetail.comment"
+						:postId="result.id"
+					></comment-item>
 				</view>
 
 				<scroll-view :scroll-y="true" class="poup-body">
@@ -149,7 +201,14 @@
 						</view>
 						<view v-else-if="commentDetail.loading == 'error'" class="error">
 							<tm-empty icon="icon-wind-cry" label="加载失败">
-								<tm-button theme="bg-gradient-light-blue-accent" size="m" v-if="!disallowComment" @click="fnGetChildComments()">刷新试试</tm-button>
+								<tm-button
+									theme="bg-gradient-light-blue-accent"
+									size="m"
+									v-if="!disallowComment"
+									@click="fnGetChildComments()"
+								>
+									刷新试试
+								</tm-button>
 							</tm-empty>
 						</view>
 					</view>
@@ -185,9 +244,15 @@
 				<block v-if="poster.showCanvas">
 					<r-canvas ref="rCanvas"></r-canvas>
 					<view class="poster-save ma-24 mt-0 pt-20 flex flex-center">
-						<tm-button theme="bg-gradient-light-blue-accent" size="m" @click="fnSavePoster()">保存到相册</tm-button>
-						<tm-button v-if="false" theme="bg-gradient-orange-accent" size="m" @click="fnShareTo()">分享给好友</tm-button>
-						<tm-button theme="bg-gradient-blue-grey-accent" size="m" @click="fnOnPosterClose()">关 闭</tm-button>
+						<tm-button theme="bg-gradient-light-blue-accent" size="m" @click="fnSavePoster()">
+							保存到相册
+						</tm-button>
+						<tm-button v-if="false" theme="bg-gradient-orange-accent" size="m" @click="fnShareTo()">
+							分享给好友
+						</tm-button>
+						<tm-button theme="bg-gradient-blue-grey-accent" size="m" @click="fnOnPosterClose()">
+							关 闭
+						</tm-button>
 					</view>
 				</block>
 			</view>
@@ -210,6 +275,8 @@ import commentItem from '@/components/comment-item/comment-item.vue';
 
 import rCanvas from '@/components/r-canvas/r-canvas.vue';
 import barrage from '@/components/barrage/barrage.vue';
+
+import { haloWxShareMixin } from '@/common/mixins/wxshare.mixin.js';
 export default {
 	components: {
 		tmSkeleton,
@@ -223,6 +290,7 @@ export default {
 		rCanvas,
 		barrage
 	},
+	mixins: [haloWxShareMixin],
 	data() {
 		return {
 			loading: 'loading',
@@ -304,7 +372,14 @@ export default {
 					this.result = res.data;
 					this.fnSetPageTitle('文章详情');
 					this.loading = 'success';
-					this.fnSetWxShareInfo();
+					this.fnSetWxShareConfig({
+						title: this.result.title,
+						desc: this.result.summary,
+						imageUrl: this.$utils.checkThumbnailUrl(this.result.thumbnail),
+						path: `/pagesA/article-detail/article-detail?articleId=${this.queryParams.articleId}`,
+						copyLink: this.$haloConfig.apiUrl,
+						query: {}
+					});
 				})
 				.catch(err => {
 					this.loading = 'error';
@@ -314,19 +389,7 @@ export default {
 					uni.stopPullDownRefresh();
 				});
 		},
-		fnSetWxShareInfo() {
-			// #ifdef MP-WEIXIN
-			uni.$tm.vx.commit('setWxShare', {
-				title: this.result.title,
-				desc: this.result.summary,
-				// imageUrl: this.poster.res.tempFilePath,
-				imageUrl: this.$utils.checkThumbnailUrl(this.result.thumbnail),
-				path: `/pagesA/article-detail/article-detail?articleId=${this.queryParams.articleId}`,
-				copyLink: this.$haloConfig.apiUrl,
-				query: {}
-			});
-			// #endif
-		},
+
 		// 浮动按钮点击
 		fnOnFlotButtonChange(index) {
 			switch (index) {

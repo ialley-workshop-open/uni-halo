@@ -5,7 +5,9 @@
 			<image class="avatar" :src="$utils.checkAvatarUrl(bloggerInfo.avatar)" mode="aspectFill"></image>
 			<view class="profile">
 				<view class="author mt-24 text-size-g text-weight-b">{{ bloggerInfo.nickname }}</view>
-				<view class="desc mt-24 text-size-m">{{ bloggerInfo.description || '这个博主很懒，竟然没写介绍~' }}</view>
+				<view class="desc mt-24 text-size-m">
+					{{ bloggerInfo.description || '这个博主很懒，竟然没写介绍~' }}
+				</view>
 			</view>
 			<image v-if="calcWaveUrl" :src="calcWaveUrl" mode="scaleToFill" class="gif-wave"></image>
 		</view>
@@ -17,19 +19,34 @@
 					<view class="statistics flex pt-24 pb-24" :class="{ 'has-solid': statisticsShowMore }">
 						<view class="item flex-1 text-align-center">
 							<view class="number text-size-xl text-bg-gradient-orange-accent">
-								<tm-flop :startVal="0" :decimals="0" :endVal="statistics.postCount" :duration="3000"></tm-flop>
+								<tm-flop
+									:startVal="0"
+									:decimals="0"
+									:endVal="statistics.postCount"
+									:duration="3000"
+								></tm-flop>
 							</view>
 							<view class="mt-6 text-align-center text-size-s text-grey-darken-1">文章总数</view>
 						</view>
 						<view class="item flex-1 text-align-center">
 							<view class="number text-size-xl text-bg-gradient-blue-accent">
-								<tm-flop :startVal="0" :decimals="0" :endVal="statistics.categoryCount" :duration="3000"></tm-flop>
+								<tm-flop
+									:startVal="0"
+									:decimals="0"
+									:endVal="statistics.categoryCount"
+									:duration="3000"
+								></tm-flop>
 							</view>
 							<view class="mt-6 text-align-center text-size-s text-grey-darken-1">分类总数</view>
 						</view>
 						<view class="item flex-1 text-align-center">
 							<view class="number text-size-xl text-bg-gradient-green-accent">
-								<tm-flop :startVal="0" :decimals="0" :endVal="statistics.tagCount" :duration="3000"></tm-flop>
+								<tm-flop
+									:startVal="0"
+									:decimals="0"
+									:endVal="statistics.tagCount"
+									:duration="3000"
+								></tm-flop>
 							</view>
 							<view class="mt-6 text-size-s text-grey-darken-1">标签总数</view>
 						</view>
@@ -37,19 +54,34 @@
 					<view class="statistics solid-top has-solid flex pt-24 pb-24">
 						<view class="item flex-1 text-align-center">
 							<view class="number text-size-xl text-bg-gradient-orange-accent">
-								<tm-flop :startVal="0" :decimals="0" :endVal="statistics.commentCount" :duration="3000"></tm-flop>
+								<tm-flop
+									:startVal="0"
+									:decimals="0"
+									:endVal="statistics.commentCount"
+									:duration="3000"
+								></tm-flop>
 							</view>
 							<view class="mt-6 text-align-center text-size-s text-grey-darken-1">评论数量</view>
 						</view>
 						<view class="item flex-1 text-align-center">
 							<view class="number text-size-xl text-bg-gradient-blue-accent">
-								<tm-flop :startVal="0" :decimals="0" :endVal="statistics.linkCount" :duration="3000"></tm-flop>
+								<tm-flop
+									:startVal="0"
+									:decimals="0"
+									:endVal="statistics.linkCount"
+									:duration="3000"
+								></tm-flop>
 							</view>
 							<view class="mt-6 text-align-center text-size-s text-grey-darken-1">点赞数量</view>
 						</view>
 						<view class="item flex-1 text-align-center">
 							<view class="number text-size-xl text-bg-gradient-green-accent">
-								<tm-flop :startVal="0" :decimals="0" :endVal="statistics.visitCount" :duration="3000"></tm-flop>
+								<tm-flop
+									:startVal="0"
+									:decimals="0"
+									:endVal="statistics.visitCount"
+									:duration="3000"
+								></tm-flop>
 							</view>
 							<view class="mt-6 text-size-s text-grey-darken-1">访客数量</view>
 						</view>
@@ -60,7 +92,12 @@
 
 		<!-- 快捷导航 -->
 		<view v-if="useQuickNav" class="quick-nav flex flex-between round-3  ma-24 pa-24 pl-40 pr-40">
-			<view class="quick-nav-item flex flex-col flex-center" v-for="(nav, index) in quickNavList" :key="index" @click="fnToNavPage(nav)">
+			<view
+				class="quick-nav-item flex flex-col flex-center"
+				v-for="(nav, index) in quickNavList"
+				:key="index"
+				@click="fnToNavPage(nav)"
+			>
 				<view class="icon round-24 halocoloricon" :class="[nav.icon]"></view>
 				<view class="name text-size-s mt-8">{{ nav.text }}</view>
 			</view>
@@ -80,7 +117,9 @@
 						@click="fnOnNav(nav)"
 					>
 						<template slot="rightValue">
-							<button class="right-value-btn" v-if="nav.openType" :open-type="nav.openType">{{ nav.rightText }}</button>
+							<button class="right-value-btn" v-if="nav.openType" :open-type="nav.openType">
+								{{ nav.rightText }}
+							</button>
 							<text v-else>{{ nav.rightText }}</text>
 						</template>
 					</tm-listitem>
@@ -88,7 +127,9 @@
 			</tm-grouplist>
 		</view>
 		<!-- 版权 -->
-		<view v-if="showCopyright" class="copyright mt-40 text-size-xs text-align-center"><view class="">「 2022 uni-halo 丨 开源项目@小莫唐尼 」</view></view>
+		<view v-if="showCopyright" class="copyright mt-40 text-size-xs text-align-center">
+			<view class="">「 2022 uni-halo 丨 开源项目@小莫唐尼 」</view>
+		</view>
 
 		<!-- 名片 -->
 		<tm-poup v-model="miniProfileCard.show" width="94vw" height="auto" :round="3" position="center">
@@ -97,17 +138,35 @@
 				<view class="left flex flex-col flex-center">
 					<image class="avatar" :src="$utils.checkAvatarUrl(bloggerInfo.avatar)" mode="aspectFill"></image>
 					<view class="name mt-10 text-size-m text-weight-b">{{ bloggerInfo.nickname }}</view>
-					<view class="mt-10 round-a-1 pa-2 pl-12 pr-12 text-size-s bg-gradient-light-blue-accent">前端摸鱼大师</view>
-					<view class="mt-6 text-size-xs text-align-center text-grey-darken-2">一个爱凑热闹的、喜欢捣鼓前端的博主。</view>
+					<view class="mt-10 round-a-1 pa-2 pl-12 pr-12 text-size-s bg-gradient-light-blue-accent">
+						前端摸鱼大师
+					</view>
+					<view class="mt-6 text-size-xs text-align-center text-grey-darken-2">
+						一个爱凑热闹的、喜欢捣鼓前端的博主。
+					</view>
 				</view>
 				<view class="right flex flex-col pl-12">
 					<view class="label text-size-s text-weight-b">爱好：摸鱼、打游戏、听音乐、逛B站</view>
-					<view class="motto mt-12 text-size-s text-grey-darken-1">如果不是在空闲着的时候就能挣到钱，那就不算摸鱼！</view>
+					<view class="motto mt-12 text-size-s text-grey-darken-1">
+						如果不是在空闲着的时候就能挣到钱，那就不算摸鱼！
+					</view>
 					<view class="mt-12 text-size-m text-weight-b text-grey-darken-2">精选图片</view>
 					<view class="photos mt-6 flex ">
-						<image class="photos-img round-2" :src="$utils.checkAvatarUrl(bloggerInfo.avatar)" mode="aspectFill"></image>
-						<image class="photos-img round-2" :src="$utils.checkAvatarUrl(bloggerInfo.avatar)" mode="aspectFill"></image>
-						<image class="photos-img round-2" :src="$utils.checkAvatarUrl(bloggerInfo.avatar)" mode="aspectFill"></image>
+						<image
+							class="photos-img round-2"
+							:src="$utils.checkAvatarUrl(bloggerInfo.avatar)"
+							mode="aspectFill"
+						></image>
+						<image
+							class="photos-img round-2"
+							:src="$utils.checkAvatarUrl(bloggerInfo.avatar)"
+							mode="aspectFill"
+						></image>
+						<image
+							class="photos-img round-2"
+							:src="$utils.checkAvatarUrl(bloggerInfo.avatar)"
+							mode="aspectFill"
+						></image>
 					</view>
 				</view>
 			</view>
@@ -386,7 +445,8 @@ export default {
 						})
 							.then(res => {
 								uni.clearStorageSync();
-								this.navList.find(x => x.key == 'cache').rightText = uni.getStorageInfoSync().currentSize + 'KB';
+								this.navList.find(x => x.key == 'cache').rightText =
+									uni.getStorageInfoSync().currentSize + 'KB';
 							})
 							.catch(err => {});
 						break;
@@ -417,6 +477,18 @@ export default {
 
 		// 快捷导航页面跳转
 		fnToNavPage(item) {
+			// 判断是内置页面还是网页
+			if (this.$utils.checkIsUrl(item.path)) {
+				uni.navigateTo({
+					url:
+						'/pagesC/website/website?data=' +
+						JSON.stringify({
+							title: item.text || this.$haloConfig.title,
+							url: item.path
+						})
+				});
+				return;
+			}
 			switch (item.type) {
 				case 'tabbar':
 					uni.switchTab({

@@ -93,7 +93,7 @@
 					:selectable="true"
 					:tag-style="markdownConfig.tagStyle"
 					:container-style="markdownConfig.containStyle"
-					:content="result.content"
+					:content="result.content || result.formatContent"
 					:markdown="true"
 					:showLineNumber="true"
 					:showLanguageName="true"

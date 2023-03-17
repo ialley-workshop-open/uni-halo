@@ -9,7 +9,9 @@
 		</view>
 		<view v-else class="content" :class="{ 'bg-white': result.length !== 0 }">
 			<!-- 空数据 -->
-			<view v-if="result.length == 0" class="content-empty flex flex-center"><tm-empty icon="icon-shiliangzhinengduixiang-" label="啊偶,博主还没有朋友呢~"></tm-empty></view>
+			<view v-if="result.length == 0" class="content-empty flex flex-center">
+				<tm-empty icon="icon-shiliangzhinengduixiang-" label="啊偶,博主还没有朋友呢~"></tm-empty>
+			</view>
 
 			<!-- 如果只有一个分组：使用列表的形式 result.length == 1 -->
 			<view v-else-if="result.length == 1" class="flex flex-col pb-24">
@@ -18,18 +20,32 @@
 						<!-- 色彩版本 -->
 						<view
 							v-if="!globalAppSettings.links.useSimple"
-							class="info flex pt-24 pb-24 pl-12 pr-12 border-b-1"
-							:class="{ 'border-b-1': index != team.children.length - 1 }"
+							class="info flex pt-24 pb-24 pl-12 pr-12"
+							:class="{ 'border-b-1': index != result[0].children.length - 1 }"
 							@click="fnOnLinkEvent(link)"
 						>
-							<view class="link-logo"><cache-image class="link-logo_img" radius="12rpx" :url="link.logo" :fileMd5="link.logo" mode="aspectFill"></cache-image></view>
+							<view class="link-logo">
+								<cache-image
+									class="link-logo_img"
+									radius="12rpx"
+									:url="link.logo"
+									:fileMd5="link.logo"
+									mode="aspectFill"
+								></cache-image>
+							</view>
 							<view class="flex flex-col pl-30 info-detail">
 								<view class="link-card_name text-size-l text-weight-b text-red">{{ link.name }}</view>
 								<view class="poup-tag ml--10 mt-6">
-									<tm-tags color="bg-gradient-amber-accent" :shadow="0" size="s" model="fill">ID：{{ link.id }}</tm-tags>
-									<tm-tags color=" bg-gradient-light-blue-lighten" :shadow="0" size="s" model="fill">{{ link.team || '暂未分组' }}</tm-tags>
+									<tm-tags color="bg-gradient-amber-accent" :shadow="0" size="s" model="fill">
+										ID：{{ link.id }}
+									</tm-tags>
+									<tm-tags color=" bg-gradient-light-blue-lighten" :shadow="0" size="s" model="fill">
+										{{ link.team || '暂未分组' }}
+									</tm-tags>
 								</view>
-								<view class="link-card_desc text-overflow text-size-s mt-4">博客简介：{{ link.description || '这个博主很懒，没写简介~' }}</view>
+								<view class="link-card_desc text-overflow text-size-s mt-4">
+									博客简介：{{ link.description || '这个博主很懒，没写简介~' }}
+								</view>
 							</view>
 						</view>
 						<!-- 简洁版本 -->
@@ -59,27 +75,55 @@
 								<view
 									v-if="!globalAppSettings.links.useSimple"
 									class="info flex pt-24 pb-24 pl-12 pr-12"
-									:class="{ 'border-b-1': linkIndex != team.children.length - 1 || index == result.length - 1 }"
+									:class="{
+										'border-b-1':
+											linkIndex != team.children.length - 1 || index == result.length - 1
+									}"
 									@click="fnOnLinkEvent(link)"
 								>
 									<view class="link-logo">
-										<cache-image class="link-logo_img" radius="12rpx" :url="link.logo" :fileMd5="link.logo" mode="aspectFill"></cache-image>
+										<cache-image
+											class="link-logo_img"
+											radius="12rpx"
+											:url="link.logo"
+											:fileMd5="link.logo"
+											mode="aspectFill"
+										></cache-image>
 									</view>
 									<view class="flex flex-col pl-30 info-detail">
-										<view class="link-card_name text-size-l text-weight-b text-red">{{ link.name }}</view>
-										<view class="poup-tag ml--10 mt-6">
-											<tm-tags color="bg-gradient-amber-accent" :shadow="0" size="s" model="fill">ID：{{ link.id }}</tm-tags>
-											<tm-tags color=" bg-gradient-light-blue-lighten" :shadow="0" size="s" model="fill">{{ link.team || '暂未分组' }}</tm-tags>
+										<view class="link-card_name text-size-l text-weight-b text-red">
+											{{ link.name }}
 										</view>
-										<view class="link-card_desc text-overflow text-size-s mt-4">博客简介：{{ link.description || '这个博主很懒，没写简介~' }}</view>
+										<view class="poup-tag ml--10 mt-6">
+											<tm-tags color="bg-gradient-amber-accent" :shadow="0" size="s" model="fill">
+												ID：{{ link.id }}
+											</tm-tags>
+											<tm-tags
+												color=" bg-gradient-light-blue-lighten"
+												:shadow="0"
+												size="s"
+												model="fill"
+											>
+												{{ link.team || '暂未分组' }}
+											</tm-tags>
+										</view>
+										<view class="link-card_desc text-overflow text-size-s mt-4">
+											博客简介：{{ link.description || '这个博主很懒，没写简介~' }}
+										</view>
 									</view>
 								</view>
 								<!-- 简洁版本 -->
-								<view v-else class="link-card flex ml-24 mr-24 pt-24 pb-24" @click="fnOnLinkEvent(link)">
+								<view
+									v-else
+									class="link-card flex ml-24 mr-24 pt-24 pb-24"
+									@click="fnOnLinkEvent(link)"
+								>
 									<image class="logo shadow-6" :src="link.logo" mode="aspectFill"></image>
 									<view class="info pl-24">
 										<view class="name text-size-g">{{ link.name }}</view>
-										<view class="desc mt-12 text-size-s text-grey-darken-1">{{ link.description }}</view>
+										<view class="desc mt-12 text-size-s text-grey-darken-1">
+											{{ link.description }}
+										</view>
 										<view v-if="false" class="link mt-12 text-size-m text-grey-darken-1">
 											<text class="iconfont icon-link mr-6 text-size-s"></text>
 											{{ link.url }}
@@ -93,18 +137,30 @@
 			</block>
 
 			<!-- 返回顶部 -->
-			<tm-flotbutton v-if="linkTotal > 10" color="light-blue" @click="fnToTopPage" size="m" icon="icon-angle-up"></tm-flotbutton>
+			<tm-flotbutton
+				v-if="linkTotal > 10"
+				color="light-blue"
+				@click="fnToTopPage"
+				size="m"
+				icon="icon-angle-up"
+			></tm-flotbutton>
 
 			<!-- 详情弹窗 -->
 			<tm-poup v-model="detail.show" :width="640" height="auto" position="center" :round="6">
 				<view class="poup pa-36">
 					<view class="info flex">
-						<view class="poup-logo bg-gradient-amber-accent pa-4 shadow-24"><image class="poup-logo_img" :src="detail.data.logo" mode="aspectFill"></image></view>
+						<view class="poup-logo bg-gradient-amber-accent pa-4 shadow-24">
+							<image class="poup-logo_img" :src="detail.data.logo" mode="aspectFill"></image>
+						</view>
 						<view class="pl-24 info-detail">
 							<view class="poup-name text-size-lg text-weight-b">{{ detail.data.name }}</view>
 							<view class="poup-tag ml--10">
-								<tm-tags color="bg-gradient-amber-accent" size="n" model="fill">ID：{{ detail.data.id }}</tm-tags>
-								<tm-tags color="bg-gradient-light-blue-lighten" size="n" model="fill">{{ detail.data.team || '暂未分组' }}</tm-tags>
+								<tm-tags color="bg-gradient-amber-accent" size="n" model="fill">
+									ID：{{ detail.data.id }}
+								</tm-tags>
+								<tm-tags color="bg-gradient-light-blue-lighten" size="n" model="fill">
+									{{ detail.data.team || '暂未分组' }}
+								</tm-tags>
 							</view>
 							<view class="poup-link text-size-m" @click="fnCopyLink(detail.data)">
 								<text class="text-orange">{{ detail.data.url }}</text>
@@ -113,10 +169,19 @@
 						</view>
 					</view>
 
-					<view class="poup-desc mt-20">博客简介：{{ detail.data.description || '这个博主很懒，没写简介~' }}</view>
+					<view class="poup-desc mt-20">
+						博客简介：{{ detail.data.description || '这个博主很懒，没写简介~' }}
+					</view>
 
 					<!-- 博客预览图 -->
-					<view class="mt-24"><tm-images :width="568" :round="2" :src="caclSiteThumbnail(detail.data.url)" mode="aspectFill"></tm-images></view>
+					<view class="mt-24">
+						<tm-images
+							:width="568"
+							:round="2"
+							:src="caclSiteThumbnail(detail.data.url)"
+							mode="aspectFill"
+						></tm-images>
+					</view>
 				</view>
 			</tm-poup>
 		</view>

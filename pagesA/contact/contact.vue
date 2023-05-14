@@ -4,14 +4,18 @@
 		<view class="profile flex flex-col flex-center pa-36">
 			<view class="avatar"><image class="avatar-img" :src="bloggerInfo.avatar" mode="aspectFill"></image></view>
 			<view class="nickname mt-24 text-weight-b text-size-g">{{ bloggerInfo.nickname }}</view>
-			<view class="desc mt-24 text-size-m text-grey-darken-3">{{ bloggerInfo.description || '这个博主很懒，竟然没写介绍~' }}</view>
+			<view class="desc mt-24 text-size-m text-grey-darken-3">
+				{{ bloggerInfo.description || '这个博主很懒，竟然没写介绍~' }}
+			</view>
 			<!-- 联系图标 -->
 			<view class="mt-24 contact-icons">
 				<!-- 放全部：似乎显得有点拥挤 -->
 				<!-- <block v-for="(item, index) in result" :key="index"><text v-if="item.value" class="halocoloricon" :class="[item.icon, { 'ml-12': index != 0 }]"></text></block> -->
 				<!-- 考虑放几个常用的就行 -->
 				<text class="halocoloricon halocoloricon-qq"></text>
+				<!-- #ifndef MP-QQ -->
 				<text class="ml-12 halocoloricon halocoloricon-wechat"></text>
+				<!-- #endif -->
 				<text class="ml-12 halocoloricon halocoloricon-GitHub"></text>
 				<text class="ml-12 halocoloricon halocoloricon-gitee"></text>
 				<text class="ml-12 halocoloricon halocoloricon-ic_email_round"></text>

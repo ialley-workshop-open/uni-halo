@@ -12,7 +12,7 @@ module.exports = {
 				changeOrigin: true,
 				secure: true,
 				pathRewrite: {
-					"^/api": ""
+					"^/api": "/api"
 				}
 			}
 		}

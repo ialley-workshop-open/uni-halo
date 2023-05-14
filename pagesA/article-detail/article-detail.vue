@@ -73,7 +73,10 @@
 				</view>
 			</view>
 			<!-- 广告区域 -->
-			<view v-if="haloAdConfig.articleDetail.use" class="ad-wrap ma-24 mb-0">
+			<view
+				v-if="haloAdConfig.articleDetail.use && (haloAdConfig.unitId || haloAdConfig.adpid)"
+				class="ad-wrap ma-24 mb-0"
+			>
 				<!-- #ifdef MP-WEIXIN -->
 				<ad v-if="haloAdConfig.unitId" :unit-id="haloAdConfig.unitId"></ad>
 				<!-- #endif -->
@@ -101,7 +104,10 @@
 				/>
 
 				<!-- 广告区域：微信/decloud申请 -->
-				<view v-if="haloAdConfig.articleDetail.use" class="ad-wrap mt-24 mb-24 ">
+				<view
+					v-if="haloAdConfig.articleDetail.use && (haloAdConfig.unitId || haloAdConfig.adpid)"
+					class="ad-wrap mt-24 mb-24 "
+				>
 					<!-- #ifdef MP-WEIXIN -->
 					<ad v-if="haloAdConfig.unitId" :unit-id="haloAdConfig.unitId"></ad>
 					<!-- #endif -->
@@ -657,6 +663,7 @@ export default {
 		},
 		fnSavePoster() {
 			this.$refs.rCanvas.saveImage(this.poster.res.tempFilePath);
+			uni.$tm.toast('保存成功');
 		},
 		fnShareTo() {
 			// #ifdef MP-WEIXIN

@@ -277,6 +277,10 @@ export default {
 		},
 		fnGetNavList() {
 			const systemInfo = uni.getSystemInfoSync();
+			let _isWx = false;
+			// #ifdef MP-WEIXIN
+			_isWx = true;
+			// #endif
 			this.navList = [
 				{
 					key: 'disclaimers',
@@ -310,7 +314,7 @@ export default {
 					isAdmin: false,
 					type: 'page',
 					openType: 'contact',
-					show: true
+					show: _isWx
 				},
 				{
 					key: 'feedback',
@@ -322,7 +326,7 @@ export default {
 					isAdmin: false,
 					type: 'page',
 					openType: 'feedback',
-					show: true
+					show: _isWx
 				},
 				{
 					key: 'about',

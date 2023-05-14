@@ -18,7 +18,8 @@ export default {
 	apiAuthorization: '', // Api认证key [必填]： Halo中-系统-博客设置-切换到高级选项-API设置-Access key
 
 	title: '', // 博客标题 [建议必填]：在某些页面没有设置具体的页面名称时候，使用该值显示
-	miniCodeImageUrl: '', // 小程序的太阳码/二维码的图片地址 [建议必填]：主要用于文章详情页面的生成海报的功能
+	miniCodeImageUrl: '', // 小程序的太阳码/二维码的图片地址 [建议必填]
+
 	aboutProfileImageUrl: '', // 关于页面中的资料卡背景图 [建议必填]
 
 	// 启动页面的配置（页面地址`/pagesA/start/start`）
@@ -80,8 +81,8 @@ export default {
 		list: [],
 	},
 
-	quickNav: { // 快捷导航配置
-		use: true,
+	quickNav: { // 快捷导航配置（如不需要恋爱日记，请注释或删除94-101行的代码）
+		use: true, // 是否在个人中心显示以下页面的入口
 		list: [{
 				icon: 'halocoloricon-classify',
 				text: '文章归档',

@@ -29,7 +29,7 @@
 			</view>
 			<block v-else>
 				<block v-for="(article, index) in dataList" :key="index">
-					<tm-translate animation-name="fadeUp" :wait="(index + 1) * 50">
+					<tm-translate animation-name="fadeUp" :wait="calcAniWait(index)">
 						<!-- 文章卡片 -->
 						<view class="article-card mt-24 bg-white pa-24 round-3">
 							<view class="thumbnail round-2" @click="fnToArticleDetail(article)">
@@ -110,295 +110,305 @@
 </template>
 
 <script>
-import tmSkeleton from '@/tm-vuetify/components/tm-skeleton/tm-skeleton.vue';
-import tmSearch from '@/tm-vuetify/components/tm-search/tm-search.vue';
-import tmTranslate from '@/tm-vuetify/components/tm-translate/tm-translate.vue';
-import tmTabs from '@/tm-vuetify/components/tm-tabs/tm-tabs.vue';
-import tmFlotbutton from '@/tm-vuetify/components/tm-flotbutton/tm-flotbutton.vue';
-import tmEmpty from '@/tm-vuetify/components/tm-empty/tm-empty.vue';
-import tmTags from '@/tm-vuetify/components/tm-tags/tm-tags.vue';
-import tmButton from '@/tm-vuetify/components/tm-button/tm-button.vue';
-import tmPickers from '@/tm-vuetify/components/tm-pickers/tm-pickers.vue';
+	import tmSkeleton from '@/tm-vuetify/components/tm-skeleton/tm-skeleton.vue';
+	import tmSearch from '@/tm-vuetify/components/tm-search/tm-search.vue';
+	import tmTranslate from '@/tm-vuetify/components/tm-translate/tm-translate.vue';
+	import tmTabs from '@/tm-vuetify/components/tm-tabs/tm-tabs.vue';
+	import tmFlotbutton from '@/tm-vuetify/components/tm-flotbutton/tm-flotbutton.vue';
+	import tmEmpty from '@/tm-vuetify/components/tm-empty/tm-empty.vue';
+	import tmTags from '@/tm-vuetify/components/tm-tags/tm-tags.vue';
+	import tmButton from '@/tm-vuetify/components/tm-button/tm-button.vue';
+	import tmPickers from '@/tm-vuetify/components/tm-pickers/tm-pickers.vue';
 
-export default {
-	components: {
-		tmSkeleton,
-		tmSearch,
-		tmTranslate,
-		tmTabs,
-		tmFlotbutton,
-		tmEmpty,
-		tmTags,
-		tmButton,
-		tmPickers
-	},
-	data() {
-		return {
-			isBlackTheme: false,
-			loading: 'loading',
-			tab: {
-				activeIndex: 0,
-				list: ['全部', '已发布', '私密', '草稿', '回收站']
-			},
-			queryParams: {
-				size: 10,
-				page: 0,
-				status: '',
-				keyword: '',
-				categoryId: undefined
-			},
-			cache: {
-				dataList: [],
-				total: 0
-			},
-			isLoadMore: false,
-			loadMoreText: '加载中...',
-			result: {},
-			dataList: [],
-			category: {
+	export default {
+		components: {
+			tmSkeleton,
+			tmSearch,
+			tmTranslate,
+			tmTabs,
+			tmFlotbutton,
+			tmEmpty,
+			tmTags,
+			tmButton,
+			tmPickers
+		},
+		data() {
+			return {
+				isBlackTheme: false,
 				loading: 'loading',
-				show: false,
-				list: [],
-				selected: [0]
-			}
-		};
-	},
-	onLoad() {
-		this.fnSetPageTitle('文章管理');
-		this.fnGetCategoryList();
-	},
-	created() {
-		this.fnGetData();
-		uni.$on('refresh-article-list', () => {
-			this.isLoadMore = false;
-			this.queryParams.page = 0;
-			this.fnGetData();
-		});
-	},
-	onPullDownRefresh() {
-		this.isLoadMore = false;
-		this.queryParams.page = 0;
-		this.fnGetData();
-	},
-
-	onReachBottom(e) {
-		if (this.result.hasNext) {
-			this.queryParams.page += 1;
-			this.isLoadMore = true;
-			this.fnGetData();
-		} else {
-			uni.showToast({
-				icon: 'none',
-				title: '没有更多数据了'
-			});
-		}
-	},
-	methods: {
-		fnOnTabChange(index) {
-			this.dataList = [];
-			const _status = {
-				0: '',
-				1: 'PUBLISHED',
-				2: 'INTIMATE',
-				3: 'DRAFT',
-				4: 'RECYCLE'
+				tab: {
+					activeIndex: 0,
+					list: ['全部', '已发布', '私密', '草稿', '回收站']
+				},
+				queryParams: {
+					size: 10,
+					page: 0,
+					status: '',
+					keyword: '',
+					categoryId: undefined
+				},
+				cache: {
+					dataList: [],
+					total: 0
+				},
+				isLoadMore: false,
+				loadMoreText: '加载中...',
+				result: {},
+				dataList: [],
+				category: {
+					loading: 'loading',
+					show: false,
+					list: [],
+					selected: [0]
+				}
 			};
-			this.queryParams.status = _status[index];
-			this.queryParams.page = 0;
-			this.fnToTopPage();
+		},
+		onLoad() {
+			this.fnSetPageTitle('文章管理');
+			this.fnGetCategoryList();
+		},
+		created() {
 			this.fnGetData();
+			uni.$on('refresh-article-list', () => {
+				this.isLoadMore = false;
+				this.queryParams.page = 0;
+				this.fnGetData();
+			});
 		},
-		// 获取分类列表
-		fnGetCategoryList() {
-			this.category.loading = 'loading';
-			this.$httpApi.admin
-				.getCategoryList()
-				.then(res => {
-					if (res.status == 200) {
-						let _list = res.data;
-						_list.unshift({ id: undefined, name: '全部' });
-						this.category.list = _list;
-						this.category.loading = 'success';
-					} else {
-						this.category.loading = 'error';
-					}
-				})
-				.catch(err => {
-					this.category.loading = 'error';
-				});
-		},
-		// 显示分类选择
-		fnOnCategoryConfirm(e) {
-			this.category.selected = [e[0].index];
-			this.queryParams.categoryId = e[0].data.id;
-		},
-		fnOnSearch() {
-			this.queryParams.page = 0;
+		onPullDownRefresh() {
 			this.isLoadMore = false;
-			this.fnToTopPage();
+			this.queryParams.page = 0;
 			this.fnGetData();
 		},
-		fnGetData() {
-			uni.showLoading({
-				mask: true,
-				title: '加载中...'
-			});
-			// 设置状态为加载中
-			if (!this.isLoadMore) {
-				this.loading = 'loading';
-			}
-			this.loadMoreText = '加载中...';
-			this.$httpApi.admin
-				.getPostsByPage(this.queryParams)
-				.then(res => {
-					console.log('请求结果：');
-					console.log(res);
-					if (res.status == 200) {
-						// 处理数据
-						this.result = res.data;
-						const _dataList = res.data.content.map(item => {
-							item.hasThumbnail = item.thumbnail != '';
-							if (item.thumbnail) {
-								item.thumbnail = this.$utils.checkThumbnailUrl(item.thumbnail);
-							}
-							return item;
-						});
-						if (this.isLoadMore) {
-							this.dataList = this.dataList.concat(_dataList);
-						} else {
-							this.dataList = _dataList;
-						}
 
-						this.loading = 'success';
-						this.loadMoreText = res.data.hasNext ? '上拉加载更多' : '呜呜，没有更多数据啦~';
-					} else {
-						this.loading = 'error';
-						this.loadMoreText = '呜呜，加载失败了~';
-					}
-				})
-				.catch(err => {
-					console.error(err);
-					this.loading = 'error';
-					this.loadMoreText = '加载失败，请下拉刷新！';
-				})
-				.finally(() => {
-					setTimeout(() => {
-						uni.hideLoading();
-						uni.stopPullDownRefresh();
-					}, 800);
+		onReachBottom(e) {
+			if (this.result.hasNext) {
+				this.queryParams.page += 1;
+				this.isLoadMore = true;
+				this.fnGetData();
+			} else {
+				uni.showToast({
+					icon: 'none',
+					title: '没有更多数据了'
 				});
+			}
 		},
-
-		// 跳转文章详情（预览）
-		fnToArticleDetail(article) {
-			uni.navigateTo({
-				url: '/pagesA/article-detail/article-detail?articleId=' + article.id,
-				animationType: 'slide-in-right'
-			});
-		},
-		// 新增
-		fnOnAddArticle() {
-			this.$Router.push({ path: '/pagesB/articles/article-edit', query: {} });
-		},
-		// 文章编辑
-		fnOnEditArticle(article) {
-			this.$Router.push({ path: '/pagesB/articles/article-edit', query: { postsId: article.id } });
-		},
-		// 设置文章信息
-		fnOnSetArticle(article, index) {
-			this.$Router.push({ path: '/pagesB/articles/article-setting', query: { postsId: article.id, postTitle: article.title, isEdit: 1, from: 'list' } });
-		},
-		// 删除文章
-		fnOnDelArticle(article, index) {
-			uni.$eShowModal({
-				title: '提示',
-				content: '是否确定要删除该文章？',
-				showCancel: true,
-				cancelText: '否',
-				cancelColor: '#999999',
-				confirmText: '是',
-				confirmColor: '#03a9f4'
-			})
-				.then(res => {
-					uni.showLoading({
-						mask: true,
-						title: '删除中...'
+		methods: {
+			fnOnTabChange(index) {
+				this.dataList = [];
+				const _status = {
+					0: '',
+					1: 'PUBLISHED',
+					2: 'INTIMATE',
+					3: 'DRAFT',
+					4: 'RECYCLE'
+				};
+				this.queryParams.status = _status[index];
+				this.queryParams.page = 0;
+				this.fnToTopPage();
+				this.fnGetData();
+			},
+			// 获取分类列表
+			fnGetCategoryList() {
+				this.category.loading = 'loading';
+				this.$httpApi.admin
+					.getCategoryList()
+					.then(res => {
+						if (res.status == 200) {
+							let _list = res.data;
+							_list.unshift({ id: undefined, name: '全部' });
+							this.category.list = _list;
+							this.category.loading = 'success';
+						} else {
+							this.category.loading = 'error';
+						}
+					})
+					.catch(err => {
+						this.category.loading = 'error';
 					});
-					this.$httpApi.admin
-						.deletePostsByIds([article.id])
-						.then(res => {
-							if (res.status == 200) {
-								uni.$tm.toast('文章已删除成功！');
-								this.dataList.splice(index, 1);
+			},
+			// 显示分类选择
+			fnOnCategoryConfirm(e) {
+				this.fnResetSetAniWaitIndex();
+				this.category.selected = [e[0].index];
+				this.queryParams.categoryId = e[0].data.id;
+			},
+			fnOnSearch() {
+				this.fnResetSetAniWaitIndex();
+				this.queryParams.page = 0;
+				this.isLoadMore = false;
+				this.fnToTopPage();
+				this.fnGetData();
+			},
+			fnGetData() {
+				uni.showLoading({
+					mask: true,
+					title: '加载中...'
+				});
+				// 设置状态为加载中
+				if (!this.isLoadMore) {
+					this.loading = 'loading';
+				}
+				this.loadMoreText = '加载中...';
+				this.$httpApi.admin
+					.getPostsByPage(this.queryParams)
+					.then(res => {
+						console.log('请求结果：');
+						console.log(res);
+						if (res.status == 200) {
+							// 处理数据
+							this.result = res.data;
+							const _dataList = res.data.content.map(item => {
+								item.hasThumbnail = item.thumbnail != '';
+								if (item.thumbnail) {
+									item.thumbnail = this.$utils.checkThumbnailUrl(item.thumbnail);
+								}
+								return item;
+							});
+							if (this.isLoadMore) {
+								this.dataList = this.dataList.concat(_dataList);
 							} else {
-								uni.$tm.toast('操作失败，请重试！');
+								this.dataList = _dataList;
 							}
-						})
-						.catch(err => {
-							uni.$tm.toast('操作失败，请重试！');
+
+							this.loading = 'success';
+							this.loadMoreText = res.data.hasNext ? '上拉加载更多' : '呜呜，没有更多数据啦~';
+						} else {
+							this.loading = 'error';
+							this.loadMoreText = '呜呜，加载失败了~';
+						}
+					})
+					.catch(err => {
+						console.error(err);
+						this.loading = 'error';
+						this.loadMoreText = '加载失败，请下拉刷新！';
+					})
+					.finally(() => {
+						setTimeout(() => {
+							uni.hideLoading();
+							uni.stopPullDownRefresh();
+						}, 800);
+					});
+			},
+
+			// 跳转文章详情（预览）
+			fnToArticleDetail(article) {
+				uni.navigateTo({
+					url: '/pagesA/article-detail/article-detail?articleId=' + article.id,
+					animationType: 'slide-in-right'
+				});
+			},
+			// 新增
+			fnOnAddArticle() {
+				this.$Router.push({ path: '/pagesB/articles/article-edit', query: {} });
+			},
+			// 文章编辑
+			fnOnEditArticle(article) {
+				this.$Router.push({ path: '/pagesB/articles/article-edit', query: { postsId: article.id } });
+			},
+			// 设置文章信息
+			fnOnSetArticle(article, index) {
+				this.$Router.push({ path: '/pagesB/articles/article-setting', query: { postsId: article.id, postTitle: article.title, isEdit: 1, from: 'list' } });
+			},
+			// 删除文章
+			fnOnDelArticle(article, index) {
+				uni.$eShowModal({
+						title: '提示',
+						content: '是否确定要删除该文章？',
+						showCancel: true,
+						cancelText: '否',
+						cancelColor: '#999999',
+						confirmText: '是',
+						confirmColor: '#03a9f4'
+					})
+					.then(res => {
+						uni.showLoading({
+							mask: true,
+							title: '删除中...'
 						});
-				})
-				.catch(err => {});
+						this.$httpApi.admin
+							.deletePostsByIds([article.id])
+							.then(res => {
+								if (res.status == 200) {
+									uni.$tm.toast('文章已删除成功！');
+									this.dataList.splice(index, 1);
+								} else {
+									uni.$tm.toast('操作失败，请重试！');
+								}
+							})
+							.catch(err => {
+								uni.$tm.toast('操作失败，请重试！');
+							});
+					})
+					.catch(err => {});
+			}
 		}
-	}
-};
+	};
 </script>
 
 <style lang="scss" scoped>
-.app-page {
-	width: 100vw;
-	min-height: 100vh;
-	display: flex;
-	flex-direction: column;
-	padding-bottom: 24rpx;
-	background-color: #fafafd;
+	.app-page {
+		width: 100vw;
+		min-height: 100vh;
+		display: flex;
+		flex-direction: column;
+		padding-bottom: 24rpx;
+		background-color: #fafafd;
 
-	&.is-balck {
-		background-color: #212121;
-	}
-}
-.app-page-content {
-	box-sizing: border-box;
-	.content-empty {
-		height: 60vh;
-	}
-}
-
-.article-card {
-	box-sizing: border-box;
-	box-shadow: 0rpx 2rpx 24rpx rgba(0, 0, 0, 0.05);
-	.thumbnail {
-		width: 100%;
-		height: 280rpx;
-		&-img {
-			width: 100%;
-			height: 100%;
-			background-color: rgba(0, 0, 0, 0.03);
-		}
-		&-not {
-			width: 100%;
-			height: 100%;
-			background-color: rgba(0, 0, 0, 0.03);
+		&.is-balck {
+			background-color: #212121;
 		}
 	}
-	.title {
-		overflow: hidden;
-		white-space: nowrap;
-		text-overflow: ellipsis;
-		word-wrap: break-word;
-		word-break: break-all;
-	}
-	.summary {
-		display: -webkit-box;
-		-webkit-box-orient: vertical;
-		-webkit-line-clamp: 3;
-		overflow: hidden;
-		word-wrap: break-word;
-		word-break: break-all;
-	}
-	.foot {
+
+	.app-page-content {
 		box-sizing: border-box;
-		border-top: 2rpx solid rgba(0, 0, 0, 0.03);
+
+		.content-empty {
+			height: 60vh;
+		}
 	}
-}
+
+	.article-card {
+		box-sizing: border-box;
+		box-shadow: 0rpx 2rpx 24rpx rgba(0, 0, 0, 0.05);
+
+		.thumbnail {
+			width: 100%;
+			height: 280rpx;
+
+			&-img {
+				width: 100%;
+				height: 100%;
+				background-color: rgba(0, 0, 0, 0.03);
+			}
+
+			&-not {
+				width: 100%;
+				height: 100%;
+				background-color: rgba(0, 0, 0, 0.03);
+			}
+		}
+
+		.title {
+			overflow: hidden;
+			white-space: nowrap;
+			text-overflow: ellipsis;
+			word-wrap: break-word;
+			word-break: break-all;
+		}
+
+		.summary {
+			display: -webkit-box;
+			-webkit-box-orient: vertical;
+			-webkit-line-clamp: 3;
+			overflow: hidden;
+			word-wrap: break-word;
+			word-break: break-all;
+		}
+
+		.foot {
+			box-sizing: border-box;
+			border-top: 2rpx solid rgba(0, 0, 0, 0.03);
+		}
+	}
 </style>

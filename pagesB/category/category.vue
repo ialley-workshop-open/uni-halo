@@ -16,7 +16,7 @@
 			<view v-if="dataList.length == 0" class="content-empty flex flex-center"><tm-empty icon="icon-shiliangzhinengduixiang-" label="无数据"></tm-empty></view>
 			<block v-else>
 				<block v-for="(category, index) in dataList" :key="index">
-					<tm-translate animation-name="fadeUp" :wait="(index + 1) * 50">
+					<tm-translate animation-name="fadeUp" :wait="calcAniWait(index)">
 						<view class="category-card flex round-3 bg-white pa-24 mb-24" @click="fnShowFormModal(category)">
 							<text class="del-icon flex flex-center" @click.stop="fnDelete(category, index)">×</text>
 							<view class="left">
@@ -52,49 +52,13 @@
 			<view class="poup-content">
 				<view class="poup-head text-align-center text-weight-b text-size-g ma-24">{{ form.id != undefined ? '编辑分类' : '新增分类' }}</view>
 				<scroll-view class="poup-body pa-24 pt-0" :scroll-y="true" @touchmove.stop>
-					<tm-input
-						required
-						:adjust-position="true"
-						:round="3"
-						:borderBottom="false"
-						title="名称"
-						bg-color="grey-lighten-5"
-						v-model="form.name"
-						placeholder="请输入分类名称"
-					></tm-input>
+					<tm-input required :adjust-position="true" :round="3" :borderBottom="false" title="名称" bg-color="grey-lighten-5" v-model="form.name" placeholder="请输入分类名称"></tm-input>
 					<view class="pl-32 mb-24 input-tips text-grey text-size-s">填写提示：页面上所显示的名称</view>
-					<tm-input
-						:borderBottom="false"
-						:adjust-position="true"
-						:round="3"
-						title="别名"
-						bg-color="grey-lighten-5"
-						v-model="form.slug"
-						placeholder="请输入分类别名"
-					></tm-input>
+					<tm-input :borderBottom="false" :adjust-position="true" :round="3" title="别名" bg-color="grey-lighten-5" v-model="form.slug" placeholder="请输入分类别名"></tm-input>
 					<view class="pl-32 mb-24 input-tips text-grey text-size-s">填写提示：一般为单个分类页面的标识，最好为英文</view>
-					<tm-input
-						:borderBottom="false"
-						:adjust-position="true"
-						:round="3"
-						title="密码"
-						bg-color="grey-lighten-5"
-						v-model="form.password"
-						placeholder="请输入分类密码"
-					></tm-input>
+					<tm-input :borderBottom="false" :adjust-position="true" :round="3" title="密码" bg-color="grey-lighten-5" v-model="form.password" placeholder="请输入分类密码"></tm-input>
 					<view class="pl-32 mb-24 input-tips text-grey text-size-s">填写提示：分类的访问密码</view>
-					<tm-input
-						:borderBottom="false"
-						:vertical="true"
-						:adjust-position="true"
-						inputType="textarea"
-						:round="3"
-						title="描述"
-						:height="160"
-						bg-color="grey-lighten-5"
-						v-model="form.description"
-						placeholder="请输入分类描述"
-					></tm-input>
+					<tm-input :borderBottom="false" :vertical="true" :adjust-position="true" inputType="textarea" :round="3" title="描述" :height="160" bg-color="grey-lighten-5" v-model="form.description" placeholder="请输入分类描述"></tm-input>
 					<view class="pl-32 mb-24 input-tips text-grey text-size-s">填写提示：分类的描述信息</view>
 					<view class="ma-30 mt-12 pb-12">
 						<view class="mb-12">
@@ -122,207 +86,163 @@
 </template>
 
 <script>
-import tmSkeleton from '@/tm-vuetify/components/tm-skeleton/tm-skeleton.vue';
-import tmButton from '@/tm-vuetify/components/tm-button/tm-button.vue';
-import tmEmpty from '@/tm-vuetify/components/tm-empty/tm-empty.vue';
-import tmTranslate from '@/tm-vuetify/components/tm-translate/tm-translate.vue';
-import tmFlotbutton from '@/tm-vuetify/components/tm-flotbutton/tm-flotbutton.vue';
-import tmPoup from '@/tm-vuetify/components/tm-poup/tm-poup.vue';
-import tmInput from '@/tm-vuetify/components/tm-input/tm-input.vue';
-import AttachmentSelect from '@/components/attachment-select/attachment-select.vue';
-export default {
-	components: {
-		tmSkeleton,
-		tmButton,
-		tmEmpty,
-		tmTranslate,
-		tmFlotbutton,
-		tmPoup,
-		tmInput,
-		AttachmentSelect
-	},
-	data() {
-		return {
-			loading: 'loading',
-			queryParams: {
-				size: 10,
-				page: 0,
-				more: true
-			},
-			dataList: [],
-			poupShow: false,
-			attachmentsSelectShow: false,
-			form: {
-				description: undefined,
-				password: undefined,
-				createTime: undefined,
-				fullPath: undefined,
-				id: undefined,
-				name: '',
-				slug: undefined,
-				thumbnail: undefined,
-				showThumbnail: undefined
-			}
-		};
-	},
-
-	onLoad() {
-		this.fnSetPageTitle('分类管理');
-	},
-	created() {
-		this.fnGetData();
-	},
-	onPullDownRefresh() {
-		this.isLoadMore = false;
-		this.queryParams.page = 0;
-		this.fnGetData();
-	},
-
-	methods: {
-		fnGetData() {
-			uni.showLoading({
-				mask: true,
-				title: '加载中...'
-			});
-			// 设置状态为加载中
-			if (!this.isLoadMore) {
-				this.loading = 'loading';
-			}
-			this.loadMoreText = '加载中...';
-			this.$httpApi.admin
-				.getCategoryList(this.queryParams)
-				.then(res => {
-					console.log('getCategoryList：');
-					console.log(res);
-					if (res.status == 200) {
-						this.loading = 'success';
-						this.dataList = res.data.map(item => {
-							if (item.thumbnail) {
-								item['showThumbnail'] = this.$utils.checkThumbnailUrl(item.thumbnail);
-							} else {
-								item['showThumbnail'] = '';
-							}
-							return item;
-						});
-					} else {
-						this.loading = 'error';
-					}
-
-					console.log(this.dataList);
-				})
-				.catch(err => {
-					console.error(err);
-					this.loading = 'error';
-					this.loadMoreText = '加载失败，请下拉刷新！';
-				})
-				.finally(() => {
-					setTimeout(() => {
-						uni.hideLoading();
-						uni.stopPullDownRefresh();
-					}, 800);
-				});
+	import tmSkeleton from '@/tm-vuetify/components/tm-skeleton/tm-skeleton.vue';
+	import tmButton from '@/tm-vuetify/components/tm-button/tm-button.vue';
+	import tmEmpty from '@/tm-vuetify/components/tm-empty/tm-empty.vue';
+	import tmTranslate from '@/tm-vuetify/components/tm-translate/tm-translate.vue';
+	import tmFlotbutton from '@/tm-vuetify/components/tm-flotbutton/tm-flotbutton.vue';
+	import tmPoup from '@/tm-vuetify/components/tm-poup/tm-poup.vue';
+	import tmInput from '@/tm-vuetify/components/tm-input/tm-input.vue';
+	import AttachmentSelect from '@/components/attachment-select/attachment-select.vue';
+	export default {
+		components: {
+			tmSkeleton,
+			tmButton,
+			tmEmpty,
+			tmTranslate,
+			tmFlotbutton,
+			tmPoup,
+			tmInput,
+			AttachmentSelect
 		},
-
-		fnSelectColor() {
-			this.$refs.colorPicker.open();
-		},
-
-		fnOnConfirmSelectColor(e) {
-			this.selectColor = e.rgba;
-			this.$set(this.form, 'color', e.hex);
-		},
-		fnOnAttachmentsSelectClose() {
-			this.attachmentsSelectShow = false;
-		},
-		fnOnPoupChange(e) {
-			if (!e) {
-				this.fnResetForm();
-			}
-		},
-		// 监听附件选择
-		fnOnAttachmentsSelect(file) {
-			this.form.thumbnail = file.path;
-			this.form.showThumbnail = this.$utils.checkThumbnailUrl(file.path);
-			this.attachmentsSelectShow = false;
-		},
-		fnShowFormModal(category) {
-			if (category) {
-				this.form = Object.assign({}, {}, category);
-				if (category.thumbnail) {
-					this.form.showThumbnail = this.$utils.checkThumbnailUrl(category.thumbnail);
+		data() {
+			return {
+				loading: 'loading',
+				queryParams: {
+					size: 10,
+					page: 0,
+					more: true
+				},
+				dataList: [],
+				poupShow: false,
+				attachmentsSelectShow: false,
+				form: {
+					description: undefined,
+					password: undefined,
+					createTime: undefined,
+					fullPath: undefined,
+					id: undefined,
+					name: '',
+					slug: undefined,
+					thumbnail: undefined,
+					showThumbnail: undefined
 				}
-			} else {
-				this.fnResetForm();
-			}
-			this.poupShow = true;
-		},
-		fnResetForm() {
-			this.form = {
-				color: undefined,
-				createTime: undefined,
-				fullPath: undefined,
-				id: undefined,
-				name: '',
-				slug: undefined,
-				thumbnail: undefined,
-				showThumbnail: undefined
 			};
 		},
-		fnSubmit() {
-			if (this.form.name.trim() == '') {
-				return uni.$tm.toast('分类名称未填写！');
-			}
-			if (this.form.id == undefined) {
-				this.$httpApi.admin
-					.createCategory(this.form)
-					.then(res => {
-						if (res.status == 200) {
-							uni.$tm.toast(`保存成功！`);
-							uni.startPullDownRefresh();
-						} else {
-							uni.$tm.toast('操作失败，请重试！');
-						}
-					})
-					.catch(err => {
-						uni.$tm.toast('操作失败，请重试！');
-					});
-			} else {
-				this.$httpApi.admin
-					.updateCategoryById(this.form.id, this.form)
-					.then(res => {
-						if (res.status == 200) {
-							uni.$tm.toast(`保存成功！`);
-							let updateIndex = this.dataList.findIndex(x => x.id == this.form.id);
-							this.$set(this.dataList, updateIndex, this.form);
-						} else {
-							uni.$tm.toast('操作失败，请重试！');
-						}
-					})
-					.catch(err => {
-						uni.$tm.toast('操作失败，请重试！');
-					});
-			}
+
+		onLoad() {
+			this.fnSetPageTitle('分类管理');
 		},
-		// 删除
-		fnDelete(category) {
-			const _category = category || this.form;
-			uni.$eShowModal({
-				title: '提示',
-				content: `您是否要将 ${_category.name} 的分类删除？`,
-				showCancel: true,
-				cancelText: '否',
-				cancelColor: '#999999',
-				confirmText: '是',
-				confirmColor: '#03a9f4'
-			})
-				.then(res => {
+		created() {
+			this.fnGetData();
+		},
+		onPullDownRefresh() {
+			this.isLoadMore = false;
+			this.queryParams.page = 0;
+			this.fnGetData();
+		},
+
+		methods: {
+			fnGetData() {
+				uni.showLoading({
+					mask: true,
+					title: '加载中...'
+				});
+				// 设置状态为加载中
+				if (!this.isLoadMore) {
+					this.loading = 'loading';
+				}
+				this.loadMoreText = '加载中...';
+				this.$httpApi.admin
+					.getCategoryList(this.queryParams)
+					.then(res => {
+						console.log('getCategoryList：');
+						console.log(res);
+						if (res.status == 200) {
+							this.loading = 'success';
+							this.dataList = res.data.map(item => {
+								if (item.thumbnail) {
+									item['showThumbnail'] = this.$utils.checkThumbnailUrl(item.thumbnail);
+								} else {
+									item['showThumbnail'] = '';
+								}
+								return item;
+							});
+						} else {
+							this.loading = 'error';
+						}
+
+						console.log(this.dataList);
+					})
+					.catch(err => {
+						console.error(err);
+						this.loading = 'error';
+						this.loadMoreText = '加载失败，请下拉刷新！';
+					})
+					.finally(() => {
+						setTimeout(() => {
+							uni.hideLoading();
+							uni.stopPullDownRefresh();
+						}, 800);
+					});
+			},
+
+			fnSelectColor() {
+				this.$refs.colorPicker.open();
+			},
+
+			fnOnConfirmSelectColor(e) {
+				this.selectColor = e.rgba;
+				this.$set(this.form, 'color', e.hex);
+			},
+			fnOnAttachmentsSelectClose() {
+				this.attachmentsSelectShow = false;
+			},
+			fnOnPoupChange(e) {
+				if (!e) {
+					this.fnResetForm();
+				}
+			},
+			// 监听附件选择
+			fnOnAttachmentsSelect(file) {
+				this.form.thumbnail = file.path;
+				this.form.showThumbnail = this.$utils.checkThumbnailUrl(file.path);
+				this.attachmentsSelectShow = false;
+			},
+			fnShowFormModal(category) {
+				if (category) {
+					this.form = Object.assign({}, {}, category);
+					if (category.thumbnail) {
+						this.form.showThumbnail = this.$utils.checkThumbnailUrl(category.thumbnail);
+					}
+				} else {
+					this.fnResetForm();
+				}
+				this.poupShow = true;
+			},
+			fnResetForm() {
+				this.form = {
+					color: undefined,
+					createTime: undefined,
+					fullPath: undefined,
+					id: undefined,
+					name: '',
+					slug: undefined,
+					thumbnail: undefined,
+					showThumbnail: undefined
+				};
+			},
+			fnSubmit() {
+				if (this.form.name.trim() == '') {
+					return uni.$tm.toast('分类名称未填写！');
+				}
+				if (this.form.id == undefined) {
 					this.$httpApi.admin
-						.deleteCategoryById(_category.id)
+						.createCategory(this.form)
 						.then(res => {
 							if (res.status == 200) {
-								uni.$tm.toast(`${_category.name} 分类已删除！`);
-								const delIndex = this.dataList.findIndex(x => x.id == _category.id);
-								this.dataList.splice(delIndex, 1);
+								uni.$tm.toast(`保存成功！`);
+								uni.startPullDownRefresh();
 							} else {
 								uni.$tm.toast('操作失败，请重试！');
 							}
@@ -330,91 +250,146 @@ export default {
 						.catch(err => {
 							uni.$tm.toast('操作失败，请重试！');
 						});
-				})
-				.catch(err => {});
+				} else {
+					this.$httpApi.admin
+						.updateCategoryById(this.form.id, this.form)
+						.then(res => {
+							if (res.status == 200) {
+								uni.$tm.toast(`保存成功！`);
+								let updateIndex = this.dataList.findIndex(x => x.id == this.form.id);
+								this.$set(this.dataList, updateIndex, this.form);
+							} else {
+								uni.$tm.toast('操作失败，请重试！');
+							}
+						})
+						.catch(err => {
+							uni.$tm.toast('操作失败，请重试！');
+						});
+				}
+			},
+			// 删除
+			fnDelete(category) {
+				const _category = category || this.form;
+				uni.$eShowModal({
+						title: '提示',
+						content: `您是否要将 ${_category.name} 的分类删除？`,
+						showCancel: true,
+						cancelText: '否',
+						cancelColor: '#999999',
+						confirmText: '是',
+						confirmColor: '#03a9f4'
+					})
+					.then(res => {
+						this.$httpApi.admin
+							.deleteCategoryById(_category.id)
+							.then(res => {
+								if (res.status == 200) {
+									uni.$tm.toast(`${_category.name} 分类已删除！`);
+									const delIndex = this.dataList.findIndex(x => x.id == _category.id);
+									this.dataList.splice(delIndex, 1);
+								} else {
+									uni.$tm.toast('操作失败，请重试！');
+								}
+							})
+							.catch(err => {
+								uni.$tm.toast('操作失败，请重试！');
+							});
+					})
+					.catch(err => {});
+			}
 		}
-	}
-};
+	};
 </script>
 
 <style lang="scss" scoped>
-.app-page {
-	width: 100vw;
-	min-height: 100vh;
-}
-.loading-wrap {
-	.loading-error {
-		height: 65vh;
+	.app-page {
+		width: 100vw;
+		min-height: 100vh;
 	}
-}
-.content-empty {
-	width: 100%;
-	height: 60vh;
-}
 
-.poup-content {
-	overflow: hidden;
-}
-.poup-body {
-	height: 71vh;
-	box-sizing: border-box;
-	touch-action: none;
-}
-.thumbnail {
-	width: 100%;
-	height: 260rpx;
-}
-.category-card {
-	position: relative;
-	box-sizing: border-box;
-	box-shadow: 0rpx 2rpx 24rpx rgba(0, 0, 0, 0.03);
-	.del-icon {
-		width: 46rpx;
-		height: 46rpx;
-		position: absolute;
-		right: 24rpx;
-		top: 24rpx;
-		border-radius: 50%;
-		box-sizing: border-box;
-		border: 4rpx solid #fff;
-		background-color: #ff8177;
-		box-shadow: 0rpx 0rpx 24rpx rgba(0, 0, 0, 0.05);
-		font-size: 32rpx;
-		color: #fff;
-	}
-	.left {
-		width: 200rpx;
-		height: 190rpx;
-
-		.cover {
-			width: 100%;
-			height: inherit;
-			background-color: #607d8b;
+	.loading-wrap {
+		.loading-error {
+			height: 65vh;
 		}
 	}
-	.right {
-		width: 0;
-		flex-grow: 1;
+
+	.content-empty {
+		width: 100%;
+		height: 60vh;
+	}
+
+	.poup-content {
+		overflow: hidden;
+	}
+
+	.poup-body {
+		height: 71vh;
 		box-sizing: border-box;
-		.color {
+		touch-action: none;
+	}
+
+	.thumbnail {
+		width: 100%;
+		height: 260rpx;
+	}
+
+	.category-card {
+		position: relative;
+		box-sizing: border-box;
+		box-shadow: 0rpx 2rpx 24rpx rgba(0, 0, 0, 0.03);
+
+		.del-icon {
+			width: 46rpx;
+			height: 46rpx;
+			position: absolute;
+			right: 24rpx;
+			top: 24rpx;
+			border-radius: 50%;
+			box-sizing: border-box;
+			border: 4rpx solid #fff;
+			background-color: #ff8177;
+			box-shadow: 0rpx 0rpx 24rpx rgba(0, 0, 0, 0.05);
+			font-size: 32rpx;
 			color: #fff;
 		}
-	}
-}
 
-.desc-box {
-	box-sizing: border-box;
-	.label {
-		width: 86rpx;
+		.left {
+			width: 200rpx;
+			height: 190rpx;
+
+			.cover {
+				width: 100%;
+				height: inherit;
+				background-color: #607d8b;
+			}
+		}
+
+		.right {
+			width: 0;
+			flex-grow: 1;
+			box-sizing: border-box;
+
+			.color {
+				color: #fff;
+			}
+		}
 	}
-	.value {
-		width: 0;
-		flex-grow: 1;
-		white-space: nowrap;
-		overflow: hidden;
-		text-overflow: ellipsis;
-		word-wrap: break-word;
-		word-break: break-all;
+
+	.desc-box {
+		box-sizing: border-box;
+
+		.label {
+			width: 86rpx;
+		}
+
+		.value {
+			width: 0;
+			flex-grow: 1;
+			white-space: nowrap;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			word-wrap: break-word;
+			word-break: break-all;
+		}
 	}
-}
 </style>

@@ -106,7 +106,6 @@
 			}
 		},
 		created() {
-			console.log('cache-image', this.url);
 			this.imgStyle = {
 				width: this.width,
 				height: this.height,

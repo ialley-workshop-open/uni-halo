@@ -13,18 +13,9 @@
 			</view>
 			<block v-else>
 				<block v-for="(item, index) in dataList" :key="index">
-					<tm-translate animation-name="fadeUp" :wait="(index + 1) * 50">
+					<tm-translate animation-name="fadeUp" :wait="calcAniWait(index)">
 						<!-- 列表项 -->
-						<comment-item
-							class="mb-12"
-							:isChild="false"
-							:comment="item"
-							:postId="sheetId"
-							:useSolid="false"
-							@on-copy="fnCopyContent"
-							@on-comment="fnToComment"
-							@on-detail="fnOnShowCommentDetail"
-						></comment-item>
+						<comment-item class="mb-12" :isChild="false" :comment="item" :postId="sheetId" :useSolid="false" @on-copy="fnCopyContent" @on-comment="fnToComment" @on-detail="fnOnShowCommentDetail"></comment-item>
 					</tm-translate>
 				</block>
 				<tm-flotbutton :offset="[16, 80]" @click="fnToTopPage" size="m" color="light-blue" icon="icon-angle-up"></tm-flotbutton>
@@ -59,15 +50,7 @@
 						</view>
 
 						<block v-else>
-							<comment-item
-								v-for="(comment, index) in commentDetail.list"
-								:useSolid="false"
-								:useActions="false"
-								:key="index"
-								:isChild="false"
-								:comment="comment"
-								:postId="sheetId"
-							></comment-item>
+							<comment-item v-for="(comment, index) in commentDetail.list" :useSolid="false" :useActions="false" :key="index" :isChild="false" :comment="comment" :postId="sheetId"></comment-item>
 						</block>
 					</block>
 				</scroll-view>
@@ -77,194 +60,197 @@
 </template>
 
 <script>
-import AppKeys from '@/config/keys.js';
-import SheetConfig from '@/config/sheets.config.js';
+	import AppKeys from '@/config/keys.js';
+	import SheetConfig from '@/config/sheets.config.js';
 
-import tmSkeleton from '@/tm-vuetify/components/tm-skeleton/tm-skeleton.vue';
-import tmFlotbutton from '@/tm-vuetify/components/tm-flotbutton/tm-flotbutton.vue';
-import tmTranslate from '@/tm-vuetify/components/tm-translate/tm-translate.vue';
-import tmEmpty from '@/tm-vuetify/components/tm-empty/tm-empty.vue';
-import tmPoup from '@/tm-vuetify/components/tm-poup/tm-poup.vue';
-import tmButton from '@/tm-vuetify/components/tm-button/tm-button.vue';
-import commentItem from '@/components/comment-item/comment-item.vue';
+	import tmSkeleton from '@/tm-vuetify/components/tm-skeleton/tm-skeleton.vue';
+	import tmFlotbutton from '@/tm-vuetify/components/tm-flotbutton/tm-flotbutton.vue';
+	import tmTranslate from '@/tm-vuetify/components/tm-translate/tm-translate.vue';
+	import tmEmpty from '@/tm-vuetify/components/tm-empty/tm-empty.vue';
+	import tmPoup from '@/tm-vuetify/components/tm-poup/tm-poup.vue';
+	import tmButton from '@/tm-vuetify/components/tm-button/tm-button.vue';
+	import commentItem from '@/components/comment-item/comment-item.vue';
 
-export default {
-	components: {
-		tmSkeleton,
-		tmFlotbutton,
-		tmTranslate,
-		tmEmpty,
-		tmPoup,
-		tmButton,
-		commentItem
-	},
-	data() {
-		return {
-			loading: 'loading',
-			queryParams: {
-				size: 10,
-				page: 0
-			},
-			result: null,
-			dataList: [],
-			isLoadMore: false,
-			loadMoreText: '加载中...',
-			sheetId: SheetConfig[AppKeys.SHEET_LEAVING],
-			commentDetail: {
+	export default {
+		components: {
+			tmSkeleton,
+			tmFlotbutton,
+			tmTranslate,
+			tmEmpty,
+			tmPoup,
+			tmButton,
+			commentItem
+		},
+		data() {
+			return {
 				loading: 'loading',
-				show: false,
-				comment: {},
-				postId: undefined,
-				list: []
-			}
-		};
-	},
+				queryParams: {
+					size: 10,
+					page: 0
+				},
+				result: null,
+				dataList: [],
+				isLoadMore: false,
+				loadMoreText: '加载中...',
+				sheetId: SheetConfig[AppKeys.SHEET_LEAVING],
+				commentDetail: {
+					loading: 'loading',
+					show: false,
+					comment: {},
+					postId: undefined,
+					list: []
+				}
+			};
+		},
 
-	onLoad() {
-		this.fnSetPageTitle('留言板');
-	},
-	created() {
-		this.fnGetData();
-		uni.$on('leaving_refresh', () => {
+		onLoad() {
+			this.fnSetPageTitle('留言板');
+		},
+		created() {
 			this.fnGetData();
-		});
-	},
-	onPullDownRefresh() {
-		this.isLoadMore = false;
-		this.queryParams.page = 0;
-		this.fnGetData();
-	},
-
-	onReachBottom(e) {
-		if (this.result.hasNext) {
-			this.queryParams.page += 1;
-			this.isLoadMore = true;
+			uni.$on('leaving_refresh', () => {
+				this.fnGetData();
+			});
+		},
+		onPullDownRefresh() {
+			this.isLoadMore = false;
+			this.queryParams.page = 0;
 			this.fnGetData();
-		} else {
-			uni.showToast({
-				icon: 'none',
-				title: '没有更多数据了'
-			});
-		}
-	},
+		},
 
-	methods: {
-		fnGetData() {
-			uni.showLoading({
-				mask: true,
-				title: '加载中...'
-			});
-			// 设置状态为加载中
-			if (!this.isLoadMore) {
-				this.loading = 'loading';
+		onReachBottom(e) {
+			if (this.result.hasNext) {
+				this.queryParams.page += 1;
+				this.isLoadMore = true;
+				this.fnGetData();
+			} else {
+				uni.showToast({
+					icon: 'none',
+					title: '没有更多数据了'
+				});
 			}
-			this.loadMoreText = '加载中...';
-			this.$httpApi
-				.getSheetsCommentsTreeBySheetId(this.sheetId, this.queryParams)
-				.then(res => {
-					if (res.status == 200) {
-						this.loading = 'success';
-						// return;
-						this.loadMoreText = res.data.hasNext ? '上拉加载更多' : '呜呜，没有更多数据啦~';
-						// 处理数据
-						this.result = res.data;
-						if (this.isLoadMore) {
-							this.dataList = this.dataList.concat(res.data.content);
+		},
+
+		methods: {
+			fnGetData() {
+				uni.showLoading({
+					mask: true,
+					title: '加载中...'
+				});
+				// 设置状态为加载中
+				if (!this.isLoadMore) {
+					this.loading = 'loading';
+				}
+				this.loadMoreText = '加载中...';
+				this.$httpApi
+					.getSheetsCommentsTreeBySheetId(this.sheetId, this.queryParams)
+					.then(res => {
+						if (res.status == 200) {
+							this.loading = 'success';
+							// return;
+							this.loadMoreText = res.data.hasNext ? '上拉加载更多' : '呜呜，没有更多数据啦~';
+							// 处理数据
+							this.result = res.data;
+							if (this.isLoadMore) {
+								this.dataList = this.dataList.concat(res.data.content);
+							} else {
+								this.dataList = res.data.content;
+							}
 						} else {
-							this.dataList = res.data.content;
+							this.loading = 'error';
+							this.loadMoreText = '加载失败，请下拉刷新！';
 						}
-					} else {
+					})
+					.catch(err => {
+						console.error(err);
 						this.loading = 'error';
 						this.loadMoreText = '加载失败，请下拉刷新！';
-					}
-				})
-				.catch(err => {
-					console.error(err);
-					this.loading = 'error';
-					this.loadMoreText = '加载失败，请下拉刷新！';
-				})
-				.finally(() => {
-					setTimeout(() => {
-						uni.hideLoading();
-						uni.stopPullDownRefresh();
-					}, 500);
-				});
-		},
-		fnToComment(data) {
-			let _comment = {};
-			if (data) {
-				_comment = {
-					id: this.sheetId,
-					parentId: data.comment.id,
-					title: data.comment.author,
-					from: 'sheets',
-					formPage: 'leaving',
-					type: 'user'
-				};
-			} else {
-				_comment = {
-					id: this.sheetId,
-					parentId: 0,
-					title: '留言板留言',
-					from: 'sheets',
-					formPage: 'leaving',
-					type: 'post'
-				};
-			}
+					})
+					.finally(() => {
+						setTimeout(() => {
+							uni.hideLoading();
+							uni.stopPullDownRefresh();
+						}, 500);
+					});
+			},
+			fnToComment(data) {
+				let _comment = {};
+				if (data) {
+					_comment = {
+						id: this.sheetId,
+						parentId: data.comment.id,
+						title: data.comment.author,
+						from: 'sheets',
+						formPage: 'leaving',
+						type: 'user'
+					};
+				} else {
+					_comment = {
+						id: this.sheetId,
+						parentId: 0,
+						title: '留言板留言',
+						from: 'sheets',
+						formPage: 'leaving',
+						type: 'post'
+					};
+				}
 
-			uni.$tm.vx.commit('comment/setCommentInfo', _comment);
-			this.$Router.push({
-				path: '/pagesA/comment/comment',
-				query: _comment
-			});
-		},
-		fnCopyContent(content) {
-			uni.$tm.u.setClipboardData(content);
-			uni.$tm.toast('内容已复制成功！');
-		},
-		fnOnShowCommentDetail(comment) {
-			this.commentDetail.comment = comment;
-			this.commentDetail.list = [];
-			this.commentDetail.show = true;
-			this.fnGetChildComments();
-		},
-		fnGetChildComments() {
-			this.commentDetail.loading = 'loading';
-			this.$httpApi
-				.getSheetsChildrenCommentList(this.sheetId, this.commentDetail.comment.id, {})
-				.then(res => {
-					if (res.status == 200) {
-						this.commentDetail.loading = 'success';
-						this.commentDetail.list = res.data;
-					} else {
-						this.commentDetail.loading = 'error';
-					}
-				})
-				.catch(err => {
-					this.commentDetail.loading = 'error';
+				uni.$tm.vx.commit('comment/setCommentInfo', _comment);
+				this.$Router.push({
+					path: '/pagesA/comment/comment',
+					query: _comment
 				});
+			},
+			fnCopyContent(content) {
+				uni.$tm.u.setClipboardData(content);
+				uni.$tm.toast('内容已复制成功！');
+			},
+			fnOnShowCommentDetail(comment) {
+				this.commentDetail.comment = comment;
+				this.commentDetail.list = [];
+				this.commentDetail.show = true;
+				this.fnGetChildComments();
+			},
+			fnGetChildComments() {
+				this.commentDetail.loading = 'loading';
+				this.$httpApi
+					.getSheetsChildrenCommentList(this.sheetId, this.commentDetail.comment.id, {})
+					.then(res => {
+						if (res.status == 200) {
+							this.commentDetail.loading = 'success';
+							this.commentDetail.list = res.data;
+						} else {
+							this.commentDetail.loading = 'error';
+						}
+					})
+					.catch(err => {
+						this.commentDetail.loading = 'error';
+					});
+			}
 		}
-	}
-};
+	};
 </script>
 
 <style lang="scss" scoped>
-.app-page {
-	width: 100vw;
-	display: flex;
-	flex-direction: column;
-	background-color: #fafafd;
-}
-.app-page-content {
-	box-sizing: border-box;
-	// box-shadow: 0rpx 0rpx 24rpx rgba(0, 0, 0, 0.05);
-}
-.content-empty {
-	width: 100%;
-	height: 60vh;
-}
-.loading-wrap {
-	box-sizing: border-box;
-	padding: 24rpx;
-}
+	.app-page {
+		width: 100vw;
+		display: flex;
+		flex-direction: column;
+		background-color: #fafafd;
+	}
+
+	.app-page-content {
+		box-sizing: border-box;
+		// box-shadow: 0rpx 0rpx 24rpx rgba(0, 0, 0, 0.05);
+	}
+
+	.content-empty {
+		width: 100%;
+		height: 60vh;
+	}
+
+	.loading-wrap {
+		box-sizing: border-box;
+		padding: 24rpx;
+	}
 </style>

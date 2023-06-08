@@ -23,7 +23,7 @@
 			<block v-else>
 				<block v-for="(article, index) in dataList" :key="article.id">
 					<!-- 文章卡片 -->
-					<tm-translate animation-name="fadeUp" :wait="(index + 1) * 50">
+					<tm-translate animation-name="fadeUp" :wait="calcAniWait(index)">
 						<article-card :article="article" @on-click="fnToArticleDetail"></article-card>
 						<!-- 广告区域 -->
 						<view v-if="haloAdConfig.articles.use && (index + 1) % haloAdConfig.frequency == 0" class="ad-wrap ma-24">
@@ -45,159 +45,162 @@
 </template>
 
 <script>
-import tmSkeleton from '@/tm-vuetify/components/tm-skeleton/tm-skeleton.vue';
-import tmSearch from '@/tm-vuetify/components/tm-search/tm-search.vue';
-import tmTranslate from '@/tm-vuetify/components/tm-translate/tm-translate.vue';
-import tmTabs from '@/tm-vuetify/components/tm-tabs/tm-tabs.vue';
-import tmFlotbutton from '@/tm-vuetify/components/tm-flotbutton/tm-flotbutton.vue';
-import tmEmpty from '@/tm-vuetify/components/tm-empty/tm-empty.vue';
+	import tmSkeleton from '@/tm-vuetify/components/tm-skeleton/tm-skeleton.vue';
+	import tmSearch from '@/tm-vuetify/components/tm-search/tm-search.vue';
+	import tmTranslate from '@/tm-vuetify/components/tm-translate/tm-translate.vue';
+	import tmTabs from '@/tm-vuetify/components/tm-tabs/tm-tabs.vue';
+	import tmFlotbutton from '@/tm-vuetify/components/tm-flotbutton/tm-flotbutton.vue';
+	import tmEmpty from '@/tm-vuetify/components/tm-empty/tm-empty.vue';
 
-export default {
-	components: {
-		tmSkeleton,
-		tmSearch,
-		tmTranslate,
-		tmTabs,
-		tmFlotbutton,
-		tmEmpty
-	},
-	data() {
-		return {
-			isBlackTheme: false,
-			loading: 'loading',
-			tab: {
-				activeIndex: 0,
-				list: ['全部', '最新文章', '热门文章', '最近更新', '最多点赞']
-			},
-			queryParams: {
-				size: 10,
-				page: 0,
-				sort: 'topPriority,createTime,desc',
-				keyword: ''
-			},
-			cache: {
-				dataList: [],
-				total: 0
-			},
-			isLoadMore: false,
-			loadMoreText: '加载中...',
-			result: {},
-			dataList: []
-		};
-	},
-	onLoad() {
-		this.fnSetPageTitle('文章列表');
-	},
-	created() {
-		this.fnGetData();
-	},
-	onPullDownRefresh() {
-		this.isLoadMore = false;
-		this.queryParams.page = 0;
-		this.fnGetData();
-	},
-
-	onReachBottom(e) {
-		if (this.result.hasNext) {
-			this.queryParams.page += 1;
-			this.isLoadMore = true;
-			this.fnGetData();
-		} else {
-			uni.showToast({
-				icon: 'none',
-				title: '没有更多数据了'
-			});
-		}
-	},
-	methods: {
-		fnOnTabChange(index) {
-			this.dataList = [];
-			const _sorts = {
-				0: '',
-				1: 'topPriority,createTime,desc',
-				2: 'topPriority,visits,desc',
-				3: 'topPriority,updateTime,desc',
-				4: 'topPriority,likes,desc'
+	export default {
+		components: {
+			tmSkeleton,
+			tmSearch,
+			tmTranslate,
+			tmTabs,
+			tmFlotbutton,
+			tmEmpty
+		},
+		data() {
+			return {
+				isBlackTheme: false,
+				loading: 'loading',
+				tab: {
+					activeIndex: 0,
+					list: ['全部', '最新文章', '热门文章', '最近更新', '最多点赞']
+				},
+				queryParams: {
+					size: 10,
+					page: 0,
+					sort: 'topPriority,createTime,desc',
+					keyword: ''
+				},
+				cache: {
+					dataList: [],
+					total: 0
+				},
+				isLoadMore: false,
+				loadMoreText: '加载中...',
+				result: {},
+				dataList: []
 			};
-			this.queryParams.sort = _sorts[index];
-			this.queryParams.page = 0;
-			this.dataList = [];
-			this.fnToTopPage();
+		},
+		onLoad() {
+			this.fnSetPageTitle('文章列表');
+		},
+		created() {
 			this.fnGetData();
 		},
-		fnOnSearch() {
-			this.queryParams.page = 0;
+		onPullDownRefresh() {
 			this.isLoadMore = false;
+			this.queryParams.page = 0;
 			this.fnGetData();
 		},
-		fnGetData() {
-			uni.showLoading({
-				mask: true,
-				title: '加载中...'
-			});
-			// 设置状态为加载中
-			if (!this.isLoadMore) {
-				this.loading = 'loading';
-			}
-			this.loadMoreText = '加载中...';
-			this.$httpApi
-				.getPostList(this.queryParams)
-				.then(res => {
-					console.log('请求结果：');
-					console.log(res);
 
-					this.loading = 'success';
-					this.loadMoreText = res.data.hasNext ? '上拉加载更多' : '呜呜，没有更多数据啦~';
-					// 处理数据
-					this.result = res.data;
-					if (this.isLoadMore) {
-						this.dataList = this.dataList.concat(res.data.content);
-					} else {
-						this.dataList = res.data.content;
-					}
-				})
-				.catch(err => {
-					console.error(err);
-					this.loading = 'error';
-					this.loadMoreText = '加载失败，请下拉刷新！';
-				})
-				.finally(() => {
-					setTimeout(() => {
-						uni.hideLoading();
-						uni.stopPullDownRefresh();
-					}, 800);
+		onReachBottom(e) {
+			if (this.result.hasNext) {
+				this.queryParams.page += 1;
+				this.isLoadMore = true;
+				this.fnGetData();
+			} else {
+				uni.showToast({
+					icon: 'none',
+					title: '没有更多数据了'
 				});
+			}
 		},
+		methods: {
+			fnOnTabChange(index) {
+				this.fnResetSetAniWaitIndex();
+				this.dataList = [];
+				const _sorts = {
+					0: '',
+					1: 'topPriority,createTime,desc',
+					2: 'topPriority,visits,desc',
+					3: 'topPriority,updateTime,desc',
+					4: 'topPriority,likes,desc'
+				};
+				this.queryParams.sort = _sorts[index];
+				this.queryParams.page = 0;
+				this.dataList = [];
+				this.fnToTopPage();
+				this.fnGetData();
+			},
+			fnOnSearch() {
+				this.fnResetSetAniWaitIndex();
+				this.queryParams.page = 0;
+				this.isLoadMore = false;
+				this.fnGetData();
+			},
+			fnGetData() {
+				uni.showLoading({
+					mask: true,
+					title: '加载中...'
+				});
+				// 设置状态为加载中
+				if (!this.isLoadMore) {
+					this.loading = 'loading';
+				}
+				this.loadMoreText = '加载中...';
+				this.$httpApi
+					.getPostList(this.queryParams)
+					.then(res => {
+						console.log('请求结果：');
+						console.log(res);
 
-		//跳转文章详情
-		fnToArticleDetail(article) {
-			uni.navigateTo({
-				url: '/pagesA/article-detail/article-detail?articleId=' + article.id,
-				animationType: 'slide-in-right'
-			});
+						this.loading = 'success';
+						this.loadMoreText = res.data.hasNext ? '上拉加载更多' : '呜呜，没有更多数据啦~';
+						// 处理数据
+						this.result = res.data;
+						if (this.isLoadMore) {
+							this.dataList = this.dataList.concat(res.data.content);
+						} else {
+							this.dataList = res.data.content;
+						}
+					})
+					.catch(err => {
+						console.error(err);
+						this.loading = 'error';
+						this.loadMoreText = '加载失败，请下拉刷新！';
+					})
+					.finally(() => {
+						setTimeout(() => {
+							uni.hideLoading();
+							uni.stopPullDownRefresh();
+						}, 800);
+					});
+			},
+
+			//跳转文章详情
+			fnToArticleDetail(article) {
+				uni.navigateTo({
+					url: '/pagesA/article-detail/article-detail?articleId=' + article.id,
+					animationType: 'slide-in-right'
+				});
+			}
 		}
-	}
-};
+	};
 </script>
 
 <style lang="scss" scoped>
-.app-page {
-	width: 100vw;
-	min-height: 100vh;
-	display: flex;
-	flex-direction: column;
-	padding-bottom: 24rpx;
-	background-color: #fafafd;
+	.app-page {
+		width: 100vw;
+		min-height: 100vh;
+		display: flex;
+		flex-direction: column;
+		padding-bottom: 24rpx;
+		background-color: #fafafd;
 
-	&.is-balck {
-		background-color: #212121;
+		&.is-balck {
+			background-color: #212121;
+		}
 	}
-}
-.content {
-	padding-top: 24rpx;
 
-	.content-empty {
-		height: 60vh;
+	.content {
+		padding-top: 24rpx;
+
+		.content-empty {
+			height: 60vh;
+		}
 	}
-}
 </style>

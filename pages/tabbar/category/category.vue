@@ -12,23 +12,7 @@
 			</view>
 			<block v-else>
 				<tm-sliderNav :list="categoryList" bg-color="white" color="light-blue" rang-key="name" @change="fnOnCategoryChange"></tm-sliderNav>
-				<scroll-view
-					class="right-content pt-12 pb-12"
-					:scroll-y="true"
-					:scroll-top="scrollTop"
-					:scroll-with-animation="true"
-					:refresher-enabled="true"
-					:refresher-triggered="triggered"
-					:refresher-threshold="60"
-					refresher-background="#fafafa"
-					@refresherrefresh="fnGetData(true)"
-					@scrolltolower="fnGetData(false)"
-					@scroll="fnOnScroll"
-					@touchmove.stop
-					@touchstart="fnOnTouchStart"
-					@touchend="fnOnTouchEnd"
-					@touchcancel="fnOnTouchEnd"
-				>
+				<scroll-view class="right-content pt-12 pb-12" :scroll-y="true" :scroll-top="scrollTop" :scroll-with-animation="true" :refresher-enabled="true" :refresher-triggered="triggered" :refresher-threshold="60" refresher-background="#fafafa" @refresherrefresh="fnGetData(true)" @scrolltolower="fnGetData(false)" @scroll="fnOnScroll" @touchmove.stop @touchstart="fnOnTouchStart" @touchend="fnOnTouchEnd" @touchcancel="fnOnTouchEnd">
 					<view v-if="dataList.length == 0" class="article-empty flex flex-center">
 						<tm-empty icon="icon-shiliangzhinengduixiang-" label="该分类下暂无文章~"></tm-empty>
 					</view>
@@ -36,7 +20,7 @@
 					<block v-else>
 						<block v-for="(article, index) in dataList" :key="article.createTime">
 							<!-- 文章卡片 -->
-							<tm-translate animation-name="fadeUp" :wait="(index + 1) * 50">
+							<tm-translate animation-name="fadeUp" :wait="calcAniWait(index)">
 								<article-min-card :article="article" @on-click="fnToArticleDetail"></article-min-card>
 							</tm-translate>
 						</block>
@@ -50,195 +34,201 @@
 </template>
 
 <script>
-import throttle from '@/utils/throttle.js';
-import tmSkeleton from '@/tm-vuetify/components/tm-skeleton/tm-skeleton.vue';
-import tmTranslate from '@/tm-vuetify/components/tm-translate/tm-translate.vue';
-import tmFlotbutton from '@/tm-vuetify/components/tm-flotbutton/tm-flotbutton.vue';
-import tmEmpty from '@/tm-vuetify/components/tm-empty/tm-empty.vue';
-import tmFlowLayout from '@/tm-vuetify/components/tm-flowLayout/tm-flowLayout.vue';
-import tmSliderNav from '@/tm-vuetify/components/tm-sliderNav/tm-sliderNav.vue';
+	import throttle from '@/utils/throttle.js';
+	import tmSkeleton from '@/tm-vuetify/components/tm-skeleton/tm-skeleton.vue';
+	import tmTranslate from '@/tm-vuetify/components/tm-translate/tm-translate.vue';
+	import tmFlotbutton from '@/tm-vuetify/components/tm-flotbutton/tm-flotbutton.vue';
+	import tmEmpty from '@/tm-vuetify/components/tm-empty/tm-empty.vue';
+	import tmFlowLayout from '@/tm-vuetify/components/tm-flowLayout/tm-flowLayout.vue';
+	import tmSliderNav from '@/tm-vuetify/components/tm-sliderNav/tm-sliderNav.vue';
 
-import ArticleMinCard from '@/components/article-min-card/article-min-card.vue';
-export default {
-	components: {
-		tmSkeleton,
-		tmTranslate,
-		tmFlotbutton,
-		tmEmpty,
-		tmFlowLayout,
-		tmSliderNav,
-		ArticleMinCard
-	},
-	data() {
-		return {
-			loading: 'loading',
-			queryParams: {
-				size: 10,
-				page: 0,
-				slug: ''
-			},
-			categoryList: [],
-			result: null,
-			dataList: [],
-			isLoadMore: false,
-			loadMoreText: '',
-			scrollTop: 0,
-			tempScrollTop: 0,
-			scrollTimeout: null,
-			triggered: false
-		};
-	},
+	import ArticleMinCard from '@/components/article-min-card/article-min-card.vue';
+	export default {
+		components: {
+			tmSkeleton,
+			tmTranslate,
+			tmFlotbutton,
+			tmEmpty,
+			tmFlowLayout,
+			tmSliderNav,
+			ArticleMinCard
+		},
+		data() {
+			return {
+				loading: 'loading',
+				queryParams: {
+					size: 10,
+					page: 0,
+					slug: ''
+				},
+				categoryList: [],
+				result: null,
+				dataList: [],
+				isLoadMore: false,
+				loadMoreText: '',
+				scrollTop: 0,
+				tempScrollTop: 0,
+				scrollTimeout: null,
+				triggered: false
+			};
+		},
 
-	onLoad() {
-		this.fnSetPageTitle('文章分类');
-		this.fnGetAllCategory();
-	},
-	onPullDownRefresh() {
-		this.queryParams.page = 0;
-		this.isLoadMore = false;
-		this.fnGetData();
-	},
-	onReachBottom(e) {
-		if (this.result.hasNext) {
-			this.queryParams.page += 1;
-			this.isLoadMore = true;
-			this.fnGetData(false);
-		} else {
-			uni.showToast({
-				icon: 'none',
-				title: '没有更多数据了'
-			});
-		}
-	},
-	methods: {
-		fnOnCategoryChange(e) {
-			this.queryParams.slug = this.categoryList[e].slug;
-			this.fnToTopScroll();
-			this.dataList = [];
+		onLoad() {
+			this.fnSetPageTitle('文章分类');
+			this.fnGetAllCategory();
+		},
+		onPullDownRefresh() {
+			this.queryParams.page = 0;
+			this.isLoadMore = false;
 			this.fnGetData();
 		},
-
-		fnGetAllCategory() {
-			this.loading = 'loading';
-			uni.showLoading({
-				mask: true,
-				title: '加载中...'
-			});
-			this.$httpApi
-				.getCategoryList({ more: true })
-				.then(res => {
-					this.categoryList = res.data;
-					if (res.data.length != 0) {
-						this.queryParams.slug = res.data[0].slug;
-						this.triggered = false;
-						this.loading = 'success';
-						this.fnGetData(true, false);
-					}
-				})
-				.catch(err => {
-					console.error(err);
-					this.loading = 'error';
-				})
-				.finally(() => {
-					uni.hideLoading();
-					uni.stopPullDownRefresh();
-				});
-		},
-		fnGetData(isPulldownRefresh = true, triggered = true) {
-			if (!isPulldownRefresh) {
-				if (this.result.hasNext) {
-					this.queryParams.page += 1;
-				} else {
-					return uni.showToast({
-						icon: 'none',
-						title: '没有更多数据了'
-					});
-				}
+		onReachBottom(e) {
+			if (this.result.hasNext) {
+				this.queryParams.page += 1;
+				this.isLoadMore = true;
+				this.fnGetData(false);
 			} else {
-				this.queryParams.page = 0;
-				if (triggered) {
-					this.triggered = true;
-				}
-			}
-
-			this.$httpApi
-				.getCategoryPostList(this.queryParams.slug, this.queryParams)
-				.then(res => {
-					this.result = res.data;
-
-					if (!isPulldownRefresh) {
-						this.dataList = this.dataList.concat(res.data.content);
-					} else {
-						this.dataList = res.data.content;
-					}
-					this.loadMoreText = res.data.hasNext ? '上拉加载更多' : '呜呜，没有更多数据啦~';
-				})
-				.catch(err => {
-					this.loadMoreText = '加载失败！';
-				})
-				.finally(() => {
-					this.triggered = false;
+				uni.showToast({
+					icon: 'none',
+					title: '没有更多数据了'
 				});
+			}
 		},
-		//跳转文章详情
-		fnToArticleDetail(article) {
-			uni.navigateTo({
-				url: '/pagesA/article-detail/article-detail?articleId=' + article.id,
-				animationType: 'slide-in-right'
-			});
-		},
-		fnOnScroll(e) {
-			this.tempScrollTop = e.detail.scrollTop;
-		},
-		fnToTopScroll() {
-			uni.pageScrollTo({
-				scrollTop: 0,
-				duration: 500
-			});
-			this.scrollTop = 0;
-			this.tempScrollTop = 0;
-		},
-		fnOnTouchStart() {
-			clearTimeout(this.scrollTimeout);
-		},
-		fnOnTouchEnd() {
-			this.scrollTimeout = setTimeout(() => {
-				this.scrollTop = this.tempScrollTop;
-			}, 500);
+		methods: {
+			fnOnCategoryChange(e) {
+				this.fnResetSetAniWaitIndex();
+				this.queryParams.slug = this.categoryList[e].slug;
+				this.fnToTopScroll();
+				this.dataList = [];
+				this.fnGetData();
+			},
+
+			fnGetAllCategory() {
+				this.loading = 'loading';
+				uni.showLoading({
+					mask: true,
+					title: '加载中...'
+				});
+				this.$httpApi
+					.getCategoryList({ more: true })
+					.then(res => {
+						this.categoryList = res.data;
+						if (res.data.length != 0) {
+							this.queryParams.slug = res.data[0].slug;
+							this.triggered = false;
+							this.loading = 'success';
+							this.fnGetData(true, false);
+						}
+					})
+					.catch(err => {
+						console.error(err);
+						this.loading = 'error';
+					})
+					.finally(() => {
+						uni.hideLoading();
+						uni.stopPullDownRefresh();
+					});
+			},
+			fnGetData(isPulldownRefresh = true, triggered = true) {
+				if (!isPulldownRefresh) {
+					if (this.result.hasNext) {
+						this.queryParams.page += 1;
+					} else {
+						return uni.showToast({
+							icon: 'none',
+							title: '没有更多数据了'
+						});
+					}
+				} else {
+					this.queryParams.page = 0;
+					if (triggered) {
+						this.triggered = true;
+					}
+				}
+
+				this.$httpApi
+					.getCategoryPostList(this.queryParams.slug, this.queryParams)
+					.then(res => {
+						this.result = res.data;
+
+						if (!isPulldownRefresh) {
+							this.dataList = this.dataList.concat(res.data.content);
+						} else {
+							this.dataList = res.data.content;
+						}
+						this.loadMoreText = res.data.hasNext ? '上拉加载更多' : '呜呜，没有更多数据啦~';
+					})
+					.catch(err => {
+						this.loadMoreText = '加载失败！';
+					})
+					.finally(() => {
+						this.triggered = false;
+					});
+			},
+			//跳转文章详情
+			fnToArticleDetail(article) {
+				uni.navigateTo({
+					url: '/pagesA/article-detail/article-detail?articleId=' + article.id,
+					animationType: 'slide-in-right'
+				});
+			},
+			fnOnScroll(e) {
+				this.tempScrollTop = e.detail.scrollTop;
+			},
+			fnToTopScroll() {
+				uni.pageScrollTo({
+					scrollTop: 0,
+					duration: 500
+				});
+				this.scrollTop = 0;
+				this.tempScrollTop = 0;
+			},
+			fnOnTouchStart() {
+				clearTimeout(this.scrollTimeout);
+			},
+			fnOnTouchEnd() {
+				this.scrollTimeout = setTimeout(() => {
+					this.scrollTop = this.tempScrollTop;
+				}, 500);
+			}
 		}
-	}
-};
+	};
 </script>
 
 <style lang="scss" scoped>
-.app-page {
-	width: 100vw;
-	min-height: 100vh;
-	display: flex;
-	flex-direction: column;
-	background-color: #fff;
-}
-.content {
-	height: 100vh;
-	background-color: #fafafa;
-}
-.category-empty {
-	width: 100%;
-	height: 70vh;
-}
-.article-empty {
-	width: 100%;
-	height: 70vh;
-}
-.right-content {
-	// width: calc(100vw - 144rpx);
-	width: calc(100vw - 190rpx);
-	height: 100vh;
-	background-color: #fff;
-	white-space: nowrap;
-	background-color: #fafafa;
-}
-.loading-wrap {
-	padding: 24rpx;
-}
+	.app-page {
+		width: 100vw;
+		min-height: 100vh;
+		display: flex;
+		flex-direction: column;
+		background-color: #fff;
+	}
+
+	.content {
+		height: 100vh;
+		background-color: #fafafa;
+	}
+
+	.category-empty {
+		width: 100%;
+		height: 70vh;
+	}
+
+	.article-empty {
+		width: 100%;
+		height: 70vh;
+	}
+
+	.right-content {
+		// width: calc(100vw - 144rpx);
+		width: calc(100vw - 190rpx);
+		height: 100vh;
+		background-color: #fff;
+		white-space: nowrap;
+		background-color: #fafafa;
+	}
+
+	.loading-wrap {
+		padding: 24rpx;
+	}
 </style>

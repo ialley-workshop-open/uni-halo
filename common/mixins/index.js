@@ -18,14 +18,30 @@ export default {
 				return {
 					author: HaloConfig.author,
 					_isWechat: true,
-					haloAdConfig: HaloAdConfig
+					haloAdConfig: HaloAdConfig,
+					_aniWaitIndex: 0, // 动画索引
 				};
 			},
 			computed: {
 				// 获取全局应用设置
 				globalAppSettings() {
 					return uni.$tm.vx.getters().getSettings;
+				},
+				// 计算动画索引
+				calcAniWait() {
+					return (index) => {
+						if ((index + 1) % 10 == 0) {
+							this._aniWaitIndex = 1;
+						} else {
+							this._aniWaitIndex += 1;
+						}
+						console.log('this._aniWaitIndex', this._aniWaitIndex);
+						return this._aniWaitIndex * 50
+					}
 				}
+			},
+			onLoad() {
+				this.fnResetSetAniWaitIndex()
 			},
 			created() {
 				// #ifdef MP-WEIXIN
@@ -36,7 +52,9 @@ export default {
 				this._isWechat = false;
 				// #endif
 			},
-
+			onShow() {
+				this.fnResetSetAniWaitIndex()
+			},
 			methods: {
 				/**
 				 * 设置页面标题
@@ -60,6 +78,10 @@ export default {
 							console.log('err：', err);
 						},
 					});
+				},
+				// 初始化动画索引值（需要在每个页面调用）
+				fnResetSetAniWaitIndex() {
+					this._aniWaitIndex = 0
 				}
 			},
 		});

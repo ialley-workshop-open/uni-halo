@@ -153,3 +153,22 @@
 		transform: scale(1);
 	}
 }
+
+/* 文本省略样式 开始 */
+.text-sub-one {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+/* 多行文本省略 */
+@for $i from 2 through 30 {
+	.text-sub-more-#{$i} {
+		display: -webkit-box;
+		-webkit-box-orient: vertical;
+		-webkit-line-clamp: $i;
+		overflow: hidden;
+	}
+}
+
+/* 文本省略样式 结束 */

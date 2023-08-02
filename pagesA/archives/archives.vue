@@ -115,10 +115,10 @@
 			},
 			fnGetData() {
 				this.loading = 'loading';
-				uni.showLoading({
-					mask: true,
-					title: '加载中...'
-				});
+				// uni.showLoading({
+				// 	mask: true,
+				// 	title: '加载中...'
+				// });
 				this.$httpApi[this.api](this.queryParams)
 					.then(res => {
 						this.result = res.data;

@@ -75,10 +75,10 @@
 		},
 		methods: {
 			fnGetData() {
-				uni.showLoading({
-					mask: true,
-					title: '加载中...'
-				});
+				// uni.showLoading({
+				// 	mask: true,
+				// 	title: '加载中...'
+				// });
 				// 设置状态为加载中
 				if (!this.isLoadMore) {
 					this.loading = 'loading';

@@ -4,6 +4,7 @@
 			<tm-skeleton model="listAvatr"></tm-skeleton>
 			<tm-skeleton model="listAvatr"></tm-skeleton>
 			<tm-skeleton model="listAvatr"></tm-skeleton>
+			<tm-skeleton model="listAvatr"></tm-skeleton>
 		</view>
 		<!-- 内容区域 -->
 		<view v-else class="app-page-content pa-24" :class="{ 'bg-white': dataList.length !== 0 }">
@@ -133,10 +134,10 @@
 
 		methods: {
 			fnGetData() {
-				uni.showLoading({
-					mask: true,
-					title: '加载中...'
-				});
+				// uni.showLoading({
+				// 	mask: true,
+				// 	title: '加载中...'
+				// });
 				// 设置状态为加载中
 				if (!this.isLoadMore) {
 					this.loading = 'loading';

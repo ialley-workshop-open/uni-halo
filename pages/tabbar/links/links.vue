@@ -210,10 +210,10 @@
 			fnGetData() {
 				this.linkTotal = 0;
 				this.loading = 'loading';
-				uni.showLoading({
-					mask: true,
-					title: '加载中...'
-				});
+				// uni.showLoading({
+				// 	mask: true,
+				// 	title: '加载中...'
+				// });
 				this.$httpApi
 					.getLinkListByTeam()
 					.then(res => {

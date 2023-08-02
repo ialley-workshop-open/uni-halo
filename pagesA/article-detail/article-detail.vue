@@ -364,10 +364,10 @@
 		methods: {
 			fnGetData() {
 				this.loading = 'loading';
-				uni.showLoading({
-					mask: true,
-					title: '加载中...'
-				});
+				// uni.showLoading({
+				// 	mask: true,
+				// 	title: '加载中...'
+				// });
 				this.$httpApi
 					.getArticleDetail(this.queryParams.articleId)
 					.then(res => {

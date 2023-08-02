@@ -16,6 +16,51 @@ import {
 	delCache,
 	setCache
 } from "@/utils/storage";
+
+const getCategoryNameByUrl = (url) => {
+	const reg = '(?<=/api/content/categories/).+(?=/posts)'
+	return url.match(reg)[0] || '无分类名'
+}
+const showCategoryInputPasswordModal = (response, category) => {
+	uni.showModal({
+		title: `[ ${category} ] 分类已加密`, // TODO 这里应该获取分类的名字，可以在弹窗之前请求后台拿到所有分类根据分类code拿到名称，但是不会在这之前发送请求
+		content: '',
+		editable: true,
+		placeholderText: '请输入分类密码后访问',
+		confirmText: '验证密码',
+		cancelText: '暂不访问',
+		showCancel: true,
+		cancelColor: '#999999',
+		confirmColor: '#03a9f4',
+		success: (res) => {
+			if (res.confirm) {
+				// TODO 这里如果没有输入密码点击确认应该阻止窗口关闭，但是没找到方法
+				if (!res.content) {
+					uni.showToast({
+						title: '提示：请输入密码',
+						icon: 'none',
+						success: () => {
+							setTimeout(() => {
+								showCategoryInputPasswordModal(response, category);
+							}, 800)
+						}
+					})
+					return;
+				}
+				// 根据请求URL正则匹配分类code，然后把输入的密码根据分类code放入缓存，然后在category.getCategoryPostList中获取，解决多个分类加密输入密码后点错的问题
+				// 目前存在一个问题，比如前两个都需要密码，如果先输入第二个的密码之后，重新进来默认打开第一个还会弹窗，所以想在弹窗标题上增加分类名字
+				// 另外有以下两种方式科技解决
+				// TODO 1.其实这里获取到密码之后可以直接发送一个请求追加上password参数，因为后台会缓存权限，后续不输入密码也可以访问,可惜不会
+				// TODO 2.另外也可以拿到密码之后，直接选中该分类追加password参数，重新请求，可惜也不会
+				setCache('APP_CATEGORY_PWD_' + category, res.content)
+				uni.reLaunch({
+					url: '/pages/tabbar/category/category'
+				});
+			} else if (res.cancel) {}
+		},
+	})
+}
+
 export const setInterceptors = (http) => {
 	http.interceptors.request.use(
 		(config) => {
@@ -61,10 +106,17 @@ export const setInterceptors = (http) => {
 				uni.$tm.toast(response.data.message);
 				// 如果是请求分类之后报401说明密码错误，那么清除该密码，下次点击会报403弹窗再次输入密码
 				if (response.config.url.indexOf('/api/content/categories') >= 0) {
-					let requestUrl = response.config.url;
-					var reg = '(?<=/api/content/categories/).+(?=/posts)'
-					let category = requestUrl.match(reg)[0]
-					delCache('APP_CATEGORY_PWD_' + category)
+					const category = getCategoryNameByUrl(response.config.url)
+					delCache('APP_CATEGORY_PWD_' + category);
+					uni.showToast({
+						title: '提示：密码不正确',
+						icon: 'none',
+						success: () => {
+							setTimeout(() => {
+								showCategoryInputPasswordModal(response, category);
+							}, 800)
+						}
+					})
 				} else {
 					// 其他情况维持原来的逻辑
 					delCache('APP_ADMIN_LOGIN_TOKEN');
@@ -89,39 +141,8 @@ export const setInterceptors = (http) => {
 			} else if (response.data.status == 403) {
 				// 如果报403是请求分类文章接口（您没有该分类的访问权限）的话说明是私密分类，需要输入密码请求
 				if (response.config.url.indexOf('/api/content/categories') >= 0) {
-					uni.showModal({
-						title: '私密分类', // TODO 这里应该获取分类的名字，可以在弹窗之前请求后台拿到所有分类根据分类code拿到名称，但是不会在这之前发送请求
-						content: '',
-						editable: true,
-						placeholderText: '请输入密码',
-						confirmText: '确认',
-						cancelText: '取消',
-						showCancel: true,
-						cancelColor: '#000000',
-						confirmColor: '#007aff',
-						success: (res) => {
-							if (res.confirm) {
-								// TODO 这里如果没有输入密码点击确认应该阻止窗口关闭，但是没找到方法
-								if (!res.content) {
-									uni.$tm.toast('请输入密码');
-									return
-								}
-								// 根据请求URL正则匹配分类code，然后把输入的密码根据分类code放入缓存，然后在category.getCategoryPostList中获取，解决多个分类加密输入密码后点错的问题
-								// 目前存在一个问题，比如前两个都需要密码，如果先输入第二个的密码之后，重新进来默认打开第一个还会弹窗，所以想在弹窗标题上增加分类名字
-								// 另外有以下两种方式科技解决
-								// TODO 1.其实这里获取到密码之后可以直接发送一个请求追加上password参数，因为后台会缓存权限，后续不输入密码也可以访问,可惜不会
-								// TODO 2.另外也可以拿到密码之后，直接选中该分类追加password参数，重新请求，可惜也不会
-								let requestUrl = response.config.url;
-								var reg = '(?<=/api/content/categories/).+(?=/posts)'
-								let category = requestUrl.match(reg)[0]
-								setCache('APP_CATEGORY_PWD_' + category, res.content)
-								uni.reLaunch({
-									url: '/pages/tabbar/category/category'
-								});
-							} else if (res.cancel) {
-							}
-						},
-					})
+					const category = getCategoryNameByUrl(response.config.url);
+					showCategoryInputPasswordModal(response, category);
 				}
 			} else {
 				return Promise.reject(response.data);

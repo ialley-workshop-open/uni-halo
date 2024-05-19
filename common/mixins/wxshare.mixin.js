@@ -1,5 +1,6 @@
 // 微信分享配置
 import haloConfig from '@/config/halo.config.js'
+import HaloTokenConfig from '@/config/token.config.js'
 import { jsonToUrlParams2 } from '@/utils/url.params.js'
 export const haloWxShareMixin = {
 	data() {
@@ -55,7 +56,7 @@ export const haloWxShareMixin = {
 			}
 			let _config = Object.assign({}, {
 				path: sharePath,
-				copyLink: haloConfig.apiUrl,
+				copyLink: HaloTokenConfig.BASE_API,
 				query: {}
 			}, config)
 

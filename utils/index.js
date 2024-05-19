@@ -11,6 +11,7 @@
  */
 
 import HaloConfig from '@/config/halo.config.js';
+import HaloTokenConfig from '@/config/token.config.js'
 import {
 	logTypes,
 	logUtils
@@ -27,21 +28,15 @@ const utils = {
 	// 检查链接
 	checkUrl: function(url) {
 		if (!url) return '';
-		if (!this.checkIsUrl(url)) return HaloConfig.apiUrl + url;
+		if (!this.checkIsUrl(url)) return HaloTokenConfig.BASE_API + url;
 		return url
 	},
 
 	// 检查封面图
 	checkThumbnailUrl: function(thumbnail, mustRealUrl = false) {
+		console.log("thumbnail",thumbnail)
 		if (!thumbnail && mustRealUrl) {
 			return HaloConfig.defaultStaticThumbnailUrl
-		}
-		if (!HaloConfig.defaultThumbnailUrl) {
-			// logUtils.saveLog(logTypes.config, {
-			// 	path: 'checkThumbnailUrl',
-			// 	page: 'checkThumbnailUrl',
-			// 	msg: '未配置默认的封面图，配置参数【HaloConfig.defaultThumbnailUrl】'
-			// })
 		}
 		let _url = HaloConfig.defaultThumbnailUrl
 		if (_url) {
@@ -52,7 +47,7 @@ const utils = {
 			}
 		}
 		if (!thumbnail) return _url;
-		if (!this.checkIsUrl(thumbnail)) return HaloConfig.apiUrl + thumbnail;
+		if (!this.checkIsUrl(thumbnail)) return HaloTokenConfig.BASE_API + thumbnail;
 		return thumbnail
 	},
 
@@ -67,7 +62,7 @@ const utils = {
 			}
 		}
 		if (!image) return _url;
-		if (!this.checkIsUrl(image)) return HaloConfig.apiUrl + image;
+		if (!this.checkIsUrl(image)) return HaloTokenConfig.BASE_API + image;
 		return image
 	},
 
@@ -85,7 +80,7 @@ const utils = {
 			}
 			return _url;
 		}
-		if (!this.checkIsUrl(avatar)) return HaloConfig.apiUrl + avatar;
+		if (!this.checkIsUrl(avatar)) return HaloTokenConfig.BASE_API + avatar;
 		return avatar
 	},
 

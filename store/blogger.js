@@ -27,16 +27,7 @@ export default {
 	},
 	actions: {
 		fnGetBlogger(context) {
-			if (HaloConfig.author.use) {
-				context.commit("setBlogger", HaloConfig.author);
-			} else {
-				Blogger.getBloggerInfo().then((res) => {
-					context.commit("setBlogger", res.data);
-				}).catch((err) => {
-					// 如果失败，则加载默认配置信息
-					context.commit("setBlogger", HaloConfig.author);
-				});
-			}
+			context.commit("setBlogger", HaloConfig.author);
 		},
 	},
 };

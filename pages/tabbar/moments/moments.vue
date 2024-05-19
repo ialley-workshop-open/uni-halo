@@ -12,15 +12,37 @@
 				<tm-empty icon="icon-shiliangzhinengduixiang-" label="暂无数据"></tm-empty>
 			</view>
 			<block v-else>
-				<block v-for="(item, index) in dataList" :key="index">
+				<block v-for="(moment, index) in dataList" :key="index">
 					<!--  卡片 -->
-					<tm-translate style="box-sizing: border-box;width: 50%;padding: 0 8rpx;" animation-name="fadeUp"
-						:wait="calcAniWait()">
-						<view class="catgory-card" :style="{backgroundImage:`url(${item.spec.cover})`}">
+					<tm-translate animation-name="fadeUp" :wait="calcAniWait()">
+						<view class="moment-card">
+							<view class="head" style="display: flex;align-items: center;">
+								<view class="avatar" style="flex-shrink: 0;">
+									<image style="width: 66rpx;height: 66rpx;border-radius: 50%;"
+										:src="moment.spec.user.avatar" />
+								</view>
+								<view class="nickname" style="margin-left: 12rpx;">
+									<view style="font-size: 30rpx;font-weight: bold;color: #333333;">
+										{{moment.spec.user.displayName}}
+									</view>
+									<view style="margin-top: 6rpx;font-size: 24rpx;color: #666;">
+										{{ { d: moment.spec.releaseTime, f: 'yyyy年MM月dd日 星期w' } | formatTime }}
+									</view>
+								</view>
+							</view>
 							<view class="content">
-								<view style="font-size: 32rpx;color: #ffffff;">{{item.spec.displayName}}</view>
-								<view style="font-size: 24rpx;color: #ffffff;margin-top: 6rpx;">共
-									{{item.postCount}} 篇文章
+								<mp-html class="evan-markdown" lazy-load :domain="markdownConfig.domain"
+									:loading-img="markdownConfig.loadingGif" :scroll-table="true" :selectable="true"
+									:tag-style="markdownConfig.tagStyle" :container-style="markdownConfig.containStyle"
+									:content="moment.spec.content.html" :markdown="true" :showLineNumber="true"
+									:showLanguageName="true" :copyByLongPress="true" />
+							</view>
+							<view v-if="moment.spec.content.medium.length!==0" class="images"
+								:class="['images-'+moment.spec.content.medium.length]">
+								<view class="image-item" v-for="(image,index) in moment.spec.content.medium"
+									:key="index">
+									<image mode="aspectFill" style="width: 100%;height: 100%;border-radius: 6rpx;"
+										:src="image.url" @click="handlePreview(index,moment.spec.content.medium)" />
 								</view>
 							</view>
 						</view>
@@ -103,7 +125,7 @@
 				}
 				this.loadMoreText = '加载中...';
 				this.$httpApi.v2
-					.getCategoryList(this.queryParams)
+					.getMomentList(this.queryParams)
 					.then(res => {
 						console.log('请求结果：');
 						console.log(res);
@@ -114,7 +136,15 @@
 						this.result = res;
 
 						const tempItems = res.items.map(item => {
-							item.spec.cover = this.$utils.checkThumbnailUrl(item.spec.cover, true)
+							item.spec.user = {
+								displayName: this.bloggerInfo.nickname,
+								avatar: this.$utils.checkAvatarUrl(this.bloggerInfo.avatar)
+							}
+							item.spec.content.medium
+								.filter(x => x.type === 'PHOTO')
+								.map(medium => {
+									medium.url = this.$utils.checkThumbnailUrl(medium.url, true)
+								})
 							return item;
 						})
 
@@ -158,52 +188,50 @@
 		padding: 24rpx;
 	}
 
-	.app-page-content {
-		display: flex;
-		flex-wrap: wrap;
-		padding: 0 12rpx;
-		gap: 20rpx 0;
-	}
-
-	.catgory-card {
-		width: 100%;
-		height: 200rpx;
-		position: relative;
+	.moment-card {
 		display: flex;
 		flex-direction: column;
 		box-sizing: border-box;
+		margin: 0 24rpx;
 		border-radius: 12rpx;
 		background-color: #ffff;
 		box-shadow: 0rpx 2rpx 24rpx rgba(0, 0, 0, 0.03);
 		overflow: hidden;
-		background-repeat: no-repeat;
-		background-size: cover;
-
-		&:before {
-			content: '';
-			position: absolute;
-			left: 0;
-			top: 0;
-			right: 0;
-			bottom: 0;
-			background-color: rgba(0, 0, 0, 0.15);
-			z-index: 1;
-		}
+		margin-bottom: 24rpx;
 	}
 
-	.content {
-		width: 100%;
-		height: 100%;
-		position: relative;
-		z-index: 2;
+	.head {
+		padding: 24rpx;
+		padding-bottom: 0;
+	}
+
+	.images {
 		display: flex;
-		flex-direction: column;
-		align-items: center;
-		justify-content: center;
-	}
+		flex-wrap: wrap;
+		align-items: flex-start;
+		padding: 24rpx;
+		padding-top: 0;
 
-	.load-text {
-		width: 100%;
-		text-align: center;
+		.image-item {
+			box-sizing: border-box;
+			border-radius: 24rpx;
+			padding: 6rpx;
+			width: 33%;
+			height: 200rpx
+		}
+
+		&-1 {
+			>.image-item {
+				width: 100%;
+				height: 350rpx
+			}
+		}
+
+		&-2 {
+			>.image-item {
+				width: 50%;
+				height: 250rpx
+			}
+		}
 	}
 </style>

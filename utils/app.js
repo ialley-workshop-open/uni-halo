@@ -37,7 +37,7 @@ export const _DefaultAppSettings = {
 	},
 	// 评论弹幕（文章详情）
 	barrage: {
-		use: true, // 是否启用
+		use: false, // 是否启用
 		type: 'leftBottom' // 弹幕位置（rightToLeft leftBottom）
 	},
 	gallery: {
@@ -51,7 +51,7 @@ export const _DefaultAppSettings = {
 	},
 	about: {
 		showAdmin: false, // 显示后台登录入口
-		showAllCount: true, // 默认显示所有的统计信息（关于页面） 
+		showAllCount: false, // 默认显示所有的统计信息（关于页面） 
 	},
 	// 文章配置
 	article: {

@@ -14,12 +14,9 @@ export default {
 
 	/**
 	 * 获取文章详情
-	 * @param {String} articleId  文章id
+	 * @param {String} name  文章 name
 	 */
-	getArticleDetail: (articleId) => {
-		return HttpHandler.Get(`/api/content/posts/${articleId}`, {
-			formatDisabled: false,
-			sourceDisabled: true
-		})
+	getArticleDetail: (name) => {
+		return HttpHandler.Get(`/apis/api.content.halo.run/v1alpha1/posts/${name}`, {})
 	},
 }

@@ -27,13 +27,13 @@ export default {
 			title: '关于我们',
 			desc: '我们一起度过的那些经历'
 		},
-		{
-			key: 'album',
-			use: true,
-			iconImageUrl: 'https://b.925i.cn/uni_halo_love/diandian.png',
-			title: '恋爱相册',
-			desc: '定格了我们的那些小美好'
-		},
+		// {
+		// 	key: 'album',
+		// 	use: true,
+		// 	iconImageUrl: 'https://b.925i.cn/uni_halo_love/diandian.png',
+		// 	title: '恋爱相册',
+		// 	desc: '定格了我们的那些小美好'
+		// },
 		{
 			key: 'list',
 			use: true,

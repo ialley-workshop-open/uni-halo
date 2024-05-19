@@ -1,24 +1,24 @@
 <template>
 	<view class="article-card " :class="cardType" @click="fnClickEvent('card')">
 		<view class="left">
-			<cache-image class="thumbnail" radius="6rpx" :url="$utils.checkThumbnailUrl(article.thumbnail)" :fileMd5="$utils.checkThumbnailUrl(article.thumbnail)" mode="aspectFill"></cache-image>
+			<cache-image class="thumbnail" radius="6rpx" :url="$utils.checkThumbnailUrl(article.spec.cover)" :fileMd5="$utils.checkThumbnailUrl(article.spec.cover)" mode="aspectFill"></cache-image>
 			<!-- <image class="thumbnail" lazy-load :src="$utils.checkThumbnailUrl(article.thumbnail)" mode="aspectFill"></image> -->
 		</view>
 		<view class="right">
 			<view class="title">
-				<text class="is-top bg-gradient-blue-accent" v-if="article.topped">置顶</text>
-				<text class="title-text text-overflow">{{ article.title }}</text>
+				<text class="is-top bg-gradient-blue-accent" v-if="article.spec.pinned">置顶</text>
+				<text class="title-text text-overflow">{{ article.spec.title }}</text>
 			</view>
-			<view class="content text-overflow-2">{{ article.summary }}</view>
+			<view class="content text-overflow-2">{{ article.status.excerpt }}</view>
 			<view class="foot">
 				<view class="create-time">
 					<text class="time-label">发布时间：</text>
-					{{ { d: article.createTime, f: 'yyyy-MM-dd' } | formatTime }}
+					{{ { d: article.spec.publishTime, f: 'yyyy-MM-dd' } | formatTime }}
 				</view>
 				<view class="visits">
 					<!-- <tm-icons :size="24" name="icon-filter-fill"></tm-icons> -->
 					浏览
-					<text class="number">{{ article.visits }}</text>
+					<text class="number">{{ article.stats.visit }}</text>
 					次
 				</view>
 			</view>

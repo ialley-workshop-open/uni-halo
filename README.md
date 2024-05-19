@@ -4,12 +4,12 @@
     </a>
 </p>
 
-<p align="center"><b>【uni-halo】</b> 基于 uniapp + Halo API 开发的多端项目，值得一试。</p>
+<p align="center"><b>【uni-halo v2.0】</b> 基于 Halo API 多端项目，值得一试。</p>
  
 <br />
 <p align="center">
 	<a href="https://b.925i.cn">作者博客</a>
-	<a href="https://uni-halo.925i.cn">文档地址</a>
+	<a href="https://uni-halo.925i.cn">文档地址（等待更新v2版本说明）</a>
 	<a href="https://gitee.com/ialley-workshop-open/uni-halo">Gitee仓库</a>
 	<a href="https://github.com/ialley-workshop-open/uni-halo">Github仓库</a>
 </p>
@@ -26,10 +26,9 @@
 
 #### 🍻 基础功能
 
-几乎实现PC端后台的全功能，让您在手机端也可以管理您的博客。
+`重要说明：2.0版本 暂时去掉后台管理功能。`
 
-- 用户端：文章列表、文章分类、文章详情、图库、留言板、友链、个人日记等
-- 管理端：资料修改、密码修改、日记管理、文章管理、分类管理、标签管理、附件管理、友链管理、评论管理、日志管理等
+- 用户端：文章列表、文章分类、文章详情、图库、友链、瞬间等 
 
 <br/>
 
@@ -42,7 +41,7 @@
 ## 😎 文档源码
 
 - 作者博客：[https://b.925i.cn/](https://b.925i.cn/)
-- 官方文档：[https://uni-halo.925i.cn/](https://uni-halo.925i.cn/)
+- 官方文档（待更新v2版本说明）：[https://uni-halo.925i.cn/](https://uni-halo.925i.cn/)
 - Gitee    ：[https://gitee.com/ialley-workshop-open/uni-halo](https://gitee.com/ialley-workshop-open/uni-halo)
 - Github ：[https://github.com/ialley-workshop-open/uni-halo](https://github.com/ialley-workshop-open/uni-halo)
   
@@ -69,22 +68,14 @@
 |我的|归档|详情|留言板|
 |:--:|:--:|:--:|:--:|
 |![我的](https://uni-halo.925i.cn/assets/005.d1ccf84e.jpg)|![归档](https://uni-halo.925i.cn/assets/007.e481f0c1.jpg)|![详情](https://uni-halo.925i.cn/assets/008.a4f5af80.jpg)|![留言板](https://uni-halo.925i.cn/assets/006.fc80dc8c.jpg)|
-
-##### 💻 管理端
-
-说明：以下仅为部分截图
-
-|后台首页|文章管理|
-|:--:|:--:|
-|![后台首页](https://uni-halo.925i.cn/assets/009.707f9a85.jpg)|![文章管理](https://uni-halo.925i.cn/assets/010.0b018b02.jpg)|
-
+ 
 ##### 📱 恋爱日记
 
 说明：以下仅为部分截图
 
-|主页															|恋爱相册															|恋爱清单															|
-|:--:															|:--:																|--																	|
-|![主页](https://uni-halo.925i.cn/assets/love_001.6bf8b4e9.jpg)	|![恋爱相册](https://uni-halo.925i.cn/assets/love_003.b8effd48.jpg)	|![恋爱清单](https://uni-halo.925i.cn/assets/love_002.a08bd8d6.jpg)	|
+|                      主页															                      | 恋爱清单															|
+|:-----------------------------------------------------------:|--																	|
+|![主页](https://uni-halo.925i.cn/assets/love_001.6bf8b4e9.jpg)	| ![恋爱清单](https://uni-halo.925i.cn/assets/love_002.a08bd8d6.jpg)	|
 
 <br/>
 

@@ -64,13 +64,15 @@ const showCategoryInputPasswordModal = (response, category) => {
 export const setInterceptors = (http) => {
 	http.interceptors.request.use(
 		(config) => {
+			console.log("config", config)
+
 			// 可使用async await 做异步操作
 			config.header = {
 				...config.header
 				// ... 可以直接加参数
 			};
-			if (getAdminAccessToken()) {
-				config.header['admin-authorization'] = getAdminAccessToken()
+			if (config.custom.systemToken) {
+				config.header['Authorization'] = `Bearer ${config.custom.systemToken}`
 			}
 			return config;
 		},
@@ -138,12 +140,14 @@ export const setInterceptors = (http) => {
 						})
 					})
 				}
+				return Promise.reject(response.data);
 			} else if (response.data.status == 403) {
 				// 如果报403是请求分类文章接口（您没有该分类的访问权限）的话说明是私密分类，需要输入密码请求
 				if (response.config.url.indexOf('/api/content/categories') >= 0) {
 					const category = getCategoryNameByUrl(response.config.url);
 					showCategoryInputPasswordModal(response, category);
 				}
+				return Promise.reject(response.data);
 			} else {
 				return Promise.reject(response.data);
 			}

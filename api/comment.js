@@ -16,11 +16,11 @@ export default {
 
 	/**
 	 * 获取评论列表接口（列表数据）
-	 * @param {String} postId  文章id 
+	 * @param {String} name  文章id 
 	 * @param {Object} params  查询参数
 	 */
-	getPostCommentList: (postId, params) => {
-		return HttpHandler.Get(`/api/content/posts/${postId}/comments/list_view`, params)
+	getPostCommentList: (name, params) => {
+		return HttpHandler.Get(`/apis/content.halo.run/v1alpha1/comments${name}`, params)
 	},
 
 	/**

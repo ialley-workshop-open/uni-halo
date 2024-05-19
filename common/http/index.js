@@ -11,6 +11,7 @@
  */
 
 import HaloConfig from '@/config/halo.config.js'
+import HaloTokenConfig from '@/config/token.config.js'
 import {
 	setInterceptors
 } from "./interceptors.js";
@@ -21,11 +22,10 @@ const http = new Request()
 http.setConfig((config) => {
 
 	// 如果是在外部浏览器调试或者编译为h5，请注释该行代码
-	config.baseURL = HaloConfig.apiUrl;
+	config.baseURL = HaloTokenConfig.BASE_API;
 
 	config.header = {
-		...config.header,
-		'api-authorization': HaloConfig.apiAuthorization,
+		...config.header, 
 		ContentType: 'application/json',
 		dataType: 'json'
 	}

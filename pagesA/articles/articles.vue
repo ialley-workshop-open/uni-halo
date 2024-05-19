@@ -2,11 +2,13 @@
 	<view class="app-page" :class="{ 'is-balck grey-darken-6': isBlackTheme }">
 		<!-- 顶部切换 -->
 		<view class="e-fixed shadow-2">
-			<tm-search v-model="queryParams.keyword" :round="24" :shadow="0" color="light-blue" insert-color="light-blue" :clear="true" @confirm="fnOnSearch"></tm-search>
-			<tm-tabs color="light-blue" :shadow="0" v-model="tab.activeIndex" :list="tab.list" align="center" @change="fnOnTabChange"></tm-tabs>
+			<tm-search v-model="queryParams.keyword" :round="24" :shadow="0" color="light-blue"
+				insert-color="light-blue" :clear="true" @input="fnOnSearch" @confirm="fnOnSearch"></tm-search>
+			<tm-tabs v-if="false" color="light-blue" :shadow="0" v-model="tab.activeIndex" :list="tab.list"
+				align="center" @change="fnOnTabChange"></tm-tabs>
 		</view>
 		<!-- 占位区域 -->
-		<view style="width: 100vw;height: 184rpx;"></view>
+		<view style="width: 100vw;height: 100rpx;"></view>
 		<!-- 加载区域 -->
 		<view v-if="loading != 'success'" class="loading-wrap pa-24">
 			<tm-skeleton model="listAvatr"></tm-skeleton>
@@ -18,24 +20,23 @@
 		<view v-else class="content">
 			<view v-if="dataList.length == 0" class="content-empty flex flex-center">
 				<!-- 空布局 -->
-				<tm-empty icon="icon-shiliangzhinengduixiang-" label="该分类下暂无数据"></tm-empty>
+				<tm-empty v-if="!queryParams.keyword" icon="icon-shiliangzhinengduixiang-" label="请输入关键词搜索"></tm-empty>
+				<tm-empty v-else icon="icon-shiliangzhinengduixiang-"
+					:label="`未搜到 ${queryParams.keyword} 相关文章`"></tm-empty>
 			</view>
 			<block v-else>
-				<block v-for="(article, index) in dataList" :key="article.id">
-					<!-- 文章卡片 -->
-					<tm-translate animation-name="fadeUp" :wait="calcAniWait(index)">
-						<article-card :article="article" @on-click="fnToArticleDetail"></article-card>
-						<!-- 广告区域 -->
-						<view v-if="haloAdConfig.articles.use && (index + 1) % haloAdConfig.frequency == 0" class="ad-wrap ma-24">
-							<!-- #ifdef MP-WEIXIN -->
-							<ad v-if="haloAdConfig.unitId" :unit-id="haloAdConfig.unitId"></ad>
-							<!-- #endif -->
-							<!-- #ifndef MP-WEIXIN -->
-							<ad v-if="haloAdConfig.adpid" :adpid="haloAdConfig.adpid"></ad>
-							<!-- #endif -->
-						</view>
-					</tm-translate>
-				</block>
+				<!-- 文章卡片 -->
+				<tm-translate v-for="(article, index) in dataList" :key="article.name" animation-name="fadeUp"
+					:wait="calcAniWait(index)">
+					<view class="article-card" @click="fnToArticleDetail(article)">
+						<text style="font-size: 32rpx;font-weight: bold;color: #333;" v-html="article.title">{{article.title}}</text>
+						<text style="font-size: 28rpx;margin-top: 16rpx;color: #555;" v-html="article.content">{{article.content}}
+						</text>
+						<text style="font-size: 24rpx;margin-top: 24rpx;color:#888">
+							发布日期：{{ { d: article.publishTimestamp, f: 'yyyy年MM月dd日' } | formatTime }}
+						</text>
+					</view>
+				</tm-translate>
 
 				<tm-flotbutton @click="fnToTopPage" size="m" color="light-blue" icon="icon-angle-up"></tm-flotbutton>
 				<view class="load-text">{{ loadMoreText }}</view>
@@ -70,10 +71,10 @@
 					list: ['全部', '最新文章', '热门文章', '最近更新', '最多点赞']
 				},
 				queryParams: {
-					size: 10,
-					page: 0,
-					sort: 'topPriority,createTime,desc',
-					keyword: ''
+					keyword: "",
+					limit: 5,
+					highlightPreTag: "<text>",
+					highlightPostTag: "</text>"
 				},
 				cache: {
 					dataList: [],
@@ -88,27 +89,19 @@
 		onLoad() {
 			this.fnSetPageTitle('文章列表');
 		},
-		created() {
-			this.fnGetData();
+		created() { 
+			if (!this.queryParams.keyword) {
+				this.loading = 'success'
+			} else {
+				this.fnGetData();
+			}
 		},
 		onPullDownRefresh() {
+			this.fnResetSetAniWaitIndex();
 			this.isLoadMore = false;
-			this.queryParams.page = 0;
 			this.fnGetData();
 		},
 
-		onReachBottom(e) {
-			if (this.result.hasNext) {
-				this.queryParams.page += 1;
-				this.isLoadMore = true;
-				this.fnGetData();
-			} else {
-				uni.showToast({
-					icon: 'none',
-					title: '没有更多数据了'
-				});
-			}
-		},
 		methods: {
 			fnOnTabChange(index) {
 				this.fnResetSetAniWaitIndex();
@@ -121,16 +114,18 @@
 					4: 'topPriority,likes,desc'
 				};
 				this.queryParams.sort = _sorts[index];
-				this.queryParams.page = 0;
 				this.dataList = [];
 				this.fnToTopPage();
 				this.fnGetData();
 			},
 			fnOnSearch() {
 				this.fnResetSetAniWaitIndex();
-				this.queryParams.page = 0;
 				this.isLoadMore = false;
-				this.fnGetData();
+				if (!this.queryParams.keyword) {
+					this.dataList = []
+				} else {
+					this.fnGetData();
+				}
 			},
 			fnGetData() {
 				// uni.showLoading({
@@ -142,20 +137,19 @@
 					this.loading = 'loading';
 				}
 				this.loadMoreText = '加载中...';
-				this.$httpApi
-					.getPostList(this.queryParams)
+				this.$httpApi.v2
+					.getPostListByKeyword(this.queryParams)
 					.then(res => {
 						console.log('请求结果：');
 						console.log(res);
 
 						this.loading = 'success';
-						this.loadMoreText = res.data.hasNext ? '上拉加载更多' : '呜呜，没有更多数据啦~';
-						// 处理数据
-						this.result = res.data;
+						this.loadMoreText = res.hasNext ? '上拉加载更多' : '呜呜，没有更多数据啦~';
+						this.result = res;
 						if (this.isLoadMore) {
-							this.dataList = this.dataList.concat(res.data.content);
+							this.dataList = this.dataList.concat(res.hits);
 						} else {
-							this.dataList = res.data.content;
+							this.dataList = res.hits;
 						}
 					})
 					.catch(err => {
@@ -174,7 +168,7 @@
 			//跳转文章详情
 			fnToArticleDetail(article) {
 				uni.navigateTo({
-					url: '/pagesA/article-detail/article-detail?articleId=' + article.id,
+					url: '/pagesA/article-detail/article-detail?name=' + article.name,
 					animationType: 'slide-in-right'
 				});
 			}
@@ -202,5 +196,18 @@
 		.content-empty {
 			height: 60vh;
 		}
+	}
+
+	.article-card {
+		display: flex;
+		flex-direction: column;
+		box-sizing: border-box;
+		margin: 0 24rpx;
+		padding: 24rpx;
+		border-radius: 12rpx;
+		background-color: #ffff;
+		box-shadow: 0rpx 2rpx 24rpx rgba(0, 0, 0, 0.03);
+		overflow: hidden;
+		margin-bottom: 24rpx;
 	}
 </style>

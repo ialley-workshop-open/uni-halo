@@ -63,8 +63,9 @@ import ApiManager from '@/api/index.js'
 Vue.use(ApiManager);
 
 import HaloConfig from '@/config/halo.config.js'
+import HaloTokenConfig from '@/config/token.config.js'
 Vue.prototype.$haloConfig = HaloConfig
-Vue.prototype.$baseApiUrl = HaloConfig.apiUrl
+Vue.prototype.$baseApiUrl = HaloTokenConfig.BASE_API
 
 import HaloAdConfig from '@/config/ad.config.js'
 Vue.prototype.$haloAdConfig = HaloAdConfig

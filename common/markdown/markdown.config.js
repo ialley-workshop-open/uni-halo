@@ -3,8 +3,9 @@
  */
 
 import HaloConfig from '@/config/halo.config.js'
+import HaloTokenConfig from '@/config/token.config.js'
 export default {
-	domain: HaloConfig.apiUrl,
+	domain: HaloTokenConfig.BASE_API,
 	tagStyle: {
 		table: ` 
 			table-layout: fixed;

@@ -7,11 +7,13 @@
 			<tm-skeleton model="listAvatr"></tm-skeleton>
 		</view>
 		<block v-else>
-			<view class="empty" v-if="dataList.length == 0"><tm-empty icon="icon-shiliangzhinengduixiang-" label="该标签下暂无文章"></tm-empty></view>
+			<view class="empty" v-if="dataList.length == 0"><tm-empty icon="icon-shiliangzhinengduixiang-"
+					label="该标签下暂无文章"></tm-empty></view>
 			<block v-else>
-				<block v-for="(article, index) in dataList" :key="article.createTime">
+				<block v-for="(article, index) in dataList" :key="article.metadata.name">
 					<!-- 文章卡片 -->
-					<tm-translate animation-name="fadeUp" :wait="calcAniWait(index)"><article-card :article="article" @on-click="fnToArticleDetail"></article-card></tm-translate>
+					<tm-translate animation-name="fadeUp" :wait="calcAniWait(index)">
+						<article-card :article="article" @on-click="fnToArticleDetail"></article-card></tm-translate>
 				</block>
 				<view class="load-text">{{ loadMoreText }}</view>
 			</block>
@@ -39,10 +41,11 @@
 			return {
 				loading: 'loading',
 				queryParams: {
+					name: "",
 					size: 10,
 					page: 0
 				},
-				slug: '',
+				name: '',
 				pageTitle: '加载中...',
 				result: null,
 				dataList: [],
@@ -52,8 +55,9 @@
 		},
 
 		onLoad(e) {
-			this.slug = e.slug;
-			this.pageTitle = e.name;
+			this.name = e.name;
+			this.queryParams.name = this.name;
+			this.pageTitle = e.title;
 			this.fnGetData();
 		},
 		onPullDownRefresh() {
@@ -62,7 +66,7 @@
 			this.fnGetData();
 		},
 		onReachBottom(e) {
-			if (this.result.hasNext) {
+			if (this.result && this.result.hasNext) {
 				this.queryParams.page += 1;
 				this.isLoadMore = true;
 				this.fnGetData();
@@ -84,17 +88,17 @@
 					this.loading = 'loading';
 				}
 				this.loadMoreText = '加载中...';
-				this.$httpApi
-					.getTagPostsList(this.slug, this.queryParams)
+				this.$httpApi.v2
+					.getPostByTagName(this.name, this.queryParams)
 					.then(res => {
-						this.fnSetPageTitle(`标签：${this.pageTitle} （共${res.data.total}篇）`);
-						this.result = res.data;
+						this.fnSetPageTitle(`${this.pageTitle} （共${res.total}篇）`);
+						this.result = res;
 						if (this.isLoadMore) {
-							this.dataList = this.dataList.concat(res.data.content);
+							this.dataList = this.dataList.concat(res.items);
 						} else {
-							this.dataList = res.data.content;
+							this.dataList = res.items;
 						}
-						this.loadMoreText = res.data.hasNext ? '上拉加载更多' : '呜呜，没有更多数据啦~';
+						this.loadMoreText = res.hasNext ? '上拉加载更多' : '呜呜，没有更多数据啦~';
 						setTimeout(() => {
 							this.loading = 'success';
 						}, 500);
@@ -114,7 +118,7 @@
 			//跳转文章详情
 			fnToArticleDetail(article) {
 				uni.navigateTo({
-					url: '/pagesA/article-detail/article-detail?articleId=' + article.id,
+					url: '/pagesA/article-detail/article-detail?name=' + article.metadata.name,
 					animationType: 'slide-in-right'
 				});
 			}

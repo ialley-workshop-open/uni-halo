@@ -1,6 +1,9 @@
 node_modules/
 unpackage/ 
+package-lock.json
+
+
 config/halo.config.js
 config/ad.config.js
 config/love.config.js
-package-lock.json
+config/token.config.js

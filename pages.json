@@ -24,7 +24,7 @@
 			"path": "pages/tabbar/category/category",
 			"style": {
 				"navigationBarTitleText": "分类",
-				"enablePullDownRefresh": false,
+				"enablePullDownRefresh": true,
 				"app-plus": {
 					"pullToRefresh": {
 						"color": "#03a9f4",
@@ -45,9 +45,9 @@
 				}
 			}
 		}, {
-			"path": "pages/tabbar/links/links",
+			"path": "pages/tabbar/moments/moments",
 			"style": {
-				"navigationBarTitleText": "友链",
+				"navigationBarTitleText": "瞬间",
 				"enablePullDownRefresh": true,
 				"app-plus": {
 					"pullToRefresh": {
@@ -161,6 +161,18 @@
 				}
 
 			}, {
+				"path": "friend-links/friend-links",
+				"style": {
+					"navigationBarTitleText": "友情链接",
+					"enablePullDownRefresh": true,
+					"app-plus": {
+						"pullToRefresh": {
+							"color": "#03a9f4",
+							"style": "circle"
+						}
+					}
+				}
+			}, {
 				"path": "journal/journal",
 				"style": {
 					"navigationBarTitleText": "个人日记",
@@ -172,19 +184,6 @@
 						}
 					}
 				}
-			}, {
-				"path": "leaving/leaving",
-				"style": {
-					"navigationBarTitleText": "留言板",
-					"enablePullDownRefresh": true,
-					"app-plus": {
-						"pullToRefresh": {
-							"color": "#03a9f4",
-							"style": "circle"
-						}
-					}
-				}
-
 			}, {
 				"path": "articles/articles",
 				"style": {
@@ -572,8 +571,8 @@
 			}, {
 				"iconPath": "static/tabbar/select_links.png",
 				"selectedIconPath": "static/tabbar/select_links_active.png",
-				"pagePath": "pages/tabbar/links/links",
-				"text": "友链"
+				"pagePath": "pages/tabbar/moments/moments",
+				"text": "瞬间"
 			}, {
 				"iconPath": "static/tabbar/select_mine.png",
 				"selectedIconPath": "static/tabbar/select_mine_active.png",

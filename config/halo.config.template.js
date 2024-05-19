@@ -13,10 +13,7 @@ export default {
 	showCopyright: true, // 显示开源版权信息
 	showAbout: true, // 显示关于项目入口
 	uni_halo_logo: 'https://b.925i.cn/uni_halo/uni_halo_logo.png', // uni-halo的logo
-
-	apiUrl: '', // Api基础域名 [必填] ：你的Halo博客基础域名
-	apiAuthorization: '', // Api认证key [必填]： Halo中-系统-博客设置-切换到高级选项-API设置-Access key
-
+  
 	title: '', // 博客标题 [建议必填]：在某些页面没有设置具体的页面名称时候，使用该值显示
 	miniCodeImageUrl: '', // 小程序的太阳码/二维码的图片地址 [建议必填]
 
@@ -25,12 +22,12 @@ export default {
 	// 启动页面的配置（页面地址`/pagesA/start/start`）
 	start: {
 		use: true, // 是否使用首次启动页：用户第一次使用你的应用会显示否则不显示
-		title: 'uni-halo', // 启动页面中的文字标题
+		title: 'uni-halo2.0', // 标题
 		bg: '', // 留空则使用默认 开屏首页背景，可以是颜色值或者图片图片地址
-		logo: 'https://b.925i.cn/uni_halo/uni_halo_logo.png', // logo
-		desc1: '全新UI，准备出发', // 描述信息1
+		logo: 'https://b.925i.cn/uni_halo/uni_halo_logo.png', // 开屏首页图片
+		desc1: '准备好了吗，即刻就出发', // 描述信息1
 		desc2: '新触动 新感受 新体验', // 描述信息2
-		btnText: '全新触发' // 按钮文字
+		btnText: '立即体验'
 	},
 
 	// 博主信息 
@@ -81,43 +78,7 @@ export default {
 		list: [],
 	},
 
-	quickNav: { // 快捷导航配置（如不需要恋爱日记，请注释或删除94-101行的代码）
-		use: true, // 是否在个人中心显示以下页面的入口
-		list: [{
-				icon: 'halocoloricon-classify',
-				text: '文章归档',
-				iconSize: 60,
-				color: 'blue',
-				type: 'page',
-				path: '/pagesA/archives/archives'
-			},
-			{
-				icon: 'halocoloricon-attent',
-				text: '恋爱日记',
-				iconSize: 60,
-				color: 'blue',
-				type: 'page',
-				path: '/pagesA/love/love'
-			},
-			{
-				icon: 'halocoloricon-calendar',
-				text: '个人日记',
-				iconSize: 60,
-				color: 'blue',
-				type: 'page',
-				path: '/pagesA/journal/journal'
-			},
-			{
-				icon: 'halocoloricon-message',
-				text: '留言板',
-				iconSize: 60,
-				color: 'blue',
-				type: 'page',
-				path: '/pagesA/leaving/leaving'
-			}
-		]
-	},
-
+	 
 	// 微信分享信息
 	wxShareConfig: {
 		title: '', // 小程序分享标题[非必填]

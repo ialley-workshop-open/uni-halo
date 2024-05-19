@@ -11,17 +11,26 @@ export default {
 	 * @param {Object} params  查询参数 
 	 */
 	getCategoryList: (params) => {
-		return HttpHandler.Get('/api/content/categories', params)
+		return HttpHandler.Get('/apis/api.content.halo.run/v1alpha1/categories', params)
+	},
+
+	/**
+	 * 根据分类名称查询一个分类
+	 * @param {String} name  分类名称
+	 * @param {Object} params  查询参数 
+	 */
+	getCategoryPostList: (name, params) => {
+		return HttpHandler.Get(`/apis/api.content.halo.run/v1alpha1/categories/${name}`, params)
 	},
 
 	/**
 	 * 查询分类下的文章
-	 * @param {String} slug  分类名称
+	 * @param {String} name  分类名称
 	 * @param {Object} params  查询参数 
 	 */
-	getCategoryPostList: (slug, params) => {
-		// 从缓存中根据分类获取密码，如果获取到了说明本分类需要密码，避免多个分类需要密码在输入密码后刷新页面点错了分类
-		params.password = getCache('APP_CATEGORY_PWD_' + slug)
-		return HttpHandler.Get(`/api/content/categories/${slug}/posts`, params)
+	getCategoryPostList: (name, params) => {
+		return HttpHandler.Get(`/apis/api.content.halo.run/v1alpha1/categories/${name}/posts`, params)
 	},
+
+
 }

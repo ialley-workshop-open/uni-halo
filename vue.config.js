@@ -7,12 +7,12 @@ module.exports = {
 	devServer: {
 		disableHostCheck: true,
 		proxy: {
-			"/api": {
-				target: 'https://b.925i.cn',
+			"/apis": {
+				target: 'https://demo.halo.run',
 				changeOrigin: true,
 				secure: true,
 				pathRewrite: {
-					"^/api": "/api"
+					"^/apis": "/apis"
 				}
 			}
 		}

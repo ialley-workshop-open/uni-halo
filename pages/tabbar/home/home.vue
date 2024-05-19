@@ -1,7 +1,8 @@
 <template>
 	<view class="app-page">
 		<tm-menubars iconColor="white" color="white" :flat="true" :showback="false">
-			<image slot="left" class="logo ml-24 round-24" :src="bloggerInfo.avatar" mode="scaleToFill" @click="$tm.toast('以后会放一个彩蛋~')"></image>
+			<image slot="left" class="logo ml-24 round-24" :src="bloggerInfo.avatar" mode="scaleToFill"
+				@click="$tm.toast('以后会放一个彩蛋~')"></image>
 			<view class="search-input round-12 pt-12 pb-12 flex pl-24" @click="fnToSearch">
 				<text class="search-input_icon iconfont text-size-m icon-search text-grey"></text>
 				<view class="search-input_text pl-12 text-size-m text-grey">搜索文章...</view>
@@ -22,15 +23,10 @@
 			<view class="bg-white pb-24">
 				<!-- 轮播图+广告 -->
 				<view class="banner bg-white ml-24 mr-24 mt-12 round-3" v-if="bannerList.length != 0">
-					<e-swiper :dotPosition="globalAppSettings.banner.dotPosition" :autoplay="true" :useDot="globalAppSettings.banner.useDot" :list="bannerList" @on-click="fnOnBannerClick"></e-swiper>
-				</view>
-				<!-- 快捷导航 -->
-				<!-- <view v-if="useQuickNav" class="quick-nav flex-between round-3 flex mt-12 ml-12 mr-12 pa-24">
-					<view class="quick-nav-item flex flex-col flex-center" v-for="(nav, index) in quickNavList" :key="index" @click="fnToNavPage(nav)">
-						<tm-icons :size="120" :name="nav.icon"></tm-icons>
-						<view class="name text-size-s mt-4">{{ nav.text }}</view>
-					</view>
-				</view> -->
+					<e-swiper :dotPosition="globalAppSettings.banner.dotPosition" :autoplay="true"
+						:useDot="globalAppSettings.banner.useDot" :list="bannerList"
+						@on-click="fnOnBannerClick"></e-swiper>
+				</view> 
 			</view>
 			<!-- 精品分类 -->
 			<view class="flex flex-between mt-16 mb-24 pl-24 pr-24">
@@ -44,9 +40,11 @@
 				</view>
 			</view>
 			<scroll-view class="category" scroll-x="true">
-				<view v-if="categoryList.length == 0" class="cate-empty round-3 mr-5 flex flex-center text-grey">还没有任何文章分类~</view>
+				<view v-if="categoryList.length == 0" class="cate-empty round-3 mr-5 flex flex-center text-grey">
+					还没有任何文章分类~</view>
 				<block v-else>
-					<view class="content" v-for="(category, index) in categoryList" :key="category.createTime" @click="fnToCategoryBy(category)">
+					<view class="content" v-for="(category, index) in categoryList" :key="category.metadata.name"
+						@click="fnToCategoryBy(category)">
 						<category-mini-card :category="category"></category-mini-card>
 					</view>
 				</block>
@@ -54,7 +52,7 @@
 
 			<!-- 最新文章 -->
 			<view class="flex flex-between mt-24 mb-24 pl-24 pr-24">
-				<view class="page-item_title text-weight-b">最新文章</view>
+				<view class="page-item_title text-weight-b">文章列表</view>
 				<view class="show-more flex flex-center bg-white round-3" @click="fnToArticlesPage">
 					<text class="iconfont icon-angle-right text-size-s text-grey-darken-1"></text>
 				</view>
@@ -63,14 +61,16 @@
 					<text class="iconfont icon-angle-right text-size-s "></text>
 				</view>
 			</view>
-			<view v-if="articleList.length == 0" class="article-empty"><tm-empty icon="icon-shiliangzhinengduixiang-" label="博主还没有发表任何文章~"></tm-empty></view>
+			<view v-if="articleList.length == 0" class="article-empty"><tm-empty icon="icon-shiliangzhinengduixiang-"
+					label="博主还没有发表任何文章~"></tm-empty></view>
 			<block v-else>
 				<view :class="globalAppSettings.layout.home">
-					<block v-for="(article, index) in articleList" :key="article.createTime">
+					<block v-for="(article, index) in articleList" :key="article.spec.slug">
 						<tm-translate class="ani-item" animation-name="fadeUp" :wait="calcAniWait(index)">
 							<article-card from="home" :article="article" @on-click="fnToArticleDetail"></article-card>
 							<!-- 广告区域 -->
-							<view v-if="haloAdConfig.home.use && (index + 1) % haloAdConfig.frequency == 0" class="ad-wrap ma-24">
+							<view v-if="haloAdConfig.home.use && (index + 1) % haloAdConfig.frequency == 0"
+								class="ad-wrap ma-24">
 								<!-- #ifdef MP-WEIXIN -->
 								<ad v-if="haloAdConfig.unitId" :unit-id="haloAdConfig.unitId"></ad>
 								<!-- #endif -->
@@ -82,7 +82,8 @@
 					</block>
 				</view>
 				<view class="load-text mt-12">{{ loadMoreText }}</view>
-				<tm-flotbutton v-if="articleList.length > 10" color="light-blue" @click="fnToTopPage" size="m" icon="icon-angle-up"></tm-flotbutton>
+				<tm-flotbutton v-if="articleList.length > 10" color="light-blue" @click="fnToTopPage" size="m"
+					icon="icon-angle-up"></tm-flotbutton>
 			</block>
 		</block>
 		<!-- 	<tm-flotbutton @click="fnChangeMode" size="m" color="light-blue" :icon="$tm.vx.state().tmVuetify.black ? 'icon-lightbulb' : 'icon-lightbulb-fill'"></tm-flotbutton> -->
@@ -113,8 +114,8 @@
 			return {
 				loading: 'loading',
 				queryParams: {
-					size: 10,
-					page: 0
+					size: 5,
+					page: 1
 				},
 				result: {},
 				isLoadMore: false,
@@ -124,8 +125,7 @@
 				noticeList: [],
 				articleList: [],
 				categoryList: [],
-				useQuickNav: false,
-				quickNavList: []
+			 
 			};
 		},
 
@@ -138,8 +138,7 @@
 
 		},
 		onLoad() {
-			this.fnSetPageTitle();
-			this.useQuickNav = this.$haloConfig.quickNav.use;
+			this.fnSetPageTitle(); 
 		},
 
 		created() {
@@ -147,7 +146,7 @@
 		},
 		onPullDownRefresh() {
 			this.isLoadMore = false;
-			this.queryParams.page = 0;
+			this.queryParams.page = 1;
 			this.fnQuery();
 		},
 
@@ -167,22 +166,15 @@
 			fnQuery() {
 				this.fnGetBanner();
 				this.fnGetArticleList();
-				this.fnGetCategoryList();
-				this.fnGetQuickNavList();
+				this.fnGetCategoryList(); 
 			},
-			fnGetQuickNavList() {
-				this.useQuickNav = this.$haloConfig.quickNav.use;
-				if (!this.$haloConfig.quickNav.use) return;
-				const _quickNavList = this.$haloConfig.quickNav.list;
-				this.quickNavList = _quickNavList.map(item => {
-					return item;
-				});
-			},
+		 
 			fnGetCategoryList() {
-				this.$httpApi
-					.getCategoryList({ more: true })
+				this.$httpApi.v2
+					.getCategoryList({})
 					.then(res => {
-						this.categoryList = res.data.sort((a, b) => {
+						console.log('查询分类成功：', res);
+						this.categoryList = res.items.sort((a, b) => {
 							return b.postCount - a.postCount;
 						});
 
@@ -205,6 +197,7 @@
 			fnGetBanner() {
 				const _this = this;
 				const _format = function(list, type) {
+					console.log("list", list)
 					return list.map((item, index) => {
 						switch (type) {
 							case 'list':
@@ -219,14 +212,14 @@
 							case 'article':
 								return {
 									mp4: '',
-										id: item.id,
-										nickname: _this.bloggerInfo.nickname,
-										avatar: _this.bloggerInfo.avatar,
+										id: item.metadata.name,
+										nickname: item.owner.displayName,
+										avatar: _this.$utils.checkImageUrl(item.owner.avatar),
 										address: '',
-										createTime: uni.$tm.dayjs(item.createTime).fromNow(),
-										title: item.title,
-										src: _this.$utils.checkImageUrl(item.thumbnail),
-										image: _this.$utils.checkImageUrl(item.thumbnail)
+										createTime: uni.$tm.dayjs(item.spec.publishTime).fromNow(),
+										title: item.spec.title,
+										src: _this.$utils.checkImageUrl(item.spec.cover),
+										image: _this.$utils.checkImageUrl(item.spec.cover)
 								};
 							case 'banner':
 								return {
@@ -241,8 +234,11 @@
 						this.bannerList = _format(this.$haloConfig.banner.list, 'list');
 						break;
 					case 'article': // 来自热门文章的封面
-						this.$httpApi.getPostList({ page: 0, size: 6, sort: 'topPriority,visits,desc' }).then(res => {
-							this.bannerList = _format(res.data.content, 'article');
+						this.$httpApi.getPostList({
+							page: 0,
+							size: 6
+						}).then(res => {
+							this.bannerList = _format(res.items, 'article');
 							if (this.bannerList.length == 0) {
 								this.bannerList = _format(this.$haloConfig.banner.list, 'list');
 							}
@@ -258,7 +254,11 @@
 			},
 			fnOnBannerClick(item) {
 				if (item.id == '') return;
-				this.fnToArticleDetail(item);
+				this.fnToArticleDetail({
+					metadata: {
+						name: item.id
+					}
+				});
 			},
 			// 文章列表
 			fnGetArticleList() {
@@ -271,16 +271,17 @@
 					this.loading = 'loading';
 				}
 				this.loadMoreText = '加载中...';
-				this.$httpApi
+				this.$httpApi.v2
 					.getPostList(this.queryParams)
 					.then(res => {
+						console.log('加载成功', res);
 						this.loading = 'success';
-						this.loadMoreText = res.data.hasNext ? '上拉加载更多' : '呜呜，没有更多数据啦~';
-						this.result = res.data;
+						this.loadMoreText = res.hasNext ? '上拉加载更多' : '呜呜，没有更多数据啦~';
+						this.result = res;
 						if (this.isLoadMore) {
-							this.articleList = this.articleList.concat(res.data.content);
+							this.articleList = this.articleList.concat(res.items);
 						} else {
-							this.articleList = res.data.content;
+							this.articleList = res.items;
 						}
 						this.loading = 'success';
 					})
@@ -298,7 +299,7 @@
 			//跳转文章详情
 			fnToArticleDetail(article) {
 				uni.navigateTo({
-					url: '/pagesA/article-detail/article-detail?articleId=' + article.id,
+					url: '/pagesA/article-detail/article-detail?name=' + article.metadata.name,
 					animationType: 'slide-in-right'
 				});
 			},
@@ -333,7 +334,7 @@
 			// 根据slug查询分类下的文章
 			fnToCategoryBy(category) {
 				uni.navigateTo({
-					url: `/pagesA/category-detail/category-detail?slug=${category.slug}&name=${category.name}`
+					url: `/pagesA/category-detail/category-detail?name=${category.metadata.name}&title=${category.spec.displayName}`
 				});
 			},
 

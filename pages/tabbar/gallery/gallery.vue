@@ -2,7 +2,8 @@
 	<view class="app-page">
 		<!-- 顶部切换 -->
 		<view class="e-fixed" v-if="category.list.length > 2">
-			<tm-tabs color="light-blue" v-model="category.activeIndex" :list="category.list" align="left" @change="fnOnCategoryChange"></tm-tabs>
+			<tm-tabs color="light-blue" v-model="category.activeIndex" range-key="displayName" :list="category.list"
+				align="left" @change="fnOnCategoryChange"></tm-tabs>
 		</view>
 		<!-- 占位区域 -->
 		<view style="width: 100vw;height: 90rpx;"></view>
@@ -24,50 +25,16 @@
 					<template v-slot:left="{ hdata }">
 						<tm-translate animation-name="fadeUp">
 							<view class="card round-3 overflow white">
-								<tm-images :previmage="false" :src="hdata.item.image" @click="fnPreview(hdata.item)"></tm-images>
-								<view class="pa-10 text-size-s">
-									<view class="text-overflow-2">
-										<tm-tags color="bg-gradient-amber-accent" :shadow="0" :dense="true" size="s" model="fill">{{ hdata.item.team }}</tm-tags>
-										<text class="pl-6">{{ hdata.item.name }}</text>
-									</view>
-									<view v-if="hdata.item.description" class="ma-10">{{ hdata.item.description }}</view>
-									<view v-if="hdata.item.location" class="mt-10 text-grey-lighten-1">
-										<tm-icons name="icon-position-fill"></tm-icons>
-										<text class="pl-5">{{ hdata.item.location }}</text>
-									</view>
-									<view class="flex-between mt-12 flex-center">
-										<view>
-											<text class="text-size-xs text-red ml-5">{{ hdata.item.likes }}</text>
-											<text class="text-size-xs text-red ml-5">喜欢</text>
-										</view>
-										<view class="pl-10 text-size-xs text-grey-lighten-1">{{ hdata.item.takeTime }}</view>
-									</view>
-								</view>
+								<tm-images :previmage="false" :src="hdata.item.spec.cover"
+									@click="fnPreview(hdata.item)"></tm-images>
 							</view>
 						</tm-translate>
 					</template>
 					<template v-slot:right="{ hdata }">
 						<tm-translate animation-name="fadeUp">
 							<view class="card round-3  overflow white">
-								<tm-images :previmage="false" :src="hdata.item.image" @click="fnPreview(hdata.item)"></tm-images>
-								<view class="pa-10 text-size-s">
-									<view class="text-overflow-2">
-										<tm-tags :shadow="0" :dense="true" color="bg-gradient-amber-accent" size="s" model="fill">{{ hdata.item.team }}</tm-tags>
-										<text class="pl-6">{{ hdata.item.name }}</text>
-									</view>
-									<view v-if="hdata.item.description" class="ma-10">{{ hdata.item.description }}</view>
-									<view v-if="hdata.item.location" class="mt-10 text-grey-lighten-1">
-										<tm-icons name="icon-position-fill"></tm-icons>
-										<text class="pl-5">{{ hdata.item.location }}</text>
-									</view>
-									<view class="flex-between mt-12 flex-center">
-										<view>
-											<text class="text-size-xs text-red ml-5">{{ hdata.item.likes }}</text>
-											<text class="text-size-xs text-red ml-5">喜欢</text>
-										</view>
-										<view class="pl-10 text-size-xs text-grey-lighten-1">{{ hdata.item.takeTime }}</view>
-									</view>
-								</view>
+								<tm-images :previmage="false" :src="hdata.item.spec.cover"
+									@click="fnPreview(hdata.item)"></tm-images>
 							</view>
 						</tm-translate>
 					</template>
@@ -76,25 +43,8 @@
 					<block v-for="(item, index) in dataList" :key="index">
 						<tm-translate animation-name="fadeUp" :wait="calcAniWait(index)">
 							<view class="round-3 shadow-2 overflow white mb-24">
-								<tm-images :previmage="false" :src="item.image" @click="fnPreview(item)"></tm-images>
-								<view class="pa-24 text-size-m">
-									<view class="text-overflow-2">
-										<tm-tags :shadow="0" :dense="true" color="bg-gradient-amber-accent" size="s" model="fill">{{ item.team }}</tm-tags>
-										<text class="pl-6">{{ item.name }}</text>
-									</view>
-									<view v-if="item.description" class="ma-10">{{ item.description }}</view>
-									<view v-if="item.location" class="mt-10 text-grey-lighten-1">
-										<tm-icons name="icon-position-fill"></tm-icons>
-										<text class="pl-5">{{ item.location }}</text>
-									</view>
-									<view class="flex-between mt-12 flex-center">
-										<view>
-											<text class="text-size-m text-red ml-5">{{ item.likes }}</text>
-											<text class="text-size-m text-red ml-5">喜欢</text>
-										</view>
-										<view class="pl-10 text-size-m text-grey-lighten-1">{{ item.takeTime }}</view>
-									</view>
-								</view>
+								<tm-images :previmage="false" :src="item.spec.cover"
+									@click="fnPreview(item)"></tm-images>
 							</view>
 						</tm-translate>
 					</block>
@@ -140,9 +90,8 @@
 				},
 				queryParams: {
 					size: 10,
-					page: 0,
-					team: null,
-					keyword: ''
+					page: 1,
+					group: ""
 				},
 				cache: {
 					dataList: [],
@@ -159,28 +108,14 @@
 				return uni.$tm.dayjs(val).format('DD/MM/YYYY');
 			}
 		},
-		watch: {
-			globalAppSettings: {
-				deep: true,
-				handler() {
-					// this.isLoadMore = false;
-					// this.queryParams.page = 0;
-					// this.dataList = [];
-					// this.cache.list = [];
-					// this.cache.total = 0;
-				}
-			}
-		},
 		onLoad() {
 			this.fnSetPageTitle('个人图库');
 			this.fnGetCategory();
 		},
-		created() {
-			this.fnGetData();
-		},
 		onPullDownRefresh() {
+			this.dataList = []
 			this.isLoadMore = false;
-			this.queryParams.page = 0;
+			this.queryParams.page = 1;
 			this.fnGetData();
 		},
 		onReachBottom(e) {
@@ -199,59 +134,58 @@
 			fnOnCategoryChange(index) {
 				this.fnResetSetAniWaitIndex();
 				this.dataList = [];
-				if (index == 0) {
-					this.queryParams.team = null;
-				} else {
-					this.queryParams.team = this.category.list[index];
-				}
-				this.queryParams.page = 0;
+				this.queryParams.group = this.category.list[index].name;
+				this.queryParams.page = 1;
 				this.fnToTopPage();
 				this.fnGetData();
 			},
 			fnGetCategory() {
-				this.$httpApi.getPhotoTeams().then(res => {
-					this.category.list = ['全部', ...res.data];
+				this.$httpApi.v2.getPhotoGroupList({
+					page: 1,
+					size: 9999
+				}).then(res => {
+					this.category.list = res.items.map(item => {
+						return {
+							name: item.metadata.name,
+							displayName: item.spec.displayName
+						}
+					});
+					if (this.category.list.length !== 0) {
+						this.queryParams.group = this.category.list[0].name;
+						this.fnGetData();
+					}
+
 				});
 			},
 			fnGetData() {
-				// uni.showLoading({
-				// 	mask: true,
-				// 	title: '加载中...'
-				// });
 				// 设置状态为加载中
 				if (!this.isLoadMore) {
 					this.loading = 'loading';
 				}
 				this.loadMoreText = '';
-				this.$httpApi
-					.getPhotoListByPage(this.queryParams)
+				this.$httpApi.v2
+					.getPhotoListByGroupName(this.queryParams)
 					.then(res => {
-						if (res.status == 200) {
-							this.loading = 'success';
-							this.result = res.data;
-							if (res.data.content.length != 0) {
-								const _list = res.data.content.map((item, index) => {
-									item['image'] = this.$utils.checkImageUrl(item.thumbnail);
-									item['model'] = 'text';
-									item['takeTime'] = this.$tm.dayjs(item['takeTime']).format('DD/MM/YYYY');
-									return item;
+						console.log("相册 res", res)
+						this.result = res;
+						this.loading = 'success';
+						if (res.items.length != 0) {
+							const _list = res.items.map((item, index) => {
+								item.spec.cover = this.$utils.checkImageUrl(item.spec.cover);
+								return item;
+							});
+							this.fnCacheDataList(_list);
+							if (this.globalAppSettings.gallery.useWaterfull) {
+								this.dataList = _list;
+								this.$nextTick(() => {
+									this.$refs.wafll.pushData(_list);
 								});
-								this.fnCacheDataList(_list);
-								if (this.globalAppSettings.gallery.useWaterfull) {
-									this.dataList = _list;
-									this.$nextTick(() => {
-										this.$refs.wafll.pushData(_list);
-									});
-								} else {
-									this.dataList = this.dataList.concat(_list);
-								}
+							} else {
+								this.dataList = this.dataList.concat(_list);
 							}
-							this.loadMoreText = res.data.hasNext ? '上拉加载更多' : '呜呜，没有更多数据啦~';
-						} else {
-							this.loading = 'error';
-							this.waterfall.loading = 'finish';
-							this.loadMoreText = '';
 						}
+						this.loadMoreText = res.hasNext ? '上拉加载更多' : '呜呜，没有更多数据啦~';
+
 					})
 					.catch(err => {
 						console.error(err);
@@ -268,7 +202,7 @@
 			},
 			// 缓存数据
 			fnCacheDataList(dataList) {
-				if (this.queryParams.page == 0) {
+				if (this.queryParams.page == 1) {
 					this.cache.dataList = dataList;
 				} else {
 					this.cache.dataList = [...this.cache.dataList, ...dataList];
@@ -281,10 +215,10 @@
 			},
 			// 预览
 			fnPreview(item) {
-				const index = this.cache.dataList.findIndex(x => x.id == item.id);
+				const index = this.cache.dataList.findIndex(x => x.spec.cover == x.spec.cover);
 				uni.previewImage({
 					current: index,
-					urls: this.cache.dataList.map(x => x.image),
+					urls: this.cache.dataList.map(x => x.spec.cover),
 					indicator: 'number',
 					loop: true
 				});

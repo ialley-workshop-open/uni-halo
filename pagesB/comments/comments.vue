@@ -314,7 +314,7 @@
 			// 回复评论
 			fnReplySubmit() {
 				this.reply.form.author = this.bloggerInfo.nickname;
-				this.reply.form.authorUrl = this.$haloConfig.social.blog || this.$haloConfig.apiUrl;
+				this.reply.form.authorUrl = this.$haloConfig.social.blog || this.$baseApiUrl;
 				this.reply.form.email = this.bloggerInfo.email;
 
 				uni.showLoading({

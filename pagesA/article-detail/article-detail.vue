@@ -8,33 +8,33 @@
 		<block v-else>
 			<!-- 顶部信息 -->
 			<view class="head ma-24">
-				<view class="title">{{ result.title }}</view>
+				<view class="title">{{ result.spec.title }}</view>
 				<view class="detail">
 					<view class="author">
-						<text class="author-name">博主：{{ author.nickname }}</text>
+						<text class="author-name">作者：{{ result.owner.displayName }}</text>
 						<text class="author-time">
-							时间：{{ { d: result.createTime, f: 'yyyy年MM月dd日 星期w' } | formatTime }}
+							时间：{{ { d: result.spec.publishTime, f: 'yyyy年MM月dd日 星期w' } | formatTime }}
 						</text>
 					</view>
 
-					<view class="cover" v-if="result.thumbnail">
-						<image class="cover-img" mode="aspectFill" :src="calcUrl(result.thumbnail)"></image>
+					<view class="cover" v-if="result.spec.cover">
+						<image class="cover-img" mode="aspectFill" :src="calcUrl(result.spec.cover)"></image>
 					</view>
-					<view class="count" :class="{ 'no-thumbnail': !result.thumbnail }">
+					<view class="count" :class="{ 'no-thumbnail': !result.spec.cover }">
 						<view class="count-item">
-							<text class="value">{{ result.visits }}</text>
+							<text class="value">{{ result.stats.visit }}</text>
 							<text class="label">阅读</text>
 						</view>
 						<view class="count-item">
-							<text class="value">{{ result.likes }}</text>
+							<text class="value">{{ result.stats.upvote }}</text>
 							<text class="label">喜欢</text>
 						</view>
 						<view class="count-item">
-							<text class="value">{{ result.commentCount }}</text>
+							<text class="value">{{ result.stats.comment }}</text>
 							<text class="label">评论</text>
 						</view>
 						<view class="count-item">
-							<text class="value">{{ result.wordCount }}</text>
+							<text class="value">{{ result.content.raw.length }}</text>
 							<text class="label">字数</text>
 						</view>
 					</view>
@@ -46,8 +46,9 @@
 					<text class="text-weight-b">分类：</text>
 					<text v-if="result.categories.length == 0" class="category-tag is-empty">未选择分类</text>
 					<block v-else>
-						<text class="category-tag" v-for="(item, index) in result.categories" :key="index" @click="fnToCate(item)">
-							{{ item.name }}
+						<text class="category-tag" v-for="(item, index) in result.categories" :key="index"
+							@click="fnToCate(item)">
+							{{ item.spec.displayName }}
 						</text>
 					</block>
 				</view>
@@ -55,21 +56,25 @@
 					<text class="text-weight-b">标签：</text>
 					<text v-if="result.tags.length == 0" class="category-tag is-empty">未选择标签</text>
 					<block v-else>
-						<text class="category-tag" :style="{ backgroundColor: item.color }" v-for="(item, index) in result.tags" :key="index" @click="fnToTag(item)">
-							{{ item.name }}
+						<text class="category-tag" :style="{ backgroundColor: item.color }"
+							v-for="(item, index) in result.tags" :key="index" @click="fnToTag(item)">
+							{{ item.spec.displayName }}
 						</text>
 					</block>
 				</view>
 				<view v-if="originalURL" class="mt-18 category-type original-url">
 					<view class="original-url_left text-weight-b">原文：</view>
 					<view class="original-url_right text-grey">
-						<text class="original-url_right__link" @click.stop="fnToOriginal(originalURL)">{{ originalURL }}</text>
-						<text class="original-url_right__btn" @click.stop="fnToOriginal(originalURL)">阅读原文<text class="iconfont icon-angle-right ml-5 text-size-s"></text> </text>
+						<text class="original-url_right__link"
+							@click.stop="fnToOriginal(originalURL)">{{ originalURL }}</text>
+						<text class="original-url_right__btn" @click.stop="fnToOriginal(originalURL)">阅读原文<text
+								class="iconfont icon-angle-right ml-5 text-size-s"></text> </text>
 					</view>
 				</view>
 			</view>
 			<!-- 广告区域 -->
-			<view v-if="haloAdConfig.articleDetail.use && (haloAdConfig.unitId || haloAdConfig.adpid)" class="ad-wrap ma-24 mb-0">
+			<view v-if="haloAdConfig.articleDetail.use && (haloAdConfig.unitId || haloAdConfig.adpid)"
+				class="ad-wrap ma-24 mb-0">
 				<!-- #ifdef MP-WEIXIN -->
 				<ad v-if="haloAdConfig.unitId" :unit-id="haloAdConfig.unitId"></ad>
 				<!-- #endif -->
@@ -81,8 +86,13 @@
 			<view class="content ml-24 mr-24">
 				<!-- markdown渲染 -->
 				<view class="markdown-wrap">
-					<tm-more :disabled="true" :maxHeight="1500" :isRemovBar="true" :open="showValidVisitMore" @click="fnOnShowValidVisitMore">
-						<mp-html class="evan-markdown" lazy-load :domain="markdownConfig.domain" :loading-img="markdownConfig.loadingGif" :scroll-table="true" :selectable="true" :tag-style="markdownConfig.tagStyle" :container-style="markdownConfig.containStyle" :content="result.content || result.formatContent" :markdown="true" :showLineNumber="true" :showLanguageName="true" :copyByLongPress="true" />
+					<tm-more :disabled="true" :maxHeight="1500" :isRemovBar="true" :open="showValidVisitMore"
+						@click="fnOnShowValidVisitMore">
+						<mp-html class="evan-markdown" lazy-load :domain="markdownConfig.domain"
+							:loading-img="markdownConfig.loadingGif" :scroll-table="true" :selectable="true"
+							:tag-style="markdownConfig.tagStyle" :container-style="markdownConfig.containStyle"
+							:content="result.content.raw" :markdown="true" :showLineNumber="true"
+							:showLanguageName="true" :copyByLongPress="true" />
 						<template v-slot:more="{ data }">
 							<view class="">
 								<text class="text-blue text-size-m text-weight-b">文章部分内容已加密点击解锁</text>
@@ -92,7 +102,8 @@
 					</tm-more>
 				</view>
 				<!-- 广告区域：微信/decloud申请 -->
-				<view v-if="haloAdConfig.articleDetail.use && (haloAdConfig.unitId || haloAdConfig.adpid)" class="ad-wrap mt-24 mb-24 ">
+				<view v-if="haloAdConfig.articleDetail.use && (haloAdConfig.unitId || haloAdConfig.adpid)"
+					class="ad-wrap mt-24 mb-24 ">
 					<!-- #ifdef MP-WEIXIN -->
 					<ad v-if="haloAdConfig.unitId" :unit-id="haloAdConfig.unitId"></ad>
 					<!-- #endif -->
@@ -104,11 +115,13 @@
 				<!-- 广告区域：自定义广告位 -->
 				<view class="ad-card mt-24" v-if="haloAdConfig.articleDetail.custom.use">
 					<text class="ad-card_tip">广告</text>
-					<image class="ad-card_cover" :src="haloAdConfig.articleDetail.custom.cover" mode="scaleToFill"></image>
+					<image class="ad-card_cover" :src="haloAdConfig.articleDetail.custom.cover" mode="scaleToFill">
+					</image>
 					<view class="ad-card_info">
 						<view class="ad-card_info-title">{{ haloAdConfig.articleDetail.custom.title }}</view>
 						<view class="ad-card_info-desc">{{ haloAdConfig.articleDetail.custom.content }}</view>
-						<view v-if="haloAdConfig.articleDetail.custom.url" class="ad-card_info-link" @click="fnToWebview(haloAdConfig.articleDetail.custom)">
+						<view v-if="haloAdConfig.articleDetail.custom.url" class="ad-card_info-link"
+							@click="fnToWebview(haloAdConfig.articleDetail.custom)">
 							立即查看
 						</view>
 					</view>
@@ -117,7 +130,8 @@
 				<!-- 版权声明 -->
 				<view v-if="copyright.use" class="copyright-wrap bg-white mt-24 pa-24 round-4">
 					<view class="copyright-title text-weight-b">版权声明</view>
-					<view class="copyright-content mt-12  grey-lighten-5 text-grey-darken-2 round-4 pt-12 pb-12 pl-24 pr-24 ">
+					<view
+						class="copyright-content mt-12  grey-lighten-5 text-grey-darken-2 round-4 pt-12 pb-12 pl-24 pr-24 ">
 						<view v-if="copyright.author" class="copyright-text text-size-s ">
 							版权归属：{{ copyright.author }}
 						</view>
@@ -131,24 +145,29 @@
 				</view>
 
 				<!-- 评论展示区域 -->
-				<view class="comment-wrap bg-white mt-24 pa-24 round-4">
-					<commentList :disallowComment="result.disallowComment" :postId="result.id" :post="result" @on-comment-detail="fnOnShowCommentDetail" @on-loaded="fnOnCommentLoaded"></commentList>
+				<view v-if="result" class="comment-wrap bg-white mt-24 pa-24 round-4">
+					<commentList :disallowComment="!result.spec.allowComment" :postName="result.metadata.name"
+						:post="result" @on-comment-detail="fnOnShowCommentDetail" @on-loaded="fnOnCommentLoaded">
+					</commentList>
 				</view>
 			</view>
 
 			<!-- 弹幕效果 -->
 			<barrage ref="barrage" :maxTop="240" :type="globalAppSettings.barrage.type"></barrage>
 			<!-- 返回顶部 -->
-			<tm-flotbutton :offset="[16, 80]" icon="icon-angle-up" color="bg-gradient-light-blue-accent" @click="fnToTopPage()"></tm-flotbutton>
-			<tm-flotbutton :actions="btnOption.actions" actions-pos="left" :show-text="true" color="bg-gradient-orange-accent" @change="fnOnFlotButtonChange"></tm-flotbutton>
+			<tm-flotbutton :offset="[16, 80]" icon="icon-angle-up" color="bg-gradient-light-blue-accent"
+				@click="fnToTopPage()"></tm-flotbutton>
+			<tm-flotbutton :actions="btnOption.actions" actions-pos="left" :show-text="true"
+				color="bg-gradient-orange-accent" @change="fnOnFlotButtonChange"></tm-flotbutton>
 		</block>
 
 		<!-- 评论详情 -->
 		<tm-poup v-model="commentDetail.show" height="auto" :round="6" :over-close="true" position="bottom">
-			<view class="pa-24">
+			<view v-if="result" class="pa-24">
 				<view class="poup-head pb-24">
 					<view class="poup-title text-align-center text-size-g text-weight-b mb-32">评论详情</view>
-					<comment-item :useContentBg="false" :useActions="false" :isChild="false" :comment="commentDetail.comment" :postId="result.id"></comment-item>
+					<comment-item :useContentBg="false" :useActions="false" :isChild="false"
+						:comment="commentDetail.comment" :postName="result.metadata.name"></comment-item>
 				</view>
 
 				<scroll-view :scroll-y="true" class="poup-body">
@@ -159,7 +178,7 @@
 						</view>
 						<view v-else-if="commentDetail.loading == 'error'" class="error">
 							<tm-empty icon="icon-wind-cry" label="加载失败">
-								<tm-button theme="bg-gradient-light-blue-accent" size="m" v-if="!disallowComment" @click="fnGetChildComments()">
+								<tm-button theme="bg-gradient-light-blue-accent" size="m" @click="fnGetChildComments()">
 									刷新试试
 								</tm-button>
 							</tm-empty>
@@ -171,7 +190,9 @@
 						</view>
 
 						<block v-else>
-							<comment-item v-for="(comment, index) in commentDetail.list" :useContentBg="false" :useSolid="false" :useActions="false" :key="index" :isChild="false" :comment="comment" :postId="result.id"></comment-item>
+							<comment-item v-for="(comment, index) in commentDetail.list" :useContentBg="false"
+								:useSolid="false" :useActions="false" :key="index" :isChild="false" :comment="comment"
+								:postName="result.metadata.name"></comment-item>
 						</block>
 					</block>
 				</scroll-view>
@@ -203,7 +224,10 @@
 		</tm-poup>
 
 		<!-- 密码访问解密弹窗 -->
-		<tm-dialog :disabled="true" :input-val.sync="validVisitModal.value" title="验证提示" confirmText="立即验证" :showCancel="validVisitModal.useCancel" model="confirm" v-model="validVisitModal.show" content="博主设置了需要密码才能查看该文章内容,请输入文章密码进行验证" theme="split" confirmColor="blue shadow-blue-0" @cancel="fnOnValidVisitCancel" @confirm="fnOnValidVisitConfirm"></tm-dialog>
+		<tm-dialog :disabled="true" :input-val.sync="validVisitModal.value" title="验证提示" confirmText="立即验证"
+			:showCancel="validVisitModal.useCancel" model="confirm" v-model="validVisitModal.show"
+			content="博主设置了需要密码才能查看该文章内容,请输入文章密码进行验证" theme="split" confirmColor="blue shadow-blue-0"
+			@cancel="fnOnValidVisitCancel" @confirm="fnOnValidVisitConfirm"></tm-dialog>
 
 	</view>
 </template>
@@ -226,7 +250,9 @@
 	import rCanvas from '@/components/r-canvas/r-canvas.vue';
 	import barrage from '@/components/barrage/barrage.vue';
 
-	import { haloWxShareMixin } from '@/common/mixins/wxshare.mixin.js';
+	import {
+		haloWxShareMixin
+	} from '@/common/mixins/wxshare.mixin.js';
 	export default {
 		components: {
 			tmSkeleton,
@@ -248,10 +274,11 @@
 				loading: 'loading',
 				markdownConfig: MarkdownConfig,
 				btnOption: {
-					actions: [{
-							icon: 'icon-like',
-							color: 'bg-gradient-orange-accent'
-						},
+					actions: [
+						// {
+						// 	icon: 'icon-like',
+						// 	color: 'bg-gradient-orange-accent'
+						// },
 						{
 							icon: 'icon-commentdots-fill',
 							color: 'bg-gradient-green-accent'
@@ -263,15 +290,15 @@
 					]
 				},
 				queryParams: {
-					articleId: null
+					name: null
 				},
-				result: {},
+				result: null,
 
 				commentDetail: {
 					loading: 'loading',
 					show: false,
 					comment: {},
-					postId: undefined,
+					postName: undefined,
 					list: []
 				},
 				poster: {
@@ -354,7 +381,7 @@
 		},
 		onLoad(e) {
 			this.fnSetPageTitle('文章加载中...');
-			this.queryParams.articleId = e.articleId;
+			this.queryParams.name = e.name;
 			this.fnGetData();
 		},
 
@@ -364,31 +391,27 @@
 		methods: {
 			fnGetData() {
 				this.loading = 'loading';
-				// uni.showLoading({
-				// 	mask: true,
-				// 	title: '加载中...'
-				// });
-				this.$httpApi
-					.getArticleDetail(this.queryParams.articleId)
+				this.$httpApi.v2
+					.getPostByName(this.queryParams.name)
 					.then(res => {
-						if (res.status == 200) {
-							this.result = res.data;
-							this.metas = res.data.metas;
-							this.fnSetPageTitle('文章详情');
-							this.loading = 'success';
-							this.fnSetWxShareConfig({
-								title: this.result.title,
-								desc: this.result.summary,
-								imageUrl: this.$utils.checkThumbnailUrl(this.result.thumbnail),
-								path: `/pagesA/article-detail/article-detail?articleId=${this.queryParams.articleId}`,
-								copyLink: this.$haloConfig.apiUrl,
-								query: {}
-							});
-						} else {
-							this.loading = 'error';
-						}
+						console.log('详情', res);
+
+						this.result = res;
+						this.metas = [];
+						this.fnSetPageTitle('文章详情');
+						this.loading = 'success';
+						this.fnSetWxShareConfig({
+							title: this.result.spec.title,
+							desc: this.result.content.raw,
+							imageUrl: this.$utils.checkThumbnailUrl(this.result.spec.cover),
+							path: `/pagesA/article-detail/article-detail?name=${this.result.metadata.name}`,
+							copyLink: this.$baseApiUrl,
+							query: {}
+						});
+
 					})
 					.catch(err => {
+						console.log("错误", err)
 						this.loading = 'error';
 					})
 					.finally(() => {
@@ -400,28 +423,28 @@
 			// 浮动按钮点击
 			fnOnFlotButtonChange(index) {
 				switch (index) {
+					// case 0:
+					// 	this.fnDoLikes();
+					// 	break;
 					case 0:
-						this.fnDoLikes();
-						break;
-					case 1:
 						this.fnToComment();
 						break;
-					case 2:
+					case 1:
 						this.fnShowShare();
 						break;
 				}
 			},
 
 			fnToComment() {
-				if (this.result.disallowComment) {
+				if (!this.result.spec.allowComment) {
 					return uni.$tm.toast('文章已开启禁止评论！');
 				}
 				this.$Router.push({
 					path: '/pagesA/comment/comment',
 					query: {
-						id: this.result.id,
-						parentId: 0,
-						title: this.result.title,
+						isComment: true,
+						postName: this.result.metadata.name,
+						title: this.result.spec.title,
 						from: 'posts',
 						formPage: 'comment_list',
 						type: 'post'
@@ -474,7 +497,7 @@
 				this.$nextTick(async () => {
 					const systemInfo = await uni.getSystemInfoSync();
 					const _bloggerAvatar = this.$utils.checkAvatarUrl(this.bloggerInfo.avatar, true);
-					const _articleCover = this.$utils.checkThumbnailUrl(this.result.thumbnail, true);
+					const _articleCover = this.$utils.checkThumbnailUrl(this.result.spec.cover, true);
 					// 初始化
 					await this.$refs.rCanvas.init({
 						canvas_id: 'rCanvas',
@@ -566,7 +589,7 @@
 					// 文章标题
 					await this.$refs.rCanvas
 						.drawText({
-							text: this.result.title,
+							text: this.result.spec.title,
 							max_width: 312,
 							line_clamp: 1,
 							x: 12,
@@ -583,7 +606,7 @@
 						});
 					await this.$refs.rCanvas
 						.drawText({
-							text: this.result.summary,
+							text: this.result.content.raw,
 							max_width: 312,
 							line_clamp: 2,
 							x: 12,
@@ -674,9 +697,9 @@
 					provider: 'weixin',
 					scene: 'WXSceneSession',
 					type: 0,
-					href: this.$haloConfig.apiUrl,
-					title: this.result.title,
-					summary: this.result.summary,
+					href: this.$baseApiUrl,
+					title: this.result.spec.title,
+					summary: this.result.content.raw,
 					imageUrl: this.poster.res.tempFilePath,
 					success: function(res) {
 						console.log('success:' + JSON.stringify(res));
@@ -688,41 +711,45 @@
 				// #endif
 			},
 			fnOnShowCommentDetail(data) {
-				const { postId, comment } = data;
+				const {
+					postName,
+					comment
+				} = data;
 				this.commentDetail.comment = comment;
-				this.commentDetail.postId = postId;
+				this.commentDetail.postName = postName;
 				this.commentDetail.list = [];
 				this.commentDetail.show = true;
 				this.fnGetChildComments();
 			},
 			fnGetChildComments() {
 				this.commentDetail.loading = 'loading';
-				this.$httpApi
-					.getPostChildrenCommentList(this.commentDetail.postId, this.commentDetail.comment.id, {})
+				this.$httpApi.v2
+					.getPostCommentReplyList(this.commentDetail.postName, {
+						page: 1,
+						size: 100
+					})
 					.then(res => {
-						if (res.status == 200) {
-							this.commentDetail.loading = 'success';
-							this.commentDetail.list = res.data;
-						} else {
-							this.commentDetail.loading = 'error';
-						}
-						console.log('getPostChildrenCommentList', res);
+						console.log('getPostChildrenCommentList res', res);
+						this.commentDetail.loading = 'success';
+						this.commentDetail.list = res.items;
 					})
 					.catch(err => {
+						console.log('getPostChildrenCommentList err', error);
 						this.commentDetail.loading = 'error';
 					});
 			},
 			fnToCate(category) {
 				uni.navigateTo({
-					url: `/pagesA/category-detail/category-detail?slug=${category.slug}&name=${category.name}`
+					url: `/pagesA/category-detail/category-detail?name=${category.metadata.name}&title=${category.spec.displayName}`
 				});
 			},
 			fnToTag(tag) {
 				uni.navigateTo({
-					url: `/pagesA/tag-detail/tag-detail?id=${tag.id}&slug=${tag.slug}&name=${tag.name}`
+					url: `/pagesA/tag-detail/tag-detail?name=${tag.metadata.name}&title=${tag.spec.displayName}`
 				});
 			},
 			async fnOnCommentLoaded(data) {
+				console.log("data", data)
 				const _list = [];
 				const _handleData = list => {
 					return new Promise(resolve => {
@@ -731,8 +758,8 @@
 						} else {
 							list.forEach(item => {
 								_list.push(item);
-								if (item.children && item.children.length != 0) {
-									_handleData(item.children);
+								if (item.replies && item.replies.length != 0) {
+									_handleData(item.replies.items);
 								}
 								resolve();
 							});
@@ -740,31 +767,31 @@
 					});
 				};
 				await _handleData(data);
-				if (this.globalAppSettings.barrage.use) {
-					this.$nextTick(() => {
-						if (_list.length != 0) {
-							_handleAddBarrage();
-						}
-					});
-				}
-				const _handleRemove = () => {
-					this.$refs['barrage'] && this.$refs['barrage'].remove({
-						duration: 5000, // 延迟关闭的时间
-						speed: 600 // 弹幕消失的速度
-					});
-				};
-				let index = 0;
-				const _handleAddBarrage = () => {
-					setTimeout(() => {
-						this.$refs['barrage'] && this.$refs['barrage'].add(_list[index]);
-						index += 1;
-						if (index < _list.length - 1) {
-							_handleAddBarrage();
-						} else {
-							_handleRemove();
-						}
-					}, 1000);
-				};
+				// if (this.globalAppSettings.barrage.use) {
+				// 	this.$nextTick(() => {
+				// 		if (_list.length != 0) {
+				// 			_handleAddBarrage();
+				// 		}
+				// 	});
+				// }
+				// const _handleRemove = () => {
+				// 	this.$refs['barrage'] && this.$refs['barrage'].remove({
+				// 		duration: 5000, // 延迟关闭的时间
+				// 		speed: 600 // 弹幕消失的速度
+				// 	});
+				// };
+				// let index = 0;
+				// const _handleAddBarrage = () => {
+				// 	setTimeout(() => {
+				// 		this.$refs['barrage'] && this.$refs['barrage'].add(_list[index]);
+				// 		index += 1;
+				// 		if (index < _list.length - 1) {
+				// 			_handleAddBarrage();
+				// 		} else {
+				// 			_handleRemove();
+				// 		}
+				// 	}, 1000);
+				// };
 			},
 			fnToWebview(data) {
 				uni.navigateTo({
@@ -776,7 +803,10 @@
 				});
 			},
 			fnToOriginal(originalURL) {
-				this.fnToWebview({ title: this.result.title, url: originalURL });
+				this.fnToWebview({
+					title: this.result.title,
+					url: originalURL
+				});
 			},
 			// 查看密码验证确认
 			fnOnValidVisitConfirm() {

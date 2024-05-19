@@ -7,45 +7,55 @@
 			<tm-skeleton model="listAvatr"></tm-skeleton>
 			<tm-skeleton model="listAvatr"></tm-skeleton>
 		</view>
-		<view v-else class="content" :class="{ 'bg-white': result.length !== 0 }">
+		<view v-else class="content" :class="{ 'bg-white': dataList.length !== 0 }">
 			<!-- 空数据 -->
-			<view v-if="result.length == 0" class="content-empty flex flex-center">
+			<view v-if="dataList.length == 0" class="content-empty flex flex-center">
 				<tm-empty icon="icon-shiliangzhinengduixiang-" label="啊偶,博主还没有朋友呢~"></tm-empty>
 			</view>
 
-			<!-- 如果只有一个分组：使用列表的形式 result.length == 1 -->
-			<view v-else-if="result.length == 1" class="flex flex-col pb-24">
-				<block v-for="(link, index) in result[0].children" :key="index">
+			<!-- 如果只有一个分组：使用列表的形式 dataList.length == 1 -->
+			<view v-else class="flex flex-col pb-24">
+				<block v-for="(link, index) in dataList" :key="index">
 					<tm-translate animation-name="fadeUp" :wait="calcAniWait(index)">
 						<!-- 色彩版本 -->
-						<view v-if="!globalAppSettings.links.useSimple" class="info flex pt-24 pb-24 pl-12 pr-12" :class="{ 'border-b-1': index != result[0].children.length - 1 }" @click="fnOnLinkEvent(link)">
+						<view v-if="!globalAppSettings.links.useSimple" class="info flex pt-24 pb-24 pl-12 pr-12"
+							:class="{ 'border-b-1': index != dataList.length - 1 }" @click="fnCopyLink(link)">
 							<view class="link-logo">
-								<cache-image class="link-logo_img" radius="12rpx" :url="link.logo" :fileMd5="link.logo" mode="aspectFill"></cache-image>
+								<cache-image class="link-logo_img" radius="12rpx" :url="link.spec.logo"
+									:fileMd5="link.spec.logo" mode="aspectFill"></cache-image>
 							</view>
 							<view class="flex flex-col pl-30 info-detail">
-								<view class="link-card_name text-size-l text-weight-b text-red">{{ link.name }}</view>
-								<view class="poup-tag ml--10 mt-6">
-									<tm-tags color="bg-gradient-amber-accent" :shadow="0" size="s" model="fill">
-										ID：{{ link.id }}
+								<view class="link-card_name text-size-l text-weight-b text-red">
+									<tm-tags style="margin-right: 12rpx;margin-left: -2rpx;" color="bg-gradient-light-blue-lighten"
+										:shadow="0" size="s" model="fill">
+										{{ link.spec.groupName || '暂未分组' }}
+									</tm-tags>
+									{{ link.spec.displayName }}
+								</view>
+								<view class="poup-tag mt-6" style="font-size: 28rpx;">
+									站点地址：{{ link.spec.url }}
+									<!-- <tm-tags color="bg-gradient-amber-accent" :shadow="0" size="s" model="fill">
+										URL：{{ link.spec.url }}
 									</tm-tags>
 									<tm-tags color=" bg-gradient-light-blue-lighten" :shadow="0" size="s" model="fill">
-										{{ link.team || '暂未分组' }}
-									</tm-tags>
+										{{ link.spec.groupName || '暂未分组' }}
+									</tm-tags> -->
 								</view>
-								<view class="link-card_desc text-overflow text-size-s mt-4">
-									博客简介：{{ link.description || '这个博主很懒，没写简介~' }}
+								<view class="link-card_desc text-overflow mt-4" style="font-size: 28rpx;">
+									博客简介：{{ link.spec.description || '这个博主很懒，没写简介~' }}
 								</view>
 							</view>
 						</view>
 						<!-- 简洁版本 -->
-						<view v-else class="link-card flex ml-24 mr-24 pt-24 pb-24" @click="fnOnLinkEvent(link)">
-							<image class="logo shadow-6" :src="link.logo" mode="aspectFill"></image>
+						<view v-else class="link-card flex ml-24 mr-24 pt-24 pb-24" @click="fnCopyLink(link)">
+							<image class="logo shadow-6" :src="link.spec.logo" mode="aspectFill"></image>
 							<view class="info pl-24">
-								<view class="name text-size-g">{{ link.name }}</view>
-								<view class="desc mt-12 text-size-s text-grey-darken-1">{{ link.description }}</view>
+								<view class="name text-size-g">{{ link.spec.displayName }}</view>
+								<view class="desc mt-12 text-size-s text-grey-darken-1">{{ link.spec.description }}
+								</view>
 								<view v-if="false" class="link mt-12 text-size-m text-grey-darken-1">
 									<text class="iconfont icon-link mr-6 text-size-s"></text>
-									{{ link.url }}
+									{{ link.spec.url }}
 								</view>
 							</view>
 						</view>
@@ -53,49 +63,52 @@
 				</block>
 			</view>
 
-			<!-- 如果大于一个分组：使用联系人的索引形式 result.length > 1 -->
-			<block v-else>
-				<block v-for="(team, index) in result" :key="index">
+			<!-- 如果大于一个分组：使用联系人的索引形式 dataList.length > 1 -->
+			<block v-if="false">
+				<block v-for="(team, index) in dataList" :key="index">
 					<tm-translate animation-name="fadeUp" :wait="calcAniWait(index)">
 						<view class="grey-lighten-4 text  text-size-s text-weight-b px-32 py-12">{{ team.title }}</view>
-						<block v-for="(link, linkIndex) in team.children" :key="link.id">
+						<block v-for="(link, linkIndex) in team.children" :key="link.metadata.name">
 							<tm-translate animation-name="fadeUp" :wait="calcAniWait(linkIndex)">
 								<!-- 色彩版本 -->
-								<view v-if="!globalAppSettings.links.useSimple" class="info flex pt-24 pb-24 pl-12 pr-12" :class="{
+								<view v-if="!globalAppSettings.links.useSimple"
+									class="info flex pt-24 pb-24 pl-12 pr-12" :class="{
 										'border-b-1':
-											linkIndex != team.children.length - 1 || index == result.length - 1
-									}" @click="fnOnLinkEvent(link)">
+											linkIndex != team.children.length - 1 || index == dataList.length - 1
+									}" @click="fnCopyLink(link)">
 									<view class="link-logo">
-										<cache-image class="link-logo_img" radius="12rpx" :url="link.logo" :fileMd5="link.logo" mode="aspectFill"></cache-image>
+										<cache-image class="link-logo_img" radius="12rpx" :url="link.spec.logo"
+											:fileMd5="link.spec.logo" mode="aspectFill"></cache-image>
 									</view>
 									<view class="flex flex-col pl-30 info-detail">
 										<view class="link-card_name text-size-l text-weight-b text-red">
-											{{ link.name }}
+											{{ link.spec.displayName }}
 										</view>
 										<view class="poup-tag ml--10 mt-6">
 											<tm-tags color="bg-gradient-amber-accent" :shadow="0" size="s" model="fill">
-												ID：{{ link.id }}
+												ID：{{ link.metadata.name }}
 											</tm-tags>
-											<tm-tags color=" bg-gradient-light-blue-lighten" :shadow="0" size="s" model="fill">
-												{{ link.team || '暂未分组' }}
+											<tm-tags color=" bg-gradient-light-blue-lighten" :shadow="0" size="s"
+												model="fill">
+												{{ link.spec.groupName || '暂未分组' }}
 											</tm-tags>
 										</view>
 										<view class="link-card_desc text-overflow text-size-s mt-4">
-											博客简介：{{ link.description || '这个博主很懒，没写简介~' }}
+											博客简介：{{ link.spec.description || '这个博主很懒，没写简介~' }}
 										</view>
 									</view>
 								</view>
 								<!-- 简洁版本 -->
-								<view v-else class="link-card flex ml-24 mr-24 pt-24 pb-24" @click="fnOnLinkEvent(link)">
-									<image class="logo shadow-6" :src="link.logo" mode="aspectFill"></image>
+								<view v-else class="link-card flex ml-24 mr-24 pt-24 pb-24" @click="fnCopyLink(link)">
+									<image class="logo shadow-6" :src="link.spec.logo" mode="aspectFill"></image>
 									<view class="info pl-24">
-										<view class="name text-size-g">{{ link.name }}</view>
+										<view class="name text-size-g">{{ link.spec.displayName }}</view>
 										<view class="desc mt-12 text-size-s text-grey-darken-1">
-											{{ link.description }}
+											{{ link.spec.description }}
 										</view>
 										<view v-if="false" class="link mt-12 text-size-m text-grey-darken-1">
 											<text class="iconfont icon-link mr-6 text-size-s"></text>
-											{{ link.url }}
+											{{ link.spec.url }}
 										</view>
 									</view>
 								</view>
@@ -106,7 +119,7 @@
 			</block>
 
 			<!-- 返回顶部 -->
-			<tm-flotbutton v-if="linkTotal > 10" color="light-blue" @click="fnToTopPage" size="m" icon="icon-angle-up"></tm-flotbutton>
+			<tm-flotbutton color="light-blue" @click="fnToTopPage" size="m" icon="icon-angle-up"></tm-flotbutton>
 
 			<!-- 详情弹窗 -->
 			<tm-poup v-model="detail.show" :width="640" height="auto" position="center" :round="6">
@@ -138,10 +151,13 @@
 
 					<!-- 博客预览图 -->
 					<view class="mt-24">
-						<tm-images :width="568" :round="2" :src="caclSiteThumbnail(detail.data.url)" mode="aspectFill"></tm-images>
+						<tm-images :width="568" :round="2" :src="caclSiteThumbnail(detail.data.url)"
+							mode="aspectFill"></tm-images>
 					</view>
 				</view>
 			</tm-poup>
+
+			<view class="load-text">{{ loadMoreText }}</view>
 		</view>
 	</view>
 </template>
@@ -155,7 +171,9 @@
 	import tmImages from '@/tm-vuetify/components/tm-images/tm-images.vue';
 	import tmPoup from '@/tm-vuetify/components/tm-poup/tm-poup.vue';
 
-	import { GetRandomNumberByRange } from '@/utils/random.js';
+	import {
+		GetRandomNumberByRange
+	} from '@/utils/random.js';
 	export default {
 		components: {
 			tmSkeleton,
@@ -171,15 +189,17 @@
 				loading: 'loading',
 				queryParams: {
 					size: 10,
-					page: 0,
-					sort: ''
+					page: 1
 				},
-				result: [],
+				result: {},
 				detail: {
 					show: false,
 					data: {}
 				},
-				linkTotal: 0
+				isLoadMore: false,
+				loadMoreText: '',
+				dataList: [],
+				cacheDataList: []
 			};
 		},
 		computed: {
@@ -195,12 +215,26 @@
 		},
 		onLoad() {
 			this.fnSetPageTitle('朋友圈');
-		},
-		created() {
 			this.fnGetData();
 		},
 		onPullDownRefresh() {
+			this.isLoadMore = false;
+			this.queryParams.page = 1;
+			this.dataList = []
+			this.cacheDataList = []
 			this.fnGetData();
+		},
+		onReachBottom(e) {
+			if (this.result.hasNext) {
+				this.queryParams.page += 1;
+				this.isLoadMore = true;
+				this.fnGetData();
+			} else {
+				uni.showToast({
+					icon: 'none',
+					title: '没有更多数据了'
+				});
+			}
 		},
 		methods: {
 			fnRandomColor() {
@@ -208,43 +242,35 @@
 				return this.$haloConfig.colors[_r];
 			},
 			fnGetData() {
-				this.linkTotal = 0;
-				this.loading = 'loading';
-				// uni.showLoading({
-				// 	mask: true,
-				// 	title: '加载中...'
-				// });
-				this.$httpApi
-					.getLinkListByTeam()
-					.then(res => {
-						if (res.status == 200) {
-							console.log('请求结果：');
-							console.log(res);
-							// 处理数据
-							const _result = res.data.map(item => {
-								const _team = item.team || '未分组';
-								const _links = item.links.map(link => {
-									this.linkTotal += 1;
-									link.logo = this.$utils.checkAvatarUrl(link.logo);
-									return link;
-								});
-								return {
-									title: _team,
-									children: _links
-								};
-							});
+				if (!this.isLoadMore) {
+					this.loading = 'loading';
+				}
+				this.loadMoreText = '';
 
-							this.result = _result.reverse();
-							setTimeout(() => {
-								this.loading = 'success';
-							}, 500);
-						} else {
-							this.loading = 'error';
-						}
+				this.$httpApi.v2
+					.getFriendLinkList(this.queryParams)
+					.then(res => {
+						console.log('请求结果：');
+						console.log(res);
+						this.result = res;
+						const list = res.items.map(item => {
+							item.spec.logo = this.$utils.checkAvatarUrl(item.spec.logo)
+							return item;
+						})
+						this.dataList = this.dataList.concat(list);
+
+						// this.cacheDataList = this.cacheDataList.concat(list);
+						// this.dataList = this.handleGroup(this.cacheDataList).reverse();
+						setTimeout(() => {
+							this.loading = 'success';
+							this.loadMoreText = res.hasNext ? '上拉加载更多' : '呜呜，没有更多数据啦~';
+						}, 500);
+
 					})
 					.catch(err => {
 						console.error(err);
 						this.loading = 'error';
+						this.loadMoreText = '加载失败，请下拉刷新！';
 					})
 					.finally(() => {
 						setTimeout(() => {
@@ -254,6 +280,30 @@
 					});
 			},
 
+			handleGroup(list) {
+				const group = {}
+				list.forEach(item => {
+					if (group[item.spec.groupName]) {
+						group[item.spec.groupName].children.push(item)
+					} else {
+						group[item.spec.groupName] = {
+							title: item.spec.groupName,
+							children: [item]
+						}
+					}
+				})
+
+				return Object.keys(group).map(key => {
+					const {
+						title,
+						children = []
+					} = group[key]
+					return {
+						title,
+						children
+					}
+				})
+			},
 			fnOnLinkEvent(link) {
 				this.detail.data = link;
 				this.detail.show = true;

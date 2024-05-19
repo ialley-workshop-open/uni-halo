@@ -11,7 +11,15 @@ export default {
 	 * @param {Object} params 参数 
 	 */
 	getPostList: (params) => {
-		return HttpHandler.Get(`/api/content/posts`, params)
+		return HttpHandler.Get(`/apis/api.content.halo.run/v1alpha1/posts`, params)
+	},
+
+	/**
+	 * 根据名称获取文章
+	 * @param {String} name 分类名称
+	 */
+	getPostByName: (name) => {
+		return HttpHandler.Get(`/apis/api.content.halo.run/v1alpha1/posts/${name}`, {})
 	},
 
 	/**

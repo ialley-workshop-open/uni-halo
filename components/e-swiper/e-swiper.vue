@@ -2,47 +2,31 @@
 	<!-- 轮播图 -->
 	<view class="Swiper-mfw-index-box">
 		<view class="Swiper-mfw-index Swiper-box" :class="[dotPosition]">
-			<swiper
-				class="Swiper-mfw"
-				:style="{ height: height }"
-				:circular="true"
-				:indicator-dots="false"
-				:autoplay="autoplay"
-				:interval="3000"
-				:duration="1000"
-				:current="currentIndex"
-				:disable-touch="disable_touch"
-				@change="change"
-			>
+			<swiper class="Swiper-mfw" :style="{ height: height }" :circular="true" :indicator-dots="false"
+				:autoplay="autoplay" :interval="3000" :duration="1000" :current="currentIndex"
+				:disable-touch="disable_touch" @change="change">
 				<!-- 只需要前5条数据 -->
-				<swiper-item class="swiper-mfw-item" v-if="index <= (dotPosition == 'right' ? 3 : 4)" v-for="(item, index) in list" :key="index">
-					<!-- /*
+				<block v-for="(item, index) in list" :key="index">
+					<swiper-item class="swiper-mfw-item" v-if="index <= 4">
+						<!-- /*
 					 1. 这里不需要用api控制暂停视频
 					 2. 因为video标签上加了v-if="current==index"
 					 3. 当current == index时才会创建视频组件
 					 4. 否current != index则就销毁视频
 					 */ -->
-					<!-- 如果有视频，则显示视频-->
-					<template v-if="item.mp4 && current == index">
-						<video
-							class="ImageVideo"
-							:id="'ImageVideo' + index"
-							:ref="'ImageVideo' + index"
-							:src="item.mp4"
-							:loop="true"
-							:muted="false"
-							:autoplay="current == index ? true : false"
-							:controls="false"
-							:show-fullscreen-btn="false"
-							:show-play-btn="false"
-							:enable-progress-gesture="false"
-							:play-strategy="0"
-							:poster="item.image || item.src"
-						></video>
-					</template>
-					<!-- 否则显示图片 -->
-					<image v-else :src="item.image || item.src" class="Image" mode="aspectFill" @click.stop="$emit('on-click', item)"></image>
-				</swiper-item>
+						<!-- 如果有视频，则显示视频-->
+						<template v-if="item.mp4 && current == index">
+							<video class="ImageVideo" :id="'ImageVideo' + index" :ref="'ImageVideo' + index"
+								:src="item.mp4" :loop="true" :muted="false" :autoplay="current == index ? true : false"
+								:controls="false" :show-fullscreen-btn="false" :show-play-btn="false"
+								:enable-progress-gesture="false" :play-strategy="0"
+								:poster="item.image || item.src"></video>
+						</template>
+						<!-- 否则显示图片 -->
+						<image v-else :src="item.image || item.src" class="Image" mode="aspectFill"
+							@click.stop="$emit('on-click', item)"></image>
+					</swiper-item>
+				</block>
 			</swiper>
 			<!-- 指示器 [Top] -->
 			<view v-if="useTop" class="Swiper-indicator-box indicator-Top-box">
@@ -84,12 +68,15 @@
 						<!-- 用户信息 -->
 						<view class="Bottom-UserInfo">
 							<!-- 头像 -->
-							<view class="UserImage-box"><image :src="item.avatar" class="Image" mode="aspectFill"></image></view>
+							<view class="UserImage-box">
+								<image :src="item.avatar" class="Image" mode="aspectFill"></image>
+							</view>
 							<!-- 用户名 -->
 							<view class="textbox UserName-box">
 								<text class="text UserInfo">{{ item.nickname }}</text>
 							</view>
-							<view v-if="item.createTime" class="jiange-box"><text class="text jiange-text"></text></view>
+							<view v-if="item.createTime" class="jiange-box"><text class="text jiange-text"></text>
+							</view>
 							<view v-if="item.createTime" class="textbox UserGPS-box">
 								<text class="text UserInfo">发布于 {{ item.createTime }}</text>
 							</view>
@@ -106,18 +93,14 @@
 				<!-- 左边 -->
 				<view class="Bottom-left-Imagelist">
 					<block v-for="(item, index) in list" :key="index">
-						<view
-							class="Bottom-item"
-							v-if="Number(index) <= (dotPosition == 'right' ? 3 : 4)"
-							:class="currentIndex == index ? 'current' : 'no'"
-							@click="SwiperIndTap(index)"
-						>
+						<view class="Bottom-item" v-if="Number(index) <= 4"
+							:class="currentIndex == index ? 'current' : 'no'" @click="SwiperIndTap(index)">
 							<image :src="item.image || item.src" class="Image" mode="aspectFill"></image>
 						</view>
 					</block>
 				</view>
 				<!-- 右边 -->
-				<view class="Bottom-right-lili-btn">
+				<view v-if="false" class="Bottom-right-lili-btn">
 					<view class="Bottom-item is-more">
 						<view class="more" @click.stop="$emit('on-more')">
 							MORE
@@ -132,102 +115,106 @@
 </template>
 
 <script>
-export default {
-	name: 'e-swiper',
-	props: {
-		title: {
-			type: String,
-			default: ''
-		},
-		height: {
-			type: String,
-			default: '450rpx'
-		},
-		dotPosition: {
-			type: String,
-			default: 'bottom'
-		},
-		useTop: {
-			type: Boolean,
-			default: true
-		},
-		useDot: {
-			type: Boolean,
-			default: true
-		},
-		useTitle: {
-			type: Boolean,
-			default: true
-		},
-		useUser: {
-			type: Boolean,
-			default: true
-		},
-		// 轮播图 数据列表
-		list: {
-			type: Array,
-			default: () => []
-		},
-		// 当前选中的项(指示器坐标位置)
-		current: {
-			type: Number,
-			default: 0
-		},
-		// 是否自动轮播
-		autoplay: {
-			type: Boolean,
-			default: false
-		}
-	},
-	data() {
-		return {
-			// 是否禁止用户 touch 操作
-			currentIndex: 0,
-			disable_touch: false, //touch 用户划动引起swiper变化。
-			date: {
-				year: '-',
-				monthEn: '-',
-				month: '-'
+	export default {
+		name: 'e-swiper',
+		props: {
+			title: {
+				type: String,
+				default: ''
+			},
+			height: {
+				type: String,
+				default: '450rpx'
+			},
+			dotPosition: {
+				type: String,
+				default: 'bottom'
+			},
+			useTop: {
+				type: Boolean,
+				default: true
+			},
+			useDot: {
+				type: Boolean,
+				default: true
+			},
+			useTitle: {
+				type: Boolean,
+				default: true
+			},
+			useUser: {
+				type: Boolean,
+				default: true
+			},
+			// 轮播图 数据列表
+			list: {
+				type: Array,
+				default: () => []
+			},
+			// 当前选中的项(指示器坐标位置)
+			current: {
+				type: Number,
+				default: 0
+			},
+			// 是否自动轮播
+			autoplay: {
+				type: Boolean,
+				default: false
 			}
-		};
-	},
-	created() {
-		this.currentIndex = this.current;
-		const date = new Date();
-		//将月份名称存储在数组中
-		const monthArray = new Array('Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec');
+		},
+		data() {
+			return {
+				// 是否禁止用户 touch 操作
+				currentIndex: 0,
+				disable_touch: false, //touch 用户划动引起swiper变化。
+				date: {
+					year: '-',
+					monthEn: '-',
+					month: '-'
+				}
+			};
+		},
+		created() {
+			this.currentIndex = this.current;
+			const date = new Date();
+			//将月份名称存储在数组中
+			const monthArray = new Array('Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov',
+				'Dec');
 
-		this.date.year = date.getFullYear();
-		let month = date.getMonth() + 1;
-		this.date.month = month < 10 ? '0' + month : month;
-		this.date.monthEn = monthArray[date.getMonth()].toUpperCase();
-	},
-	methods: {
-		// current 改变时会触发 change 事件，event.detail = {current: current, source: source}
-		change(e) {
-			let { current, source } = e.detail;
-			//只有页面自动切换，手动切换时才轮播，其他不允许
-			if (source === 'autoplay' || source === 'touch') {
+			this.date.year = date.getFullYear();
+			let month = date.getMonth() + 1;
+			this.date.month = month < 10 ? '0' + month : month;
+			this.date.monthEn = monthArray[date.getMonth()].toUpperCase();
+		},
+		methods: {
+			// current 改变时会触发 change 事件，event.detail = {current: current, source: source}
+			change(e) {
+				let {
+					current,
+					source
+				} = e.detail;
+				//只有页面自动切换，手动切换时才轮播，其他不允许
+				if (source === 'autoplay' || source === 'touch') {
+					let event = {
+						current: current
+					};
+					this.currentIndex = current;
+					this.$emit('change', event);
+				}
+			},
+			// 手动点击了指示器[小图模式]
+			SwiperIndTap(e) {
+				let index = e;
 				let event = {
-					current: current
+					current: index
 				};
-				this.currentIndex = current;
+				this.currentIndex = index;
 				this.$emit('change', event);
 			}
-		},
-		// 手动点击了指示器[小图模式]
-		SwiperIndTap(e) {
-			let index = e;
-			let event = {
-				current: index
-			};
-			this.currentIndex = index;
-			this.$emit('change', event);
 		}
-	}
-};
+	};
 </script>
 
 <style lang="scss" scoped>
-@import './e-swiper.scss';
+	@import './e-swiper.scss';
 </style>

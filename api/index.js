@@ -40,7 +40,11 @@ import admin_comments from './admin/comments.js'
 import admin_posts from './admin/posts.js'
 import admin_logs from './admin/logs.js'
 
+// 2.0接口
+import v2 from './v2/all.api.js'
+
 const ApiManager = {
+	v2,
 	...archive,
 	...article,
 	...blogger,

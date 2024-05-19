@@ -42,7 +42,7 @@
 					size: 10,
 					page: 0
 				},
-				slug: '',
+				name: '',
 				pageTitle: '加载中...',
 				result: null,
 				dataList: [],
@@ -52,8 +52,8 @@
 		},
 
 		onLoad(e) {
-			this.slug = e.slug;
-			this.pageTitle = e.name;
+			this.name = e.name;
+			this.pageTitle = e.title;
 			this.fnGetData();
 		},
 		onPullDownRefresh() {
@@ -85,16 +85,17 @@
 				}
 				this.loadMoreText = '加载中...';
 				this.$httpApi
-					.getCategoryPostList(this.slug, this.queryParams)
+					.getCategoryPostList(this.name, this.queryParams)
 					.then(res => {
-						this.fnSetPageTitle(`分类：${this.pageTitle} （共${res.data.total}篇）`);
-						this.result = res.data;
+						console.log("请求成功：",res)
+						this.fnSetPageTitle(`${this.pageTitle} （共${res.total}篇）`);
+						this.result = res;
 						if (this.isLoadMore) {
-							this.dataList = this.dataList.concat(res.data.content);
+							this.dataList = this.dataList.concat(res.items);
 						} else {
-							this.dataList = res.data.content;
+							this.dataList = res.items;
 						}
-						this.loadMoreText = res.data.hasNext ? '上拉加载更多' : '呜呜，没有更多数据啦~';
+						this.loadMoreText = res.hasNext ? '上拉加载更多' : '呜呜，没有更多数据啦~';
 						setTimeout(() => {
 							this.loading = 'success';
 						}, 500);
@@ -114,7 +115,7 @@
 			//跳转文章详情
 			fnToArticleDetail(article) {
 				uni.navigateTo({
-					url: '/pagesA/article-detail/article-detail?articleId=' + article.id,
+					url: '/pagesA/article-detail/article-detail?name=' + article.metadata.name,
 					animationType: 'slide-in-right'
 				});
 			}

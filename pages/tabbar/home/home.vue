@@ -20,14 +20,12 @@
 		</view>
 		<block v-else>
 			<view class="bg-white pb-24">
-				<!-- 轮播图+广告 -->
 				<view class="banner bg-white ml-24 mr-24 mt-12 round-3" v-if="bannerList.length != 0">
 					<e-swiper :dotPosition="globalAppSettings.banner.dotPosition" :autoplay="true"
 						:useDot="globalAppSettings.banner.useDot" :list="bannerList"
 						@on-click="fnOnBannerClick"></e-swiper>
 				</view>
 			</view>
-			<!-- 精品分类 -->
 			<view class="flex flex-between mt-16 mb-24 pl-24 pr-24">
 				<view class="page-item_title text-weight-b ">精品分类</view>
 				<view class="show-more flex flex-center bg-white round-3" @click="fnToCategoryPage">
@@ -64,9 +62,9 @@
 					label="博主还没有发表任何文章~"></tm-empty></view>
 			<block v-else>
 				<view :class="globalAppSettings.layout.home">
-					<tm-translate v-for="(article, index) in articleList" :key="article.metadata.name" class="ani-item"
+					<tm-translate v-for="(article, index) in articleList" :key="index" class="ani-item"
 						animation-name="fadeUp" :wait="calcAniWait(index)">
-						<article-card from="home" :article="article" @on-click="fnToArticleDetail"></article-card>
+						<article-card from="home" :article="article" :post="article" @on-click="fnToArticleDetail"></article-card>
 					</tm-translate>
 				</view>
 				<view class="load-text mt-12">{{ loadMoreText }}</view>
@@ -258,19 +256,16 @@
 				}
 				this.loadMoreText = '加载中...';
 
-
 				this.$httpApi.v2
 					.getPostList(this.queryParams)
 					.then(res => {
 						console.log('加载成功', res);
-						setTimeout(() => {
-							this.result = res;
-							if (this.isLoadMore) {
-								this.articleList = this.articleList.concat(res.items);
-							} else {
-								this.articleList = res.items;
-							}
-						}, 200)
+						this.result.hasNext = res.hasNext;
+						if (this.isLoadMore) {
+							this.articleList = this.articleList.concat(res.items);
+						} else {
+							this.articleList = res.items;
+						}
 						this.loading = 'success';
 						this.loadMoreText = res.hasNext ? '上拉加载更多' : '呜呜，没有更多数据啦~';
 					})

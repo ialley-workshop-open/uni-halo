@@ -127,7 +127,7 @@
 					}
 					this.$httpApi.v2.addPostComment(commentForm)
 						.then(res => {
-							uni.$tm.toast('日志：提交成功！');
+							uni.$tm.toast('提交成功！');
 							// 更新评论者信息
 							this.handleSetVisitor();
 							setTimeout(() => {
@@ -135,7 +135,7 @@
 							}, 1500)
 						})
 						.catch(err => {
-							uni.$tm.toast("提示：评论失败");
+							uni.$tm.toast("评论失败");
 						});
 					return;
 				}
@@ -155,7 +155,7 @@
 				}
 				this.$httpApi.v2.addPostCommentReply(this.form.postName, replyForm)
 					.then(res => {
-						uni.$tm.toast('提示：提交成功！');
+						uni.$tm.toast('提交成功！');
 						// 更新评论者信息
 						this.handleSetVisitor();
 						setTimeout(() => {
@@ -163,7 +163,7 @@
 						}, 1500)
 					})
 					.catch(err => {
-						uni.$tm.toast("提示：回复失败");
+						uni.$tm.toast("回复失败");
 					});
 			}
 		}

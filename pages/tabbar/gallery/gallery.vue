@@ -81,7 +81,7 @@
 				},
 				isLoadMore: false,
 				loadMoreText: '',
-				result: {},
+				hasNext: false,
 				dataList: []
 			};
 		},
@@ -101,7 +101,7 @@
 			this.fnGetData();
 		},
 		onReachBottom(e) {
-			if (this.result.hasNext) {
+			if (this.hasNext) {
 				this.queryParams.page += 1;
 				this.isLoadMore = true;
 				this.fnGetData();
@@ -150,7 +150,7 @@
 					.getPhotoListByGroupName(this.queryParams)
 					.then(res => {
 						console.log("相册 res", res)
-						this.result = res;
+						this.hasNext = res.hasNext;
 						this.loading = 'success';
 						if (res.items.length != 0) {
 							const _list = res.items.map((item, index) => {

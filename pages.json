@@ -259,6 +259,13 @@
 						}
 					}
 				}
+			},
+			{
+				"path" : "test-page/test-page",
+				"style" : 
+				{
+					"navigationBarTitleText" : ""
+				}
 			}]
 		},
 		{

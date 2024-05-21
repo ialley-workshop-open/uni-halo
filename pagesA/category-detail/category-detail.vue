@@ -7,11 +7,13 @@
 			<tm-skeleton model="listAvatr"></tm-skeleton>
 		</view>
 		<block v-else>
-			<view class="empty" v-if="dataList.length == 0"><tm-empty icon="icon-shiliangzhinengduixiang-" label="该分类下暂无文章"></tm-empty></view>
+			<view class="empty" v-if="dataList.length == 0"><tm-empty icon="icon-shiliangzhinengduixiang-"
+					label="该分类下暂无文章"></tm-empty></view>
 			<block v-else>
 				<block v-for="(article, index) in dataList" :key="article.createTime">
 					<!-- 文章卡片 -->
-					<tm-translate animation-name="fadeUp" :wait="calcAniWait(index)"><article-card :article="article" @on-click="fnToArticleDetail"></article-card></tm-translate>
+					<tm-translate animation-name="fadeUp" :wait="calcAniWait(index)"><article-card :article="article"
+							@on-click="fnToArticleDetail"></article-card></tm-translate>
 				</block>
 				<view class="load-text">{{ loadMoreText }}</view>
 			</block>
@@ -44,7 +46,7 @@
 				},
 				name: '',
 				pageTitle: '加载中...',
-				result: null,
+				hasNext: false,
 				dataList: [],
 				isLoadMore: false,
 				loadMoreText: ''
@@ -62,7 +64,7 @@
 			this.fnGetData();
 		},
 		onReachBottom(e) {
-			if (this.result.hasNext) {
+			if (this.hasNext) {
 				this.queryParams.page += 1;
 				this.isLoadMore = true;
 				this.fnGetData();
@@ -87,9 +89,9 @@
 				this.$httpApi
 					.getCategoryPostList(this.name, this.queryParams)
 					.then(res => {
-						console.log("请求成功：",res)
+						console.log("请求成功：", res)
 						this.fnSetPageTitle(`${this.pageTitle} （共${res.total}篇）`);
-						this.result = res;
+						this.hasNext = res.hasNext;
 						if (this.isLoadMore) {
 							this.dataList = this.dataList.concat(res.items);
 						} else {

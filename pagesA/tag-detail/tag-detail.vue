@@ -47,8 +47,9 @@
 				},
 				name: '',
 				pageTitle: '加载中...',
-				result: null,
+				 
 				dataList: [],
+				hasNext:false,
 				isLoadMore: false,
 				loadMoreText: ''
 			};
@@ -66,7 +67,7 @@
 			this.fnGetData();
 		},
 		onReachBottom(e) {
-			if (this.result && this.result.hasNext) {
+			if (this.hasNext) {
 				this.queryParams.page += 1;
 				this.isLoadMore = true;
 				this.fnGetData();
@@ -92,7 +93,7 @@
 					.getPostByTagName(this.name, this.queryParams)
 					.then(res => {
 						this.fnSetPageTitle(`${this.pageTitle} （共${res.total}篇）`);
-						this.result = res;
+						this.hasNext = res.hasNext;
 						if (this.isLoadMore) {
 							this.dataList = this.dataList.concat(res.items);
 						} else {

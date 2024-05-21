@@ -12,20 +12,19 @@
 				<tm-empty icon="icon-shiliangzhinengduixiang-" label="暂无数据"></tm-empty>
 			</view>
 			<block v-else>
-				<block v-for="(item, index) in dataList" :key="index">
-					<!--  卡片 -->
-					<tm-translate style="box-sizing: border-box;width: 50%;padding: 0 8rpx;" animation-name="fadeUp"
-						:wait="calcAniWait()">
-						<view class="catgory-card" :style="{backgroundImage:`url(${item.spec.cover})`}">
-							<view class="content">
-								<view style="font-size: 32rpx;color: #ffffff;">{{item.spec.displayName}}</view>
-								<view style="font-size: 24rpx;color: #ffffff;margin-top: 6rpx;">共
-									{{item.postCount}} 篇文章
-								</view>
+
+				<tm-translate v-for="(item, index) in dataList" :key="index"
+					style="box-sizing: border-box;width: 50%;padding: 0 8rpx;" animation-name="fadeUp"
+					:wait="calcAniWait(index)">
+					<view class="catgory-card" :style="{backgroundImage:`url(${item.spec.cover})`}">
+						<view class="content" @click="handleToCategory(item)">
+							<view style="font-size: 32rpx;color: #ffffff;">{{item.spec.displayName}}</view>
+							<view style="font-size: 24rpx;color: #ffffff;margin-top: 6rpx;">共
+								{{item.postCount}} 篇文章
 							</view>
 						</view>
-					</tm-translate>
-				</block>
+					</view>
+				</tm-translate>
 				<tm-flotbutton @click="fnToTopPage" size="m" color="light-blue" icon="icon-angle-up"></tm-flotbutton>
 				<view class="load-text">{{ loadMoreText }}</view>
 			</block>
@@ -57,7 +56,7 @@
 					size: 20,
 					page: 1
 				},
-				result: null,
+				hasNext: false,
 				dataList: [],
 				isLoadMore: false,
 				loadMoreText: '加载中...'
@@ -80,7 +79,7 @@
 		},
 
 		onReachBottom(e) {
-			if (this.result.hasNext) {
+			if (this.hasNext) {
 				this.queryParams.page += 1;
 				this.isLoadMore = true;
 				this.fnGetData();
@@ -111,7 +110,7 @@
 						this.loading = 'success';
 						this.loadMoreText = res.hasNext ? '上拉加载更多' : '呜呜，没有更多数据啦~';
 						// 处理数据
-						this.result = res;
+						this.hasNext = res.hasNext;
 
 						const tempItems = res.items.map(item => {
 							item.spec.cover = this.$utils.checkThumbnailUrl(item.spec.cover, true)
@@ -140,6 +139,11 @@
 				uni.previewImage({
 					current: index,
 					urls: list.map(item => item.url)
+				})
+			},
+			handleToCategory(data) {
+				uni.navigateTo({
+					url: `/pagesA/category-detail/category-detail?name=${data.metadata.name}&title=${data.spec.displayName}`
 				})
 			}
 		}

@@ -46,8 +46,9 @@
 					size: 10,
 					page: 0
 				},
-				result: null,
+			 
 				dataList: [],
+				hasNext:false,
 				isLoadMore: false,
 				loadMoreText: '加载中...'
 			};
@@ -65,7 +66,7 @@
 			this.fnGetData();
 		},
 		onReachBottom(e) {
-			if (this.result.hasNext) {
+			if (this.hasNext) {
 				this.queryParams.page += 1;
 				this.isLoadMore = true;
 				this.fnGetData();

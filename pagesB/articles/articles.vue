@@ -153,7 +153,7 @@
 				},
 				isLoadMore: false,
 				loadMoreText: '加载中...',
-				result: {},
+			hasNext:false,
 				dataList: [],
 				category: {
 					loading: 'loading',
@@ -182,7 +182,7 @@
 		},
 
 		onReachBottom(e) {
-			if (this.result.hasNext) {
+			if (this.hasNext) {
 				this.queryParams.page += 1;
 				this.isLoadMore = true;
 				this.fnGetData();

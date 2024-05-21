@@ -29,8 +29,10 @@
 				<tm-translate v-for="(article, index) in dataList" :key="article.name" animation-name="fadeUp"
 					:wait="calcAniWait(index)">
 					<view class="article-card" @click="fnToArticleDetail(article)">
-						<text style="font-size: 32rpx;font-weight: bold;color: #333;" v-html="article.title">{{article.title}}</text>
-						<text style="font-size: 28rpx;margin-top: 16rpx;color: #555;" v-html="article.content">{{article.content}}
+						<text style="font-size: 32rpx;font-weight: bold;color: #333;"
+							v-html="article.title">{{article.title}}</text>
+						<text style="font-size: 28rpx;margin-top: 16rpx;color: #555;"
+							v-html="article.content">{{article.content}}
 						</text>
 						<text style="font-size: 24rpx;margin-top: 24rpx;color:#888">
 							发布日期：{{ { d: article.publishTimestamp, f: 'yyyy年MM月dd日' } | formatTime }}
@@ -80,16 +82,16 @@
 					dataList: [],
 					total: 0
 				},
+				hasNext: false,
 				isLoadMore: false,
 				loadMoreText: '加载中...',
-				result: {},
 				dataList: []
 			};
 		},
 		onLoad() {
 			this.fnSetPageTitle('文章列表');
 		},
-		created() { 
+		created() {
 			if (!this.queryParams.keyword) {
 				this.loading = 'success'
 			} else {
@@ -145,7 +147,7 @@
 
 						this.loading = 'success';
 						this.loadMoreText = res.hasNext ? '上拉加载更多' : '呜呜，没有更多数据啦~';
-						this.result = res;
+						this.hasNext = res.hasNext;
 						if (this.isLoadMore) {
 							this.dataList = this.dataList.concat(res.hits);
 						} else {

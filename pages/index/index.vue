@@ -20,6 +20,10 @@
 					uni.switchTab({
 						url: '/pages/tabbar/home/home'
 					});
+					
+					// uni.navigateTo({
+					// 	url:'/pagesA/test-page/test-page'
+					// })
 				} else {
 					uni.redirectTo({
 						url: '/pagesA/start/start'

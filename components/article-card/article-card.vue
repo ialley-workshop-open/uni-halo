@@ -16,7 +16,6 @@
 					{{ { d: article.spec.publishTime, f: 'yyyy-MM-dd' } | formatTime }}
 				</view>
 				<view class="visits">
-					<!-- <tm-icons :size="24" name="icon-filter-fill"></tm-icons> -->
 					浏览
 					<text class="number">{{ article.stats.visit }}</text>
 					次

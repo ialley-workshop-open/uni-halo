@@ -191,11 +191,11 @@
 					size: 10,
 					page: 1
 				},
-				result: {},
 				detail: {
 					show: false,
 					data: {}
 				},
+				hasNext:false,
 				isLoadMore: false,
 				loadMoreText: '',
 				dataList: [],
@@ -225,7 +225,7 @@
 			this.fnGetData();
 		},
 		onReachBottom(e) {
-			if (this.result.hasNext) {
+			if (this.hasNext) {
 				this.queryParams.page += 1;
 				this.isLoadMore = true;
 				this.fnGetData();
@@ -252,7 +252,7 @@
 					.then(res => {
 						console.log('请求结果：');
 						console.log(res);
-						this.result = res;
+						this.hasNext = res.hasNext;
 						const list = res.items.map(item => {
 							item.spec.logo = this.$utils.checkAvatarUrl(item.spec.logo)
 							return item;

@@ -79,7 +79,7 @@
 					size: 10,
 					page: 1
 				},
-				result: null,
+				hasNext: false,
 				dataList: [],
 				isLoadMore: false,
 				loadMoreText: '加载中...'
@@ -102,7 +102,7 @@
 		},
 
 		onReachBottom(e) {
-			if (this.result.hasNext) {
+			if (this.hasNext) {
 				this.queryParams.page += 1;
 				this.isLoadMore = true;
 				this.fnGetData();
@@ -131,9 +131,8 @@
 						console.log(res);
 
 						this.loading = 'success';
-						this.loadMoreText = res.hasNext ? '上拉加载更多' : '呜呜，没有更多数据啦~';
-						// 处理数据
-						this.result = res;
+						this.loadMoreText = res.hasNext ? '上拉加载更多' : '呜呜，没有更多数据啦~'; 
+						this.hasNext = res.hasNext;
 
 						const tempItems = res.items.map(item => {
 							item.spec.user = {

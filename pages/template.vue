@@ -47,6 +47,7 @@ export default {
 			},
 			result: null,
 			dataList: [],
+			hasNext:false,
 			isLoadMore: false,
 			loadMoreText: '加载中...'
 		};

@@ -34,7 +34,6 @@ const utils = {
 
 	// 检查封面图
 	checkThumbnailUrl: function(thumbnail, mustRealUrl = false) {
-		console.log("thumbnail",thumbnail)
 		if (!thumbnail && mustRealUrl) {
 			return HaloConfig.defaultStaticThumbnailUrl
 		}

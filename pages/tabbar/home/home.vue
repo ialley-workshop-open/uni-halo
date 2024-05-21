@@ -1,8 +1,7 @@
 <template>
 	<view class="app-page">
 		<tm-menubars iconColor="white" color="white" :flat="true" :showback="false">
-			<image slot="left" class="logo ml-24 round-24" :src="bloggerInfo.avatar" mode="scaleToFill"
-				@click="$tm.toast('以后会放一个彩蛋~')"></image>
+			<image slot="left" class="logo ml-24 round-24" :src="bloggerInfo.avatar" mode="scaleToFill"></image>
 			<view class="search-input round-12 pt-12 pb-12 flex pl-24" @click="fnToSearch">
 				<text class="search-input_icon iconfont text-size-m icon-search text-grey"></text>
 				<view class="search-input_text pl-12 text-size-m text-grey">搜索文章...</view>
@@ -11,7 +10,7 @@
 			<view slot="right" class="mr-24 text-size-m text-grey">uni-halo</view>
 			<!-- #endif -->
 		</tm-menubars>
-		<view v-if="loading != 'success'" class="loading-wrap">
+		<view v-if="loading != 'success' && articleList.length===0" class="loading-wrap">
 			<tm-skeleton model="card"></tm-skeleton>
 			<tm-skeleton model="cardActions"></tm-skeleton>
 			<tm-skeleton model="list"></tm-skeleton>
@@ -26,7 +25,7 @@
 					<e-swiper :dotPosition="globalAppSettings.banner.dotPosition" :autoplay="true"
 						:useDot="globalAppSettings.banner.useDot" :list="bannerList"
 						@on-click="fnOnBannerClick"></e-swiper>
-				</view> 
+				</view>
 			</view>
 			<!-- 精品分类 -->
 			<view class="flex flex-between mt-16 mb-24 pl-24 pr-24">
@@ -65,28 +64,16 @@
 					label="博主还没有发表任何文章~"></tm-empty></view>
 			<block v-else>
 				<view :class="globalAppSettings.layout.home">
-					<block v-for="(article, index) in articleList" :key="article.spec.slug">
-						<tm-translate class="ani-item" animation-name="fadeUp" :wait="calcAniWait(index)">
-							<article-card from="home" :article="article" @on-click="fnToArticleDetail"></article-card>
-							<!-- 广告区域 -->
-							<view v-if="haloAdConfig.home.use && (index + 1) % haloAdConfig.frequency == 0"
-								class="ad-wrap ma-24">
-								<!-- #ifdef MP-WEIXIN -->
-								<ad v-if="haloAdConfig.unitId" :unit-id="haloAdConfig.unitId"></ad>
-								<!-- #endif -->
-								<!-- #ifndef MP-WEIXIN -->
-								<ad v-if="haloAdConfig.adpid" :adpid="haloAdConfig.adpid"></ad>
-								<!-- #endif -->
-							</view>
-						</tm-translate>
-					</block>
+					<tm-translate v-for="(article, index) in articleList" :key="article.metadata.name" class="ani-item"
+						animation-name="fadeUp" :wait="calcAniWait(index)">
+						<article-card from="home" :article="article" @on-click="fnToArticleDetail"></article-card>
+					</tm-translate>
 				</view>
 				<view class="load-text mt-12">{{ loadMoreText }}</view>
 				<tm-flotbutton v-if="articleList.length > 10" color="light-blue" @click="fnToTopPage" size="m"
 					icon="icon-angle-up"></tm-flotbutton>
 			</block>
 		</block>
-		<!-- 	<tm-flotbutton @click="fnChangeMode" size="m" color="light-blue" :icon="$tm.vx.state().tmVuetify.black ? 'icon-lightbulb' : 'icon-lightbulb-fill'"></tm-flotbutton> -->
 	</view>
 </template>
 
@@ -125,7 +112,7 @@
 				noticeList: [],
 				articleList: [],
 				categoryList: [],
-			 
+
 			};
 		},
 
@@ -138,7 +125,7 @@
 
 		},
 		onLoad() {
-			this.fnSetPageTitle(); 
+			this.fnSetPageTitle();
 		},
 
 		created() {
@@ -166,14 +153,13 @@
 			fnQuery() {
 				this.fnGetBanner();
 				this.fnGetArticleList();
-				this.fnGetCategoryList(); 
+				this.fnGetCategoryList();
 			},
-		 
+
 			fnGetCategoryList() {
 				this.$httpApi.v2
 					.getCategoryList({})
 					.then(res => {
-						console.log('查询分类成功：', res);
 						this.categoryList = res.items.sort((a, b) => {
 							return b.postCount - a.postCount;
 						});
@@ -271,19 +257,22 @@
 					this.loading = 'loading';
 				}
 				this.loadMoreText = '加载中...';
+
+
 				this.$httpApi.v2
 					.getPostList(this.queryParams)
 					.then(res => {
 						console.log('加载成功', res);
+						setTimeout(() => {
+							this.result = res;
+							if (this.isLoadMore) {
+								this.articleList = this.articleList.concat(res.items);
+							} else {
+								this.articleList = res.items;
+							}
+						}, 200)
 						this.loading = 'success';
 						this.loadMoreText = res.hasNext ? '上拉加载更多' : '呜呜，没有更多数据啦~';
-						this.result = res;
-						if (this.isLoadMore) {
-							this.articleList = this.articleList.concat(res.items);
-						} else {
-							this.articleList = res.items;
-						}
-						this.loading = 'success';
 					})
 					.catch(err => {
 						this.loading = 'error';

@@ -311,17 +311,17 @@
 					// 	type: 'poup',
 					// 	show: true
 					// },
-					{
-						key: 'update',
-						title: '版本更新',
-						leftIcon: 'icon-clouddownload',
-						leftIconColor: 'pink',
-						rightText: `当前版本 v${systemInfo.appVersion}`,
-						path: 'update',
-						isAdmin: false,
-						type: 'poup',
-						show: true
-					},
+					// {
+					// 	key: 'update',
+					// 	title: '版本更新',
+					// 	leftIcon: 'icon-clouddownload',
+					// 	leftIconColor: 'pink',
+					// 	rightText: `当前版本 v${systemInfo.appVersion}`,
+					// 	path: 'update',
+					// 	isAdmin: false,
+					// 	type: 'poup',
+					// 	show: true
+					// },
 					{
 						key: 'setting',
 						title: '应用设置',

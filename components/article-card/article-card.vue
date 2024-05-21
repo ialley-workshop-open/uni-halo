@@ -1,8 +1,8 @@
 <template>
 	<view class="article-card " :class="cardType" @click="fnClickEvent('card')">
 		<view class="left">
-			<cache-image class="thumbnail" radius="6rpx" :url="$utils.checkThumbnailUrl(article.spec.cover)" :fileMd5="$utils.checkThumbnailUrl(article.spec.cover)" mode="aspectFill"></cache-image>
-			<!-- <image class="thumbnail" lazy-load :src="$utils.checkThumbnailUrl(article.thumbnail)" mode="aspectFill"></image> -->
+			<cache-image class="thumbnail" radius="6rpx" :url="$utils.checkThumbnailUrl(article.spec.cover)" :fileMd5="article.spec.cover" mode="aspectFill"></cache-image>
+			<!-- <image class="thumbnail" lazy-load :src="$utils.checkThumbnailUrl(article.spec.cover)" mode="aspectFill"></image> -->
 		</view>
 		<view class="right">
 			<view class="title">

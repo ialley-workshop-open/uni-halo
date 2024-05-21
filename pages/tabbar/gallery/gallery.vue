@@ -21,34 +21,16 @@
 				<tm-empty icon="icon-shiliangzhinengduixiang-" label="博主还没有分享图片~"></tm-empty>
 			</view>
 			<block v-else>
-				<tm-flowLayout v-if="globalAppSettings.gallery.useWaterfull" @click="fnOnClick" ref="wafll">
-					<template v-slot:left="{ hdata }">
-						<tm-translate animation-name="fadeUp">
-							<view class="card round-3 overflow white">
-								<tm-images :previmage="false" :src="hdata.item.spec.cover"
-									@click="fnPreview(hdata.item)"></tm-images>
-							</view>
-						</tm-translate>
-					</template>
-					<template v-slot:right="{ hdata }">
-						<tm-translate animation-name="fadeUp">
-							<view class="card round-3  overflow white">
-								<tm-images :previmage="false" :src="hdata.item.spec.cover"
-									@click="fnPreview(hdata.item)"></tm-images>
-							</view>
-						</tm-translate>
-					</template>
-				</tm-flowLayout>
-				<block v-else>
-					<block v-for="(item, index) in dataList" :key="index">
-						<tm-translate animation-name="fadeUp" :wait="calcAniWait(index)">
-							<view class="round-3 shadow-2 overflow white mb-24">
-								<tm-images :previmage="false" :src="item.spec.cover"
-									@click="fnPreview(item)"></tm-images>
-							</view>
-						</tm-translate>
-					</block>
+				<block v-for="(item, index) in dataList" :key="index">
+					<tm-translate style="box-sizing: border-box;padding: 6rpx;width: 50%;height: 250rpx;"
+						animation-name="fadeUp" :wait="calcAniWait(index)">
+						<view style="border-radius: 12rpx;overflow: hidden;width: 100%;height: 250rpx;">
+							<image style="width: 100%;height: 100%;" mode="aspectFill" :src="item.spec.cover"
+								@click="fnPreview(item)" />
+						</view>
+					</tm-translate>
 				</block>
+
 				<tm-flotbutton @click="fnToTopPage" color="light-blue" size="m" icon="icon-angle-up"></tm-flotbutton>
 				<view class="load-text">{{ loadMoreText }}</view>
 			</block>
@@ -133,6 +115,7 @@
 		methods: {
 			fnOnCategoryChange(index) {
 				this.fnResetSetAniWaitIndex();
+				this.cache.dataList = []
 				this.dataList = [];
 				this.queryParams.group = this.category.list[index].name;
 				this.queryParams.page = 1;
@@ -175,13 +158,10 @@
 								return item;
 							});
 							this.fnCacheDataList(_list);
-							if (this.globalAppSettings.gallery.useWaterfull) {
-								this.dataList = _list;
-								this.$nextTick(() => {
-									this.$refs.wafll.pushData(_list);
-								});
-							} else {
+							if (this.isLoadMore) {
 								this.dataList = this.dataList.concat(_list);
+							} else {
+								this.dataList = _list;
 							}
 						}
 						this.loadMoreText = res.hasNext ? '上拉加载更多' : '呜呜，没有更多数据啦~';
@@ -242,11 +222,15 @@
 	}
 
 	.content {
+		display: flex;
+		flex-wrap: wrap;
 		box-sizing: border-box;
 		padding: 0 24rpx;
 		padding-top: 24rpx;
+		gap: 12rpx 0;
 
 		.content-empty {
+			width: 100%;
 			height: 60vh;
 			display: flex;
 			align-items: center;
@@ -261,5 +245,10 @@
 
 	.card {
 		box-shadow: 0rpx 4rpx 24rpx rgba(0, 0, 0, 0.03);
+	}
+
+	.load-text {
+		width: 100%;
+		text-align: center;
 	}
 </style>

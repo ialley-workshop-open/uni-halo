@@ -54,7 +54,7 @@
 				markdownConfig: MarkdownConfig,
 				loading: 'loading',
 				queryParams: {
-					size: 10,
+					size: 20,
 					page: 1
 				},
 				result: null,

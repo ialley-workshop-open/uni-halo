@@ -1,12 +1,12 @@
 <template>
 	<view class="app-page">
 		<!-- 顶部切换 -->
-		<view class="e-fixed" v-if="category.list.length > 2">
+		<view class="e-fixed" v-if="category.list.length > 0">
 			<tm-tabs color="light-blue" v-model="category.activeIndex" range-key="displayName" :list="category.list"
 				align="left" @change="fnOnCategoryChange"></tm-tabs>
 		</view>
 		<!-- 占位区域 -->
-		<view style="width: 100vw;height: 90rpx;"></view>
+		<view v-if="category.list.length > 0" style="width: 100vw;height: 90rpx;"></view>
 		<!-- 加载区域 -->
 		<view v-if="loading != 'success'" class="loading-wrap">
 			<tm-skeleton model="card"></tm-skeleton>
@@ -26,7 +26,7 @@
 						animation-name="fadeUp" :wait="calcAniWait(index)">
 						<view style="border-radius: 12rpx;overflow: hidden;width: 100%;height: 250rpx;">
 							<image style="width: 100%;height: 100%;" mode="aspectFill" :src="item.spec.cover"
-								@click="fnPreview(item)" />
+								@click="fnPreview(index)" />
 						</view>
 					</tm-translate>
 				</block>
@@ -194,11 +194,10 @@
 				console.log('点击数据', data);
 			},
 			// 预览
-			fnPreview(item) {
-				const index = this.cache.dataList.findIndex(x => x.spec.cover == x.spec.cover);
+			fnPreview(index) {
 				uni.previewImage({
 					current: index,
-					urls: this.cache.dataList.map(x => x.spec.cover),
+					urls: this.dataList.map(x => x.spec.cover),
 					indicator: 'number',
 					loop: true
 				});

@@ -29,11 +29,10 @@
 				<tm-translate v-for="(article, index) in dataList" :key="article.name" animation-name="fadeUp"
 					:wait="calcAniWait(index)">
 					<view class="article-card" @click="fnToArticleDetail(article)">
-						<text style="font-size: 32rpx;font-weight: bold;color: #333;"
-							v-html="article.title">{{article.title}}</text>
-						<text style="font-size: 28rpx;margin-top: 16rpx;color: #555;"
-							v-html="article.content">{{article.content}}
-						</text>
+						<rich-text style="font-size: 32rpx;font-weight: bold;color: #333;"
+							:nodes="article.title"> </rich-text>
+						<rich-text style="font-size: 28rpx;margin-top: 16rpx;color: #555;"
+							:nodes="article.content">  </rich-text>
 						<text style="font-size: 24rpx;margin-top: 24rpx;color:#888">
 							发布日期：{{ { d: article.publishTimestamp, f: 'yyyy年MM月dd日' } | formatTime }}
 						</text>

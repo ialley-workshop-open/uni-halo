@@ -3,7 +3,8 @@
 		:class="{ 'child-comment-item': isChild, 'no-solid': !useSolid, classItem }">
 		<view class="comment-item_user flex">
 			<image class="user-avatar" :class="{ 'is-radius': globalAppSettings.isAvatarRadius }"
-				:src="$utils.checkAvatarUrl(comment.owner.avatar, false)" mode="aspectFill" @error="fnOnImageError(comment)"></image>
+				:src="$utils.checkAvatarUrl(comment.owner.avatar, false)" mode="aspectFill"
+				@error="fnOnImageError(comment)"></image>
 			<view class="user-info pl-14">
 				<view class="author">
 					<text class="mr-6 text-grey-darken-1 text-size-m">{{ comment.owner.displayName }}</text>
@@ -80,11 +81,17 @@
 		},
 		methods: {
 			fnOnImageError(data) {
-				data.avatar = `${this.$haloConfig.defaultAvatarUrl}&rt=${new Date().getTime()}`;
+				if (data && data.owner) {
+					if (this.$haloConfig.defaultAvatarUrl.indexOf('?') == -1) {
+						data.owner.avatar = `${this.$haloConfig.defaultAvatarUrl}?next-v=${new Date().getTime()}`
+					} else {
+						data.owner.avatar = `${this.$haloConfig.defaultAvatarUrl}&next-v=${new Date().getTime()}`
+					}
+				}
 			}
 		},
 		created() {
-			console.log("comment",this.comment)
+			console.log("comment", this.comment)
 		}
 	};
 </script>

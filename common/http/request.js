@@ -1,8 +1,6 @@
 /**
  * 封装各种请求方式
  */
-
-
 import {
 	http
 } from '@/common/http/index.js'
@@ -11,7 +9,7 @@ export default {
 	Get: (url, params, config = {}) => {
 		return http.get(url, {
 			params,
-			...config
+			...config 
 		})
 	},
 	Post: (url, data, config = {}) => {

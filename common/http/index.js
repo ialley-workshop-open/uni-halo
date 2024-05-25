@@ -31,6 +31,7 @@ http.setConfig((config) => {
 	}
 	return config
 })
+ 
 setInterceptors(http)
 
 export {

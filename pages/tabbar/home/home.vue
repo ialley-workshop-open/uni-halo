@@ -64,7 +64,8 @@
 				<view :class="globalAppSettings.layout.home">
 					<tm-translate v-for="(article, index) in articleList" :key="index" class="ani-item"
 						animation-name="fadeUp" :wait="calcAniWait(index)">
-						<article-card from="home" :article="article" :post="article" @on-click="fnToArticleDetail"></article-card>
+						<article-card from="home" :article="article" :post="article"
+							@on-click="fnToArticleDetail"></article-card>
 					</tm-translate>
 				</view>
 				<view class="load-text mt-12">{{ loadMoreText }}</view>
@@ -84,6 +85,7 @@
 	import tmEmpty from '@/tm-vuetify/components/tm-empty/tm-empty.vue';
 
 	import eSwiper from '@/components/e-swiper/e-swiper.vue';
+	import qs from 'qs'
 
 	export default {
 		components: {
@@ -100,7 +102,8 @@
 				loading: 'loading',
 				queryParams: {
 					size: 5,
-					page: 1
+					page: 1,
+					sort: ['spec.pinned,desc', 'spec.publishTime,desc']
 				},
 				result: {},
 				isLoadMore: false,
@@ -110,7 +113,6 @@
 				noticeList: [],
 				articleList: [],
 				categoryList: [],
-
 			};
 		},
 
@@ -180,58 +182,39 @@
 			// 获取轮播图
 			fnGetBanner() {
 				const _this = this;
-				const _format = function(list, type) {
-					console.log("list", list)
+				const _format = function(list) {
 					return list.map((item, index) => {
-						switch (type) {
-							case 'list':
-								return {
-									id: index,
-										nickname: _this.bloggerInfo.nickname,
-										avatar: _this.bloggerInfo.avatar,
-										address: item.href || '',
-										title: item.title,
-										image: _this.$utils.checkImageUrl(item.thumbnail)
-								};
-							case 'article':
-								return {
-									mp4: '',
-										id: item.metadata.name,
-										nickname: item.owner.displayName,
-										avatar: _this.$utils.checkImageUrl(item.owner.avatar),
-										address: '',
-										createTime: uni.$tm.dayjs(item.spec.publishTime).fromNow(),
-										title: item.spec.title,
-										src: _this.$utils.checkImageUrl(item.spec.cover),
-										image: _this.$utils.checkImageUrl(item.spec.cover)
-								};
-							case 'banner':
-								return {
-									id: '',
-										src: item
-								};
-						}
+						return {
+							mp4: '',
+							id: item.metadata.name,
+							nickname: item.owner.displayName,
+							avatar: _this.$utils.checkImageUrl(item.owner.avatar),
+							address: '',
+							createTime: uni.$tm.dayjs(item.spec.publishTime).fromNow(),
+							title: item.spec.title,
+							src: _this.$utils.checkImageUrl(item.spec.cover),
+							image: _this.$utils.checkImageUrl(item.spec.cover)
+						};
 					});
 				};
-				switch (this.$haloConfig.banner.type) {
-					case 'list': // 手动配置的banner
-						this.bannerList = _format(this.$haloConfig.banner.list, 'list');
-						break;
-					case 'article': // 来自热门文章的封面
-						this.$httpApi.getPostList({
-							page: 0,
-							size: 6
-						}).then(res => {
-							this.bannerList = _format(res.items, 'article');
-							if (this.bannerList.length == 0) {
-								this.bannerList = _format(this.$haloConfig.banner.list, 'list');
-							}
-						});
-						break;
-					case 'banner': // 来自后台配置的banner（暂未开放）
-						this.bannerList = _format([], 'banner');
-						break;
-				}
+
+				const paramsStr = qs.stringify(this.queryParams, {
+					allowDots: true,
+					encodeValuesOnly: true,
+					skipNulls: true,
+					encode: true,
+					arrayFormat: 'repeat'
+				})
+				uni.request({
+					url: '/apis/api.content.halo.run/v1alpha1/posts?' + paramsStr,
+					method: 'GET',
+					params: this.queryParams,
+					success: (res) => {
+						this.bannerList = _format(res.data.items);
+					},
+					fail: (err) => {}
+				})
+
 			},
 			fnOnBannerChange(e) {
 				this.bannerCurrent = e.current;
@@ -256,28 +239,37 @@
 				}
 				this.loadMoreText = '加载中...';
 
-				this.$httpApi.v2
-					.getPostList(this.queryParams)
-					.then(res => {
-						console.log('加载成功', res);
-						this.result.hasNext = res.hasNext;
+				const paramsStr = qs.stringify(this.queryParams, {
+					allowDots: true,
+					encodeValuesOnly: true,
+					skipNulls: true,
+					encode: true,
+					arrayFormat: 'repeat'
+				})
+				uni.request({
+					url: '/apis/api.content.halo.run/v1alpha1/posts?' + paramsStr,
+					method: 'GET',
+					params: this.queryParams,
+					success: (res) => {
+						const data = res.data;
+						this.result.hasNext = data.hasNext;
 						if (this.isLoadMore) {
-							this.articleList = this.articleList.concat(res.items);
+							this.articleList = this.articleList.concat(data.items);
 						} else {
-							this.articleList = res.items;
+							this.articleList = data.items;
 						}
 						this.loading = 'success';
-						this.loadMoreText = res.hasNext ? '上拉加载更多' : '呜呜，没有更多数据啦~';
-					})
-					.catch(err => {
+						this.loadMoreText = data.hasNext ? '上拉加载更多' : '呜呜，没有更多数据啦~';
+						uni.hideLoading();
+						uni.stopPullDownRefresh();
+					},
+					fail: (err) => {
 						this.loading = 'error';
 						this.loadMoreText = '加载失败，请下拉刷新！';
 						uni.$tm.toast(err.message || '数据加载失败！');
-					})
-					.finally(() => {
-						uni.hideLoading();
 						uni.stopPullDownRefresh();
-					});
+					}
+				})
 			},
 
 			//跳转文章详情

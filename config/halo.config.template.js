@@ -72,13 +72,7 @@ export default {
 	loadingEmptyUrl: '', // 加载图片为空地址
 
 	waveImageUrl: '', // 关于页面波浪图片
-
-	banner: { // 轮播图配置
-		type: 'article', //  轮播图数据源 list=下方配置 article=热门文章封面 
-		list: [],
-	},
-
-	 
+ 
 	// 微信分享信息
 	wxShareConfig: {
 		title: '', // 小程序分享标题[非必填]

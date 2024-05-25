@@ -6,7 +6,11 @@
 		"type": "git",
 		"url": "git+https://gitee.com/ialley-workshop-open/uni-halo.git"
 	},
-	"keywords": ["uni-halo", "小莫唐尼", "巷子工坊"],
+	"keywords": [
+		"uni-halo",
+		"小莫唐尼",
+		"巷子工坊"
+	],
 	"author": "巷子工坊丨小莫唐尼",
 	"license": "AGPL-3.0",
 	"bugs": {
@@ -17,6 +21,7 @@
 		"vue-i18n": "^9.1.10"
 	},
 	"dependencies": {
+		"qs": "^6.12.1",
 		"uni-read-pages": "^1.0.5",
 		"uni-simple-router": "^2.0.8-beta.4"
 	}

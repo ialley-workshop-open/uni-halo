@@ -72,16 +72,6 @@
 					</view>
 				</view>
 			</view>
-			<!-- 广告区域 -->
-			<view v-if="haloAdConfig.articleDetail.use && (haloAdConfig.unitId || haloAdConfig.adpid)"
-				class="ad-wrap ma-24 mb-0">
-				<!-- #ifdef MP-WEIXIN -->
-				<ad v-if="haloAdConfig.unitId" :unit-id="haloAdConfig.unitId"></ad>
-				<!-- #endif -->
-				<!-- #ifndef MP-WEIXIN -->
-				<ad v-if="haloAdConfig.adpid" :adpid="haloAdConfig.adpid"></ad>
-				<!-- #endif -->
-			</view>
 			<!-- 内容区域 -->
 			<view class="content ml-24 mr-24">
 				<!-- markdown渲染 -->
@@ -101,19 +91,8 @@
 						</template>
 					</tm-more>
 				</view>
-				<!-- 广告区域：微信/decloud申请 -->
-				<view v-if="haloAdConfig.articleDetail.use && (haloAdConfig.unitId || haloAdConfig.adpid)"
-					class="ad-wrap mt-24 mb-24 ">
-					<!-- #ifdef MP-WEIXIN -->
-					<ad v-if="haloAdConfig.unitId" :unit-id="haloAdConfig.unitId"></ad>
-					<!-- #endif -->
-					<!-- #ifndef MP-WEIXIN -->
-					<ad v-if="haloAdConfig.adpid" :adpid="haloAdConfig.adpid"></ad>
-					<!-- #endif -->
-				</view>
-
 				<!-- 广告区域：自定义广告位 -->
-				<view class="ad-card mt-24" v-if="haloAdConfig.articleDetail.custom.use">
+				<view class="ad-card mt-24" v-if="haloAdConfig.articleDetail.custom">
 					<text class="ad-card_tip">广告</text>
 					<image class="ad-card_cover" :src="haloAdConfig.articleDetail.custom.cover" mode="scaleToFill">
 					</image>

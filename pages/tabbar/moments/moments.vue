@@ -39,10 +39,10 @@
 							</view>
 							<view v-if="moment.spec.content.medium.length!==0" class="images"
 								:class="['images-'+moment.spec.content.medium.length]">
-								<view class="image-item" v-for="(image,index) in moment.spec.content.medium"
-									:key="index">
+								<view class="image-item" v-for="(image,mediumIndex) in moment.spec.content.medium"
+									:key="mediumIndex">
 									<image mode="aspectFill" style="width: 100%;height: 100%;border-radius: 6rpx;"
-										:src="image.url" @click="handlePreview(index,moment.spec.content.medium)" />
+										:src="image.url" @click="handlePreview(mediumIndex,moment.spec.content.medium)" />
 								</view>
 							</view>
 						</view>

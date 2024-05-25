@@ -206,7 +206,7 @@
 					arrayFormat: 'repeat'
 				})
 				uni.request({
-					url: '/apis/api.content.halo.run/v1alpha1/posts?' + paramsStr,
+					url: this.$baseApiUrl + '/apis/api.content.halo.run/v1alpha1/posts?' + paramsStr,
 					method: 'GET',
 					params: this.queryParams,
 					success: (res) => {
@@ -247,7 +247,7 @@
 					arrayFormat: 'repeat'
 				})
 				uni.request({
-					url: '/apis/api.content.halo.run/v1alpha1/posts?' + paramsStr,
+					url: this.$baseApiUrl + '/apis/api.content.halo.run/v1alpha1/posts?' + paramsStr,
 					method: 'GET',
 					params: this.queryParams,
 					success: (res) => {

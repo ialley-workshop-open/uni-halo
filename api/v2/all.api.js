@@ -20,7 +20,11 @@ export default {
 	 * @param {String} name 分类名称
 	 */
 	getPostByName: (name) => {
-		return HttpHandler.Get(`/apis/api.content.halo.run/v1alpha1/posts/${name}`, {})
+		return HttpHandler.Get(`/apis/api.content.halo.run/v1alpha1/posts/${name}`, {}, {
+			header: {
+				'Wechat-Session-Id': uni.getStorageSync('openid'),
+			}
+		})
 	},
 
 	/**
@@ -139,5 +143,30 @@ export default {
 	 */
 	getFriendLinkList: (params) => {
 		return HttpHandler.Get(`/apis/api.plugin.halo.run/v1alpha1/plugins/PluginLinks/links`, params)
+	},
+
+
+	/**
+	 * 校验文章访问密码
+	 */
+	checkPostVerifyCode: (verifyCode, postId) => {
+		return HttpHandler.Get(`/tools/verificationCode/check?code=${verifyCode}`, null, {
+			header: {
+				'Authorization': 'Tools工具箱插件设置的认证token',
+				'Wechat-Session-Id': uni.getStorageSync('openid'),
+				'Post-Id': postId
+			}
+		})
+	},
+
+	/**
+	 * 获取文章验证码
+	 */
+	getPostVerifyCode: () => {
+		return HttpHandler.Get(`/tools/verificationCode/create`, null, {
+			header: {
+				'Authorization': 'Tools工具箱插件设置的认证token'
+			}
+		})
 	},
 }

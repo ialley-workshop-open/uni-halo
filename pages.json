@@ -266,6 +266,13 @@
 				{
 					"navigationBarTitleText" : ""
 				}
+			},
+			{
+				"path": "advertise/advertise",
+				"style": {
+					"navigationBarTitleText": "广告页面",
+					"enablePullDownRefresh": false
+				}
 			}]
 		},
 		{

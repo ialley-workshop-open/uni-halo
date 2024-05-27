@@ -76,13 +76,16 @@
 			<view class="content ml-24 mr-24">
 				<!-- markdown渲染 -->
 				<view class="markdown-wrap">
-					<tm-more :disabled="true" :maxHeight="1500" :isRemovBar="true" :open="showValidVisitMore"
-						@click="fnOnShowValidVisitMore">
-						<mp-html class="evan-markdown" lazy-load :domain="markdownConfig.domain"
-							:loading-img="markdownConfig.loadingGif" :scroll-table="true" :selectable="true"
-							:tag-style="markdownConfig.tagStyle" :container-style="markdownConfig.containStyle"
-							:content="result.content.raw" :markdown="true" :showLineNumber="true"
-							:showLanguageName="true" :copyByLongPress="true" />
+          <mp-html class="evan-markdown" lazy-load :domain="markdownConfig.domain"
+                   :loading-img="markdownConfig.loadingGif" :scroll-table="true" :selectable="true"
+                   :tag-style="markdownConfig.tagStyle" :container-style="markdownConfig.containStyle"
+                   :content="result.content.raw" :markdown="true" :showLineNumber="true"
+                   :showLanguageName="true" :copyByLongPress="true" />
+					<tm-more v-if="showValidVisitMore" :disabled="true" :maxHeight="1" :isRemovBar="true"
+						@click="showValidVisitMorePop()">
+            <view class="text-size-n pa-24">
+              以下内容已隐藏，请验证后查看完整内容……
+            </view>
 						<template v-slot:more="{ data }">
 							<view class="">
 								<text class="text-blue text-size-m text-weight-b">文章部分内容已加密点击解锁</text>
@@ -204,11 +207,13 @@
 
 		<!-- 密码访问解密弹窗 -->
 		<tm-dialog :disabled="true" :input-val.sync="validVisitModal.value" title="验证提示" confirmText="立即验证"
-			:showCancel="validVisitModal.useCancel" model="confirm" v-model="validVisitModal.show"
-			content="博主设置了需要密码才能查看该文章内容,请输入文章密码进行验证" theme="split" confirmColor="blue shadow-blue-0"
-			@cancel="fnOnValidVisitCancel" @confirm="fnOnValidVisitConfirm"></tm-dialog>
+               :showCancel="validVisitModal.useCancel" model="confirm" v-model="validVisitModal.show"
+               content="博主设置了需要密码才能查看该文章内容,请输入文章密码进行验证" theme="split" confirmColor="blue shadow-blue-0"
+               @cancel="closeValidVisitPop" @confirm="fnValidVisitPwd"></tm-dialog>
+    <!-- 是否前往获取验证码 -->
+    <tm-dialog v-model="showGetPassword" title="免费获取验证码" content="是否前往获取验证码？" @confirm="toAdvertise" @cancel="closeAllPop"></tm-dialog>
 
-	</view>
+  </view>
 </template>
 
 <script>
@@ -294,7 +299,10 @@
 					useCancel: false,
 					value: undefined
 				},
+        visitType: 0, // 0 未加密 1 后端部分隐藏 2 前端部分隐藏 3 全部隐藏
+        visitPwd: undefined,
 				showValidVisitMore: true,
+        showGetPassword: false
 			};
 		},
 		computed: {
@@ -317,46 +325,15 @@
 			},
 			// 原文链接：个人资质=可以打开公众号文章；非个人：任意链接地址（需在小程序后台配置）
 			originalURL() {
-				const target = this.metas.find(x => x.key == 'unihalo_originalURL');
-				if (!target) return '';
-				return target.value || '';
+        if ('unihalo_originalURL' in this.result?.metadata?.annotations) {
+          return this.result?.metadata?.annotations?.unihalo_originalURL;
+        } else {
+          return '';
+        }
 			},
-			// 是否使用文章密码功能，如果值不为空，则优先于 useVisitMore：unihalo_useVisitPwd
-			useVisitPwd() {
-				const target = this.metas.find(x => x.key == 'unihalo_useVisitPwd');
-				if (!target) return false;
-				return target.value || false;
-			},
-			// 是否启用查看完整文章的功能的密码：unihalo_useVisitMorePwd
-			useVisitMorePwd() {
-				const target = this.metas.find(x => x.key == 'unihalo_useVisitMorePwd');
-				if (!target) return false;
-				return target.value || false;
-			},
-			// 当前是使用哪一种类型的密码验证 0=不使用任何 1=默认弹窗密码 2=查看部分内容 
-			useVisitMode() {
-				if (this.useVisitPwd != false) {
-					return 1
-				}
-				if (this.useVisitMorePwd != false) {
-					return 2
-				}
-				return 0
-			}
 		},
 		watch: {
-			useVisitPwd(val) {
-				if (val) {
-					this.validVisitModal.show = true
-				}
-			},
-			useVisitMode(val) {
-				if (val != 2) {
-					this.showValidVisitMore = true
-				} else {
-					this.showValidVisitMore = false
-				}
-			}
+
 		},
 		onLoad(e) {
 			this.fnSetPageTitle('文章加载中...');
@@ -374,9 +351,36 @@
 					.getPostByName(this.queryParams.name)
 					.then(res => {
 						console.log('详情', res);
-
 						this.result = res;
-						this.metas = [];
+
+            const openid = uni.getStorageSync('openid');
+            if (openid == '' || openid == null) {
+              this.fnGetOpenid();
+            }
+            const visitFlag = uni.getStorageSync('visit_' + this.result?.metadata?.name);
+
+            if (!visitFlag) {
+              const annotationsMap = res?.metadata?.annotations;
+              if (('restrictReadEnable' in annotationsMap) && annotationsMap.restrictReadEnable === 'true') {
+                this.visitType = 1;
+                this.showValidVisitMorePop();
+              } else if ('unihalo_useVisitMorePwd' in annotationsMap) {
+                this.visitType = 2;
+                this.visitPwd = annotationsMap.unihalo_useVisitMorePwd;
+                this.showValidVisitMorePop();
+              } else if ('unihalo_useVisitPwd' in annotationsMap) {
+                this.visitType = 3;
+                this.visitPwd = annotationsMap.unihalo_useVisitPwd;
+                this.showValidVisitPop();
+              } else {
+                this.visitType = 0;
+                this.showValidVisitMore = false;
+              }
+              this.fnHideContent();
+            } else {
+              this.showValidVisitMore = false;
+            }
+
 						this.fnSetPageTitle('文章详情');
 						this.loading = 'success';
 						this.fnSetWxShareConfig({
@@ -787,33 +791,110 @@
 					url: originalURL
 				});
 			},
-			// 查看密码验证确认
-			fnOnValidVisitConfirm() {
-				if (this.useVisitMode == 1) {
-					if (this.validVisitModal.value === this.useVisitPwd) {
-						this.validVisitModal.show = false;
-						return;
-					}
-				} else if (this.useVisitMode == 2) {
-					if (this.validVisitModal.value === this.useVisitMorePwd) {
-						this.showValidVisitMore = true;
-						this.validVisitModal.show = false;
-						return;
-					}
-				}
-				uni.$tm.toast("验证密码不正确！")
-			},
-			fnOnValidVisitCancel() {
-				this.validVisitModal.show = false;
-				this.validVisitModal.useCancel = true;
-				this.validVisitModal.value = undefined;
-			},
-			// 点击解锁弹出密码输入框
-			fnOnShowValidVisitMore() {
-				this.validVisitModal.useCancel = true;
-				this.validVisitModal.value = undefined;
-				this.validVisitModal.show = true;
-			}
+      showValidVisitPop() {
+        this.showValidVisitMore = true;
+        this.validVisitModal.value = undefined;
+        this.validVisitModal.show = true;
+        this.validVisitModal.useCancel = false;
+      },
+      showValidVisitMorePop() {
+        this.showValidVisitMore = true;
+        this.validVisitModal.value = undefined;
+        this.validVisitModal.show = true;
+        this.validVisitModal.useCancel = true;
+      },
+      closeValidVisitPop() {
+        this.validVisitModal.show = false;
+        this.validVisitModal.useCancel = true;
+        this.validVisitModal.value = undefined;
+        if (this.visitType === 1) {
+          // 显示是否前往获取验证弹窗
+          this.validVisitModal.show = true;
+          this.showGetPassword = true;
+        }
+      },
+      closeAllPop() {
+        this.validVisitModal.show = false;
+        this.validVisitModal.useCancel = true;
+        this.validVisitModal.value = undefined;
+        this.showGetPassword = false;
+      },
+      toAdvertise() {
+        this.showGetPassword = false;
+        uni.navigateTo({
+          url: '/pagesA/advertise/advertise'
+        });
+      },
+    //   获取openid
+      fnGetOpenid() {
+        uni.login({
+          provider: 'weixin',
+          success: function (loginRes) {
+            try {
+              // todo 因为没有获取openid，所以先使用code代替
+              uni.setStorageSync('openid', loginRes.code)
+            } catch (error) {
+              console.log(error)
+            }
+          }
+        })
+      },
+    //   隐藏内容
+      fnHideContent() {
+        switch (this.visitType) {
+          case 1:
+            const restrictReadRaw = this.result?.content?.raw.split('<!-- restrictRead start -->')[0];
+            this.result.content.raw = restrictReadRaw;
+            return;
+          case 2:
+          case 3:
+            const length = this.result?.content?.raw?.length;
+            const first30PercentLength = Math.floor(length * 0.3);
+            const first30PercentRaw = this.result?.content?.raw?.substring(0, first30PercentLength);
+            this.result.content.raw = first30PercentRaw;
+            return;
+          default:
+            return;
+        }
+      },
+    //   校验密码
+      fnValidVisitPwd() {
+        switch (this.visitType) {
+          case 0:
+            return;
+          case 1:
+            this.$httpApi.v2.checkPostVerifyCode(this.validVisitModal.value, this.result?.metadata?.name).then(res => {
+              if (res.code === 200) {
+                uni.setStorageSync('visit_' + this.result?.metadata?.name, true)
+                this.closeAllPop();
+                this.fnGetData();
+              } else {
+                uni.showToast({
+                  title: '密码错误',
+                  icon: 'none'
+                });
+              }
+            }).catch(err => {
+              console.log(err);
+            });
+            return;
+          case 2:
+          case 3:
+            if (this.visitPwd === this.validVisitModal.value) {
+              uni.setStorageSync('visit_' + this.result?.metadata?.name, true)
+              this.closeValidVisitPop();
+              this.fnGetData();
+            } else {
+              uni.showToast({
+                title: '密码错误',
+                icon: 'none'
+              });
+            }
+            return;
+          default:
+            return;
+        }
+      },
 		}
 	};
 </script>

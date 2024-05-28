@@ -71,7 +71,7 @@ export default {
         adLoad() {
             if (wx.createRewardedVideoAd) {
                 videoAd = wx.createRewardedVideoAd({
-                    adUnitId: haloAdConfig.rewardedVideoAd //你的广告key
+                    adUnitId: this.$haloAdConfig.rewardedVideoAd //你的广告key
                 })
                 videoAd.onError(err => {
                 })
@@ -86,7 +86,7 @@ export default {
             }
         },
         openVideoAd: function () {
-            if (videoAd && haloAdConfig.rewardedVideoAd != '') {
+            if (videoAd && this.$haloAdConfig.rewardedVideoAd != '') {
                 videoAd.show().catch(err => {
                     // 失败重试
                     console.log("广告拉取失败")

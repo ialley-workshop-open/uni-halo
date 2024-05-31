@@ -170,4 +170,10 @@ export default {
             }
         })
     },
+    /**
+     * 提交友情链接
+     */
+    submitLink(form) {
+        return HttpHandler.Post(`/linksSubmit/links`, form, null)
+    }
 }

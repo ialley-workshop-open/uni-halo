@@ -120,6 +120,7 @@
 
 			<!-- 返回顶部 -->
 			<tm-flotbutton color="light-blue" @click="fnToTopPage" size="m" icon="icon-angle-up"></tm-flotbutton>
+      <tm-flotbutton :offset="[16,80]" label="申请" actions-pos="left" :show-text="true" color="bg-gradient-orange-accent" @click="toSubmitLinkPage"></tm-flotbutton>
 
 			<!-- 详情弹窗 -->
 			<tm-poup v-model="detail.show" :width="640" height="auto" position="center" :round="6">
@@ -326,7 +327,12 @@
 						});
 					}
 				});
-			}
+			},
+      toSubmitLinkPage() {
+        this.$Router.push({
+          path: '/pagesA/submit-link/submit-link'
+        });
+      }
 		}
 	};
 </script>

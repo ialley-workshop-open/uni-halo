@@ -86,7 +86,7 @@
 					this.loading = 'loading';
 				}
 				this.loadMoreText = '加载中...';
-				this.$httpApi
+				this.$httpApi.v2
 					.getCategoryPostList(this.name, this.queryParams)
 					.then(res => {
 						console.log("请求成功：", res)

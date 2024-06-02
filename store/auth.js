@@ -9,7 +9,7 @@
  *  修改人员：
  *  修改时间：
  */
-import User from '@/api/admin/user.js'
+ 
 import HaloConfig from '@/config/halo.config.js';
 import {
 	getWxLoginInfo
@@ -19,46 +19,22 @@ import {
 	getCache
 } from '@/utils/storage.js'
 export default {
-	state: {
-		// 超管登录
-		adminToken: getCache('APP_ADMIN_LOGIN_TOKEN'),
-
+	state: { 
 		// 微信登录的信息
 		wxLoginInfo: getWxLoginInfo(),
 	},
-	getters: {
-		getAdminToken(state) {
-			return getCache('APP_ADMIN_LOGIN_TOKEN')
-		},
+	getters: { 
 		getWxLoginInfo(state) {
 			return state.wxLoginInfo
 		},
 	},
-	mutations: {
-		setAdminToken(state, data) {
-			state.adminToken = data
-			setCache('APP_ADMIN_LOGIN_TOKEN', data, data?.expired_in)
-		},
+	mutations: { 
 		setWxLoginInfo(state, data) {
 			state.wxLoginInfo = data
 			uni.setStorageSync('APP_WX_LOGIN_INFO', JSON.stringify(data))
 		},
 	},
-	actions: {
-		adminLogin(context, data) {
-			return new Promise((resolve, reject) => {
-				User.login(data).then((res) => {
-					if (res.status == 200) {
-						context.commit("setAdminToken", res.data);
-						resolve(res)
-					} else {
-						reject(err)
-					}
-				}).catch((err) => {
-					reject(err)
-				});
-			})
-		},
+	actions: { 
 		checkAndSetDefaultUser(context) {
 			if (!context.state.wxLoginInfo) {
 				context.commit('setWxLoginInfo', {
@@ -68,9 +44,6 @@ export default {
 					url: ''
 				})
 			}
-		},
-		adminLogout(context) {
-			context.commit("setAdminToken", null);
-		}
+		} 
 	},
 };

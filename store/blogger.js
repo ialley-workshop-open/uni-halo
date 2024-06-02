@@ -8,8 +8,7 @@
  *  修改内容：
  *  修改人员：
  *  修改时间：
- */
-import Blogger from '@/api/blogger.js'
+ */ 
 import HaloConfig from '@/config/halo.config.js';
 export default {
 	state: {

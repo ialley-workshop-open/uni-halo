@@ -148,7 +148,7 @@
 
         <!-- 评论详情 -->
         <tm-poup v-model="commentDetail.show" height="auto" :round="6" :over-close="true" position="bottom">
-            <view v-if="result" class="pa-24">
+            <view v-if="commentDetail.show && result" class="pa-24">
                 <view class="poup-head pb-24">
                     <view class="poup-title text-align-center text-size-g text-weight-b mb-32">评论详情</view>
                     <comment-item :useContentBg="false" :useActions="false" :isChild="false"

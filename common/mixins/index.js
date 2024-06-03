@@ -11,6 +11,8 @@
  */
 import HaloConfig from '@/config/halo.config.js';
 import HaloAdConfig from '@/config/ad.config.js';
+import HaloPluginsConfig from '@/config/plugins.config.js';
+
 export default {
 	install(Vue) {
 		Vue.mixin({
@@ -18,7 +20,9 @@ export default {
 				return {
 					author: HaloConfig.author,
 					_isWechat: true,
+					haloConfig: HaloConfig,
 					haloAdConfig: HaloAdConfig,
+					haloPluginsConfig: HaloPluginsConfig,
 					_aniWaitIndex: 0, // 动画索引
 				};
 			},

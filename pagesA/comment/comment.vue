@@ -50,7 +50,7 @@
 					avatar: '',
 					authorUrl: '', // 作者主页
 					content: '', // 评论内容
-					email: '', // 邮件 
+					email: '', // 邮件
 					postName: ""
 				}
 			};
@@ -113,7 +113,7 @@
 						raw: this.form.content,
 						content: this.form.content,
 						owner: {
-							avatar: this.form.avatarUrl,
+							avatar: this.form.avatar,
 							displayName: this.form.author,
 							email: this.form.email,
 							website: this.form.authorUrl,
@@ -146,7 +146,7 @@
 					raw: this.form.content,
 					content: this.form.content,
 					owner: {
-						avatar: this.form.avatarUrl,
+						avatar: this.form.avatar,
 						displayName: this.form.author,
 						email: this.form.email,
 						website: this.form.authorUrl,

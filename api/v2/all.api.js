@@ -151,7 +151,7 @@ export default {
      * 校验文章访问密码
      */
     checkPostVerifyCode: (verifyCode, postId) => {
-        return HttpHandler.Get(`/tools/verificationCode/check?code=${verifyCode}`, null, {
+        return HttpHandler.Get(`/apis/tools.muyin.site/v1alpha1/verificationCode/check?code=${verifyCode}`, null, {
             header: {
                 'Authorization': 'Tools工具箱插件设置的认证token',
                 'Wechat-Session-Id': uni.getStorageSync('openid'),
@@ -164,7 +164,7 @@ export default {
      * 获取文章验证码
      */
     getPostVerifyCode: () => {
-        return HttpHandler.Get(`/tools/verificationCode/create`, null, {
+        return HttpHandler.Get(`/apis/tools.muyin.site/v1alpha1/verificationCode/create`, null, {
             header: {
                 'Authorization': 'Tools工具箱插件设置的认证token'
             }
@@ -174,6 +174,6 @@ export default {
      * 提交友情链接
      */
     submitLink(form) {
-        return HttpHandler.Post(`/linksSubmit/links`, form, null)
+        return HttpHandler.Post(`/apis/linksSubmit.muyin.site/v1alpha1/submit`, form, null)
     }
 }

@@ -162,6 +162,19 @@ export default {
     },
 
     /**
+     * 校验文章访问密码
+     */
+    checkPostPasswordAccess: (password, postId) => {
+        return HttpHandler.Get(`/apis/tools.muyin.site/v1alpha1/visitPassword/checkPost?password=${password}`, null, {
+            header: {
+                'Authorization': HaloPluginsConfig.toolsPlugin.Authorization,
+                'Wechat-Session-Id': uni.getStorageSync('openid'),
+                'Post-Id': postId
+            }
+        })
+    },
+
+    /**
      * 获取文章验证码
      */
     getPostVerifyCode: () => {

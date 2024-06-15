@@ -375,6 +375,9 @@ export default {
                             this.visitType = 3;
                             this.visitPwd = annotationsMap.unihalo_useVisitPwd;
                             this.showValidVisitPop();
+                        } else if (('restrictReadEnable' in annotationsMap) && annotationsMap.restrictReadEnable === 'password') {
+                          this.visitType = 4;
+                          this.showValidVisitPop();
                         } else {
                             this.visitType = 0;
                             this.showValidVisitMore = false;
@@ -856,6 +859,9 @@ export default {
                     const first30PercentRaw = this.result?.content?.raw?.substring(0, first30PercentLength);
                     this.result.content.raw = first30PercentRaw;
                     return;
+                case 4:
+                    this.result.content.raw = "";
+                    return;
                 default:
                     return;
             }
@@ -894,6 +900,22 @@ export default {
                         });
                     }
                     return;
+              case 4:
+                this.$httpApi.v2.checkPostPasswordAccess(this.validVisitModal.value, this.result?.metadata?.name).then(res => {
+                  if (res.code === 200) {
+                    uni.setStorageSync('visit_' + this.result?.metadata?.name, true)
+                    this.closeAllPop();
+                    this.fnGetData();
+                  } else {
+                    uni.showToast({
+                      title: '密码错误',
+                      icon: 'none'
+                    });
+                  }
+                }).catch(err => {
+                  console.log(err);
+                });
+                return;
                 default:
                     return;
             }

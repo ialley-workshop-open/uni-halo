@@ -6,6 +6,7 @@ import HttpHandler from '@/common/http/request.js'
 import {
     getCache
 } from '@/utils/storage.js'
+import HaloPluginsConfig from '@/config/plugins.config.js'
 
 export default {
     /**
@@ -153,7 +154,7 @@ export default {
     checkPostVerifyCode: (verifyCode, postId) => {
         return HttpHandler.Get(`/apis/tools.muyin.site/v1alpha1/verificationCode/check?code=${verifyCode}`, null, {
             header: {
-                'Authorization': 'Tools工具箱插件设置的认证token',
+                'Authorization': HaloPluginsConfig.toolsPlugin.Authorization,
                 'Wechat-Session-Id': uni.getStorageSync('openid'),
                 'Post-Id': postId
             }
@@ -166,7 +167,7 @@ export default {
     getPostVerifyCode: () => {
         return HttpHandler.Get(`/apis/tools.muyin.site/v1alpha1/verificationCode/create`, null, {
             header: {
-                'Authorization': 'Tools工具箱插件设置的认证token'
+                'Authorization': HaloPluginsConfig.toolsPlugin.Authorization
             }
         })
     },

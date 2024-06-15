@@ -17,6 +17,12 @@ const PluginsConfig = Object.freeze({
 			// 博客简介
 			description: "",
 		}
+	},
+	// tools工具箱插件配置
+	toolsPlugin: {
+		pluginId:"tools",
+		enabled: true,
+		Authorization: "Tools工具箱插件设置的认证token"
 	}
 })
 

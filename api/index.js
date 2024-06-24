@@ -10,19 +10,19 @@
  *  修改时间：
  */
 
-import HttpHandler from '@/common/http/request.js'
- 
 // 2.0接口
 import v2 from './v2/all.api.js'
+import v2Config from './v2/all.config.js'
 
 const ApiManager = {
-	v2 
+    v2,
+    v2Config,
 };
 
 const install = (Vue) => {
-	Vue.prototype.$httpApi = ApiManager
+    Vue.prototype.$httpApi = ApiManager
 }
 
 export default {
-	install
+    install
 }

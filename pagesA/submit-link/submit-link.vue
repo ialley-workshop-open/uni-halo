@@ -53,12 +53,12 @@
                 <view class="poup pa-36" scroll-y="auto">
                     <view class="info flex">
                         <view class="poup-logo pa-4 shadow-24">
-                            <image :src="blogDetail.logo" class="poup-logo_img" mode="aspectFill"></image>
+                            <image :src="blogDetail.blogLogo" class="poup-logo_img" mode="aspectFill"></image>
                         </view>
                         <view class="pl-24 info-detail">
-                            <view class="poup-name text-size-lg text-weight-b">{{ blogDetail.name }}</view>
+                            <view class="poup-name text-size-lg text-weight-b">{{ blogDetail.blogName }}</view>
                             <view class="poup-tag ml--10 text-size-n mt-10 text-grey">
-                                {{ blogDetail.description }}
+                                {{ blogDetail.blogDesc }}
                             </view>
                         </view>
                     </view>
@@ -69,12 +69,12 @@
 
                     <!-- 博客预览图 -->
                     <view class="mt-24">
-                        <tm-images :round="2" :src="caclSiteThumbnail(blogDetail.url)" :width="568"
+                        <tm-images :round="2" :src="calcSiteThumbnail(blogDetail.blogUrl)" :width="568"
                                    mode="aspectFill"></tm-images>
                     </view>
                 </view>
                 <view class="poup-link flex flex-center mb-24">
-                    <tm-button theme="light-blue" size="n" @click="fnCopyLink(blogDetail.url)">复制友链交换信息</tm-button>
+                    <tm-button theme="light-blue" size="n" @click="fnCopyLink(blogDetail.blogUrl)">复制友链交换信息</tm-button>
                     <tm-button text theme="white" @click="blogDetailPoupShow = false">关闭</tm-button>
                 </view>
             </tm-poup>
@@ -117,7 +117,6 @@ export default {
     data() {
         return {
             blogDetailPoupShow: false,
-            blogDetail: this.$haloPluginsConfig.autoSubmitLink.blogDetail,
             form: {
                 url: '', // 网址
                 name: '', // 名称
@@ -129,10 +128,16 @@ export default {
         };
     },
     computed: {
-        caclSiteThumbnail(val) {
+        haloPluginConfigs(){
+            return this.$tm.vx.getters().getConfigs.pluginConfig;
+        },
+        blogDetail() {
+            return this.haloPluginConfigs.submitLink;
+        },
+        calcSiteThumbnail(val) {
             return val => {
                 if (!val) return '';
-                if (val.charAt(val.length - 1) != '/') {
+                if (val.charAt(val.length - 1) !== '/') {
                     val = val + '/';
                 }
                 return 'https://image.thum.io/get/width/1000/crop/800/' + val;
@@ -140,17 +145,17 @@ export default {
         },
         calcBlogContent() {
             return `
-				   博客名称：${this.blogDetail.name}
-				   博客地址：${this.blogDetail.url}
-				   博客logo：${this.blogDetail.logo}
-				   博客简介：${this.blogDetail.description}
+				   博客名称：${this.blogDetail.blogName}
+				   博客地址：${this.blogDetail.blogUrl}
+				   博客logo：${this.blogDetail.blogLogo}
+				   博客简介：${this.blogDetail.blogDesc}
 				`
         },
         calcBlogCoupon() {
             return {
-                img: this.blogDetail.logo,
-                title: this.blogDetail.name,
-                time: this.blogDetail.description,
+                img: this.blogDetail.blogLogo,
+                title: this.blogDetail.blogName,
+                time: this.blogDetail.blogDesc,
                 btnText: '友链详情'
             }
         }

@@ -7,20 +7,19 @@
 		</view>
 		<!-- 内容区域 -->
 		<view v-else class="app-page-content">
-			<view v-if="dataList.length == 0" class="content-empty flex flex-center">
+			<view v-if="dataList.length == 0" class="content-empty flex flex-center" style="height: 70vh;">
 				<!-- 空布局 -->
 				<tm-empty icon="icon-shiliangzhinengduixiang-" label="暂无数据"></tm-empty>
 			</view>
 			<block v-else>
-
 				<tm-translate v-for="(item, index) in dataList" :key="index"
 					style="box-sizing: border-box;width: 50%;padding: 0 8rpx;" animation-name="fadeUp"
 					:wait="calcAniWait(index)">
 					<view class="catgory-card" :style="{backgroundImage:`url(${item.spec.cover})`}">
 						<view class="content" @click="handleToCategory(item)">
-							<view style="font-size: 32rpx;color: #ffffff;">{{item.spec.displayName}}</view>
+							<view style="font-size: 32rpx;color: #ffffff;">{{ item.spec.displayName }}</view>
 							<view style="font-size: 24rpx;color: #ffffff;margin-top: 6rpx;">共
-								{{item.postCount}} 篇文章
+								{{ item.postCount }} 篇文章
 							</view>
 						</view>
 					</view>
@@ -40,6 +39,7 @@
 
 	import MarkdownConfig from '@/common/markdown/markdown.config.js';
 	import mpHtml from '@/components/mp-html/components/mp-html/mp-html.vue';
+
 	export default {
 		components: {
 			tmSkeleton,
@@ -61,12 +61,6 @@
 				isLoadMore: false,
 				loadMoreText: '加载中...'
 			};
-		},
-
-		computed: {
-			bloggerInfo() {
-				return this.$tm.vx.getters().getBlogger;
-			},
 		},
 
 		onLoad() {

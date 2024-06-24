@@ -26,8 +26,8 @@
                             </view>
                             <view class="flex flex-col pl-30 info-detail">
                                 <view class="link-card_name text-size-l text-weight-b text-red">
-                                    <tm-tags style="margin-right: 12rpx;margin-left: -2rpx;" color="bg-gradient-light-blue-lighten"
-                                             :shadow="0" size="s" model="fill">
+                                    <tm-tags style="margin-right: 12rpx;margin-left: -2rpx;"
+                                             color="bg-gradient-light-blue-lighten" :shadow="0" size="s" model="fill">
                                         {{ link.spec.groupName || '暂未分组' }}
                                     </tm-tags>
                                     {{ link.spec.displayName }}
@@ -120,7 +120,8 @@
 
             <!-- 返回顶部 -->
             <tm-flotbutton color="light-blue" @click="fnToTopPage" size="m" icon="icon-angle-up"></tm-flotbutton>
-            <tm-flotbutton v-if="haloPluginsConfig.autoSubmitLink.enabled" :offset="[16,80]" label="申请" actions-pos="left" :show-text="true" color="bg-gradient-orange-accent"
+            <tm-flotbutton v-if="haloPluginConfigs.submitLink.enabled" :offset="[16,80]" label="申请"
+                           actions-pos="left" :show-text="true" color="bg-gradient-orange-accent"
                            @click="toSubmitLinkPage"></tm-flotbutton>
             <!-- 详情弹窗 -->
             <tm-poup v-model="detail.show" :width="640" height="auto" position="center" :round="6">
@@ -152,7 +153,7 @@
 
                     <!-- 博客预览图 -->
                     <view class="mt-24">
-                        <tm-images :width="568" :round="2" :src="caclSiteThumbnail(detail.data.url)"
+                        <tm-images :width="568" :round="2" :src="calcSiteThumbnail(detail.data.url)"
                                    mode="aspectFill"></tm-images>
                     </view>
                 </view>
@@ -171,7 +172,6 @@ import tmTags from '@/tm-vuetify/components/tm-tags/tm-tags.vue';
 import tmEmpty from '@/tm-vuetify/components/tm-empty/tm-empty.vue';
 import tmImages from '@/tm-vuetify/components/tm-images/tm-images.vue';
 import tmPoup from '@/tm-vuetify/components/tm-poup/tm-poup.vue';
-
 
 import {GetRandomNumberByRange} from '@/utils/random.js';
 
@@ -200,14 +200,25 @@ export default {
             isLoadMore: false,
             loadMoreText: '',
             dataList: [],
-            cacheDataList: []
+            cacheDataList: [],
+            colors: [
+                '#39B449',
+                '#E44C41',
+                '#8698A2',
+                '#0080FE',
+                '#1CBCB4',
+                '#6638B5'
+            ]
         };
     },
     computed: {
-        caclSiteThumbnail(val) {
+        haloPluginConfigs(){
+            return this.$tm.vx.getters().getConfigs.pluginConfig;
+        },
+        calcSiteThumbnail(val) {
             return val => {
                 if (!val) return '';
-                if (val.charAt(val.length - 1) != '/') {
+                if (val.charAt(val.length - 1) !== '/') {
                     val = val + '/';
                 }
                 return 'https://image.thum.io/get/width/1000/crop/800/' + val;
@@ -239,8 +250,8 @@ export default {
     },
     methods: {
         fnRandomColor() {
-            const _r = GetRandomNumberByRange(0, this.$haloConfig.colors.length - 1);
-            return this.$haloConfig.colors[_r];
+            const _r = GetRandomNumberByRange(0, this.colors.length - 1);
+            return this.colors[_r];
         },
         fnGetData() {
             if (!this.isLoadMore) {
@@ -259,9 +270,6 @@ export default {
                         return item;
                     })
                     this.dataList = this.dataList.concat(list);
-
-                    // this.cacheDataList = this.cacheDataList.concat(list);
-                    // this.dataList = this.handleGroup(this.cacheDataList).reverse();
                     setTimeout(() => {
                         this.loading = 'success';
                         this.loadMoreText = res.hasNext ? '上拉加载更多' : '呜呜，没有更多数据啦~';

@@ -1,5 +1,5 @@
 /**
- *  功能：请求工具 
+ *  功能：请求工具
  *  作者：小莫唐尼
  *  邮箱：studio@925i.cn
  *  时间：2022年07月21日 18:58:03
@@ -10,7 +10,6 @@
  *  修改时间：
  */
 
-import HaloConfig from '@/config/halo.config.js'
 import HaloTokenConfig from '@/config/token.config.js'
 import {
 	setInterceptors
@@ -25,13 +24,13 @@ http.setConfig((config) => {
 	config.baseURL = HaloTokenConfig.BASE_API;
 
 	config.header = {
-		...config.header, 
+		...config.header,
 		ContentType: 'application/json',
 		dataType: 'json'
 	}
 	return config
 })
- 
+
 setInterceptors(http)
 
 export {

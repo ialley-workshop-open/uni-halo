@@ -1,16 +1,15 @@
 // 微信分享配置
-import haloConfig from '@/config/halo.config.js'
 import HaloTokenConfig from '@/config/token.config.js'
-import { jsonToUrlParams2 } from '@/utils/url.params.js'
+import {
+	jsonToUrlParams2
+} from '@/utils/url.params.js'
 export const haloWxShareMixin = {
-	data() {
-		return {
-			haloWxShareData: {
-				...haloConfig.wxShareConfig
-			},
+	computed: {
+		haloWxShareData() {
+			const configs = this.$tm.vx.getters().getConfigs;
+			return configs.shareConfig || {}
 		}
 	},
-
 	//#ifdef MP-WEIXIN
 	onShareAppMessage(res) {
 		return {

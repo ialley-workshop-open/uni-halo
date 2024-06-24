@@ -54,6 +54,11 @@ export default {
             }
         }
     },
+    computed: {
+        adConfigs() {
+            return this.$tm.vx.getters().getConfigs.adConfig;
+        }
+    },
     onLoad(options) {
         // #ifdef MP-WEIXIN
         wx.hideShareMenu();
@@ -71,7 +76,7 @@ export default {
         adLoad() {
             if (wx.createRewardedVideoAd) {
                 videoAd = wx.createRewardedVideoAd({
-                    adUnitId: this.$haloAdConfig.rewardedVideoAd //你的广告key
+                    adUnitId: this.adConfigs.rewardedVideoAdId //你的广告key
                 })
                 videoAd.onError(err => {
                 })
@@ -86,7 +91,7 @@ export default {
             }
         },
         openVideoAd: function () {
-            if (videoAd && this.$haloAdConfig.rewardedVideoAd != '') {
+            if (videoAd && this.adConfigs.rewardedVideoAdId != '') {
                 videoAd.show().catch(err => {
                     // 失败重试
                     console.log("广告拉取失败")
@@ -138,7 +143,3 @@ export default {
     }
 }
 </script>
-
-<style>
-
-</style>

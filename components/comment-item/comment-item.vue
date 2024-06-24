@@ -72,9 +72,11 @@
 			}
 		},
 		computed: {
-			// 获取博主信息
+			imageConfigs() {
+				return this.$tm.vx.getters().getConfigs.imagesConfig;
+			},
 			bloggerInfo() {
-				let blogger = this.$tm.vx.getters().getBlogger;
+				let blogger = this.$tm.vx.getters().getConfigs.authorConfig.blogger;
 				blogger.avatar = this.$utils.checkAvatarUrl(blogger.avatar, true);
 				return blogger;
 			}
@@ -82,10 +84,10 @@
 		methods: {
 			fnOnImageError(data) {
 				if (data && data.owner) {
-					if (this.$haloConfig.defaultAvatarUrl.indexOf('?') == -1) {
-						data.owner.avatar = `${this.$haloConfig.defaultAvatarUrl}?next-v=${new Date().getTime()}`
+					if (this.imageConfigs.defaultAvatarUrl.indexOf('?') == -1) {
+						data.owner.avatar = `${this.imageConfigs.defaultAvatarUrl}?next-v=${new Date().getTime()}`
 					} else {
-						data.owner.avatar = `${this.$haloConfig.defaultAvatarUrl}&next-v=${new Date().getTime()}`
+						data.owner.avatar = `${this.imageConfigs.defaultAvatarUrl}&next-v=${new Date().getTime()}`
 					}
 				}
 			}

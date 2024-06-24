@@ -1,6 +1,6 @@
 <template>
 	<view class="category-mini-card">
-		<cache-image class="img" height="180rpx" :url="$utils.checkThumbnailUrl(category.spec.cover,true)"
+		<cache-image class="img" height="180rpx" :url="$utils.checkThumbnailUrl(category.spec.cover,false)"
 			:fileMd5="$utils.checkThumbnailUrl(category.spec.cover)" mode="aspectFill"></cache-image>
 		<view class="content">
 			<view class="name">{{ category.spec.displayName }}</view>

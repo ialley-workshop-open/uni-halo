@@ -2,7 +2,9 @@
  * markdown配置
  */
 
-import HaloConfig from '@/config/halo.config.js'
+import {
+	getAppConfigs
+} from '@/config/index.js'
 import HaloTokenConfig from '@/config/token.config.js'
 export default {
 	domain: HaloTokenConfig.BASE_API,
@@ -93,6 +95,6 @@ export default {
 	},
 	containStyle: 'font-family: Optima-Regular, Optima, PingFangSC-light, PingFangTC-light, "PingFang SC", Cambria, Cochin, Georgia, Times, "Times New Roman", serif;padding:12px;font-size: 14px;color: #606266;word-spacing: 0.8px;letter-spacing: 0.8px;border-radius: 6px;background-color:#FFFFFF;',
 
-	loadingGif: HaloConfig.loadingGifUrl,
-	emptyGif: HaloConfig.loadingEmptyUrl,
+	loadingGif: getAppConfigs().imagesConfig.loadingGifUrl,
+	emptyGif: getAppConfigs().imagesConfig.loadingEmptyUrl,
 }

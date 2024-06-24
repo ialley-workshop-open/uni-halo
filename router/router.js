@@ -8,11 +8,6 @@ const router = createRouter({
 	platform: process.env.VUE_APP_PLATFORM,
 	routes: [...ROUTES]
 });
- 
-import {
-	checkHasWxLogin,
-	checkHasAdminLogin
-} from '@/utils/auth.js'
 
 //全局路由前置守卫
 router.beforeEach((to, from, next) => {

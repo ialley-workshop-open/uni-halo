@@ -62,17 +62,8 @@ Vue.prototype.$http = http;
 import ApiManager from '@/api/index.js'
 Vue.use(ApiManager);
 
-import HaloConfig from '@/config/halo.config.js'
 import HaloTokenConfig from '@/config/token.config.js'
-Vue.prototype.$haloConfig = HaloConfig
 Vue.prototype.$baseApiUrl = HaloTokenConfig.BASE_API
-
-import HaloAdConfig from '@/config/ad.config.js'
-Vue.prototype.$haloAdConfig = HaloAdConfig
-
-import HaloPluginsConfig from '@/config/plugins.config.js'
-Vue.prototype.$haloPluginsConfig = HaloPluginsConfig
-
 
 // 由于微信小程序的运行机制问题，需声明如下一行，H5和APP非必填
 Vue.prototype._i18n = i18n;
@@ -83,7 +74,6 @@ const app = new Vue({
 	i18n,
 	...App,
 });
-// app.$mount();
 
 // #ifdef H5
 RouterMount(app, router, '#app')

@@ -3,8 +3,7 @@ unpackage/
 package-lock.json
 .idea
 
-config/halo.config.js
-config/ad.config.js
+config/halo.config.js 
 config/love.config.js
 config/token.config.js
 config/plugins.config.js

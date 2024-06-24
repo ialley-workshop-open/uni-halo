@@ -10,7 +10,8 @@
 			<text class="img-load-text">{{ loadErrText }}</text> -->
 			<image class="img-error-img" :src="loadingErrorImageSrc" mode="scaleToFill"></image>
 		</view>
-		<image v-show="loadStatus == 'success'" :src="src" @load="fnOnLoad" @error="fnOnError" :lazy-load="lazyLoad" :style="[imgStyle]" :mode="mode" @click="$emit('on-click', url)"></image>
+		<image v-show="loadStatus == 'success'" :src="src" @load="fnOnLoad" @error="fnOnError" :lazy-load="lazyLoad"
+			:style="[imgStyle]" :mode="mode" @click="$emit('on-click', url)"></image>
 	</view>
 </template>
 
@@ -91,11 +92,14 @@
 			};
 		},
 		computed: {
+			imagesConfig() {
+				return this.$tm.vx.getters().getConfigs.imagesConfig
+			},
 			loadingImgSrc() {
-				return getApp().globalData.loadingGifUrl;
+				return this.imagesConfig.loadingGifUrl;
 			},
 			loadingErrorImageSrc() {
-				return getApp().globalData.loadingErrUrl
+				return this.imagesConfig.loadingErrUrl
 			}
 		},
 		watch: {

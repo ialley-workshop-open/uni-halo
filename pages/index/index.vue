@@ -1,35 +1,46 @@
 <template>
-	<view class="app-page"></view>
+    <view class="app-page"></view>
 </template>
 
 <script>
-	export default {
-		onLoad() {
-			this.fnCheckShowStarted();
-		},
-		methods: {
-			// 检查是否需要跳转到启动页
-			fnCheckShowStarted() {
-				if (!getApp().globalData.start.use) {
-					uni.switchTab({
-						url: '/pages/tabbar/home/home'
-					});
-					return;
-				}
-				if (uni.getStorageSync('APP_HAS_STARTED')) {
-					uni.switchTab({
-						url: '/pages/tabbar/home/home'
-					});
-					
-					// uni.navigateTo({
-					// 	url:'/pagesA/test-page/test-page'
-					// })
-				} else {
-					uni.redirectTo({
-						url: '/pagesA/start/start'
-					});
-				}
-			}
-		}
-	};
+export default {
+    computed: {
+        configs() {
+            return this.$tm.vx.getters().getConfigs;
+        }
+    },
+    onLoad() {
+        uni.$tm.vx.actions('config/fetchConfigs').then((res) => {
+            console.log('正常：', res)
+            // #ifdef MP-WEIXIN
+            uni.$tm.vx.commit('setWxShare', res.shareConfig);
+            // #endif
+            this.fnCheckShowStarted();
+        }).catch((err) => {
+            console.log('异常：', err)
+            uni.switchTab({
+                url: '/pages/tabbar/home/home'
+            });
+        })
+    },
+    methods: {
+        fnCheckShowStarted() {
+            if (!this.configs.startConfig.enable) {
+                uni.switchTab({
+                    url: '/pages/tabbar/home/home'
+                });
+                return;
+            }
+            if (uni.getStorageSync('APP_HAS_STARTED')) {
+                uni.switchTab({
+                    url: '/pages/tabbar/home/home'
+                });
+            } else {
+                uni.redirectTo({
+                    url: '/pagesA/start/start'
+                });
+            }
+        }
+    }
+};
 </script>

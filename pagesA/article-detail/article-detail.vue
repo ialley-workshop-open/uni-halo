@@ -65,12 +65,10 @@
                 <view v-if="originalURL" class="mt-18 category-type original-url">
                     <view class="original-url_left text-weight-b">原文：</view>
                     <view class="original-url_right text-grey">
-                        <text class="original-url_right__link"
-                              @click.stop="fnToOriginal(originalURL)">{{ originalURL }}
+                        <text class="original-url_right__link" @click.stop="fnToOriginal(originalURL)">{{ originalURL }}
                         </text>
                         <text class="original-url_right__btn" @click.stop="fnToOriginal(originalURL)">阅读原文
-                            <text
-                                class="iconfont icon-angle-right ml-5 text-size-s"></text>
+                            <text class="iconfont icon-angle-right ml-5 text-size-s"></text>
                         </text>
                     </view>
                 </view>
@@ -82,8 +80,8 @@
                     <mp-html class="evan-markdown" lazy-load :domain="markdownConfig.domain"
                              :loading-img="markdownConfig.loadingGif" :scroll-table="true" :selectable="true"
                              :tag-style="markdownConfig.tagStyle" :container-style="markdownConfig.containStyle"
-                             :content="result.content.raw" :markdown="true" :showLineNumber="true"
-                             :showLanguageName="true" :copyByLongPress="true"/>
+                             :content="result.content.raw" :markdown="true" :showLineNumber="true" :showLanguageName="true"
+                             :copyByLongPress="true"/>
                     <tm-more v-if="showValidVisitMore" :disabled="true" :maxHeight="1" :isRemovBar="true"
                              @click="showValidVisitMorePop()">
                         <view class="text-size-n pa-24">
@@ -97,44 +95,32 @@
                         </template>
                     </tm-more>
                 </view>
-                <!-- 广告区域：自定义广告位 -->
-                <view class="ad-card mt-24" v-if="haloAdConfig.articleDetail.use">
-                    <text class="ad-card_tip">广告</text>
-                    <image class="ad-card_cover" :src="haloAdConfig.articleDetail.cover" mode="scaleToFill">
-                    </image>
-                    <view class="ad-card_info">
-                        <view class="ad-card_info-title">{{ haloAdConfig.articleDetail.title }}</view>
-                        <view class="ad-card_info-desc">{{ haloAdConfig.articleDetail.content }}</view>
-                        <view v-if="haloAdConfig.articleDetail.url" class="ad-card_info-link"
-                              @click="fnToWebview(haloAdConfig.articleDetail)">
-                            立即查看
-                        </view>
-                    </view>
-                </view>
 
                 <!-- 版权声明 -->
-                <view v-if="copyright.use" class="copyright-wrap bg-white mt-24 pa-24 round-4">
+                <view v-if="postDetailConfig && postDetailConfig.copyrightEnabled" class="copyright-wrap bg-white mt-24 pa-24 round-4">
                     <view class="copyright-title text-weight-b">版权声明</view>
                     <view
                         class="copyright-content mt-12  grey-lighten-5 text-grey-darken-2 round-4 pt-12 pb-12 pl-24 pr-24 ">
-                        <view v-if="copyright.author" class="copyright-text text-size-s ">
-                            版权归属：{{ copyright.author }}
+                        <view v-if="postDetailConfig.copyrightAuthor" class="copyright-text text-size-s ">
+                            版权归属：{{ postDetailConfig.copyrightAuthor }}
                         </view>
-                        <view v-if="copyright.description" class="copyright-text text-size-s mt-12">
-                            版权说明：{{ copyright.description }}
+                        <view v-if="postDetailConfig.copyrightDesc" class="copyright-text text-size-s mt-12">
+                            版权说明：{{ postDetailConfig.copyrightDesc }}
                         </view>
-                        <view v-if="copyright.violation" class="copyright-text text-size-s mt-12 text-red">
-                            侵权处理：{{ copyright.violation }}
+                        <view v-if="postDetailConfig.copyrightViolation" class="copyright-text text-size-s mt-12 text-red">
+                            侵权处理：{{ postDetailConfig.copyrightViolation }}
                         </view>
                     </view>
                 </view>
 
                 <!-- 评论展示区域 -->
-                <view v-if="result" class="comment-wrap bg-white mt-24 pa-24 round-4">
-                    <commentList :disallowComment="!result.spec.allowComment" :postName="result.metadata.name"
-                                 :post="result" @on-comment-detail="fnOnShowCommentDetail" @on-loaded="fnOnCommentLoaded">
-                    </commentList>
-                </view>
+                <block v-if="postDetailConfig && postDetailConfig.showComment">
+                    <view v-if="result" class="comment-wrap bg-white mt-24 pa-24 round-4">
+                        <commentList :disallowComment="!result.spec.allowComment" :postName="result.metadata.name"
+                                     :post="result" @on-comment-detail="fnOnShowCommentDetail" @on-loaded="fnOnCommentLoaded">
+                        </commentList>
+                    </view>
+                </block>
             </view>
 
             <!-- 弹幕效果 -->
@@ -238,9 +224,7 @@ import commentItem from '@/components/comment-item/comment-item.vue';
 import rCanvas from '@/components/r-canvas/r-canvas.vue';
 import barrage from '@/components/barrage/barrage.vue';
 
-import {
-    haloWxShareMixin
-} from '@/common/mixins/wxshare.mixin.js';
+import {haloWxShareMixin} from '@/common/mixins/wxshare.mixin.js';
 
 export default {
     components: {
@@ -311,8 +295,11 @@ export default {
         };
     },
     computed: {
-        copyright() {
-            return getApp().globalData.copyright;
+        haloConfigs() {
+            return this.$tm.vx.getters().getConfigs;
+        },
+        postDetailConfig() {
+            return this.$tm.vx.getters().getConfigs.postDetailConfig;
         },
         calcUrl() {
             return url => {
@@ -324,10 +311,11 @@ export default {
         },
         // 获取博主信息
         bloggerInfo() {
-            let blogger = this.$tm.vx.getters().getBlogger;
+            let blogger = this.$tm.vx.getters().getConfigs.authorConfig.blogger;
             blogger.avatar = this.$utils.checkAvatarUrl(blogger.avatar, true);
             return blogger;
         },
+
         // 原文链接：个人资质=可以打开公众号文章；非个人：任意链接地址（需在小程序后台配置）
         originalURL() {
             if ('unihalo_originalURL' in this.result?.metadata?.annotations) {
@@ -357,14 +345,15 @@ export default {
                     this.result = res;
 
                     const openid = uni.getStorageSync('openid');
-                    if (openid == '' || openid == null) {
+                    if (openid === '' || openid === null) {
                         this.fnGetOpenid();
                     }
                     const visitFlag = uni.getStorageSync('visit_' + this.result?.metadata?.name);
 
                     if (!visitFlag) {
                         const annotationsMap = res?.metadata?.annotations;
-                        if (('restrictReadEnable' in annotationsMap) && annotationsMap.restrictReadEnable === 'true') {
+                        if (('restrictReadEnable' in annotationsMap) && annotationsMap.restrictReadEnable ===
+                            'true') {
                             this.visitType = 1;
                             this.showValidVisitMorePop();
                         } else if ('unihalo_useVisitMorePwd' in annotationsMap) {
@@ -375,9 +364,10 @@ export default {
                             this.visitType = 3;
                             this.visitPwd = annotationsMap.unihalo_useVisitPwd;
                             this.showValidVisitPop();
-                        } else if (('restrictReadEnable' in annotationsMap) && annotationsMap.restrictReadEnable === 'password') {
-                          this.visitType = 4;
-                          this.showValidVisitPop();
+                        } else if (('restrictReadEnable' in annotationsMap) && annotationsMap
+                            .restrictReadEnable === 'password') {
+                            this.visitType = 4;
+                            this.showValidVisitPop();
                         } else {
                             this.visitType = 0;
                             this.showValidVisitMore = false;
@@ -425,6 +415,9 @@ export default {
         },
 
         fnToComment() {
+            if (!this.haloConfig.basicConfig.postDetailConfig.showComment) {
+                return;
+            }
             if (!this.result.spec.allowComment) {
                 return uni.$tm.toast('文章已开启禁止评论！');
             }
@@ -615,7 +608,7 @@ export default {
                 // 小程序信息
                 await this.$refs.rCanvas
                     .drawImage({
-                        url: this.$haloConfig.miniCodeImageUrl,
+                        url: this.haloConfig.imagesConfig.miniCodeImageUrl,
                         x: 20,
                         y: 360,
                         w: 80,
@@ -681,23 +674,6 @@ export default {
             // #ifdef MP-WEIXIN
             uni.$tm.toast('点击右上角分享给好友！');
             // #endif
-            // #ifdef APP-PLUS
-            uni.share({
-                provider: 'weixin',
-                scene: 'WXSceneSession',
-                type: 0,
-                href: this.$baseApiUrl,
-                title: this.result.spec.title,
-                summary: this.result.content.raw,
-                imageUrl: this.poster.res.tempFilePath,
-                success: function (res) {
-                    console.log('success:' + JSON.stringify(res));
-                },
-                fail: function (err) {
-                    console.log('fail:' + JSON.stringify(err));
-                }
-            });
-            // #endif
         },
         fnOnShowCommentDetail(data) {
             const {
@@ -723,7 +699,7 @@ export default {
                     this.commentDetail.list = res.items;
                 })
                 .catch(err => {
-                    console.log('getPostChildrenCommentList err', error);
+                    console.log('getPostChildrenCommentList err', err);
                     this.commentDetail.loading = 'error';
                 });
         },
@@ -742,12 +718,12 @@ export default {
             const _list = [];
             const _handleData = list => {
                 return new Promise(resolve => {
-                    if (list.length == 0) {
+                    if (list.length === 0) {
                         resolve();
                     } else {
                         list.forEach(item => {
                             _list.push(item);
-                            if (item.replies && item.replies.length != 0) {
+                            if (item.replies && item.replies.length !== 0) {
                                 _handleData(item.replies.items);
                             }
                             resolve();
@@ -833,6 +809,7 @@ export default {
         },
         //   获取openid
         fnGetOpenid() {
+            // #ifdef MP-WEIXIN
             uni.login({
                 provider: 'weixin',
                 success: function (loginRes) {
@@ -844,6 +821,7 @@ export default {
                     }
                 }
             })
+            // #endif
         },
         //   隐藏内容
         fnHideContent() {
@@ -872,18 +850,19 @@ export default {
                 case 0:
                     return;
                 case 1:
-                    this.$httpApi.v2.checkPostVerifyCode(this.validVisitModal.value, this.result?.metadata?.name).then(res => {
-                        if (res.code === 200) {
-                            uni.setStorageSync('visit_' + this.result?.metadata?.name, true)
-                            this.closeAllPop();
-                            this.fnGetData();
-                        } else {
-                            uni.showToast({
-                                title: '密码错误',
-                                icon: 'none'
-                            });
-                        }
-                    }).catch(err => {
+                    this.$httpApi.v2.checkPostVerifyCode(this.validVisitModal.value, this.result?.metadata?.name).then(
+                        res => {
+                            if (res.code === 200) {
+                                uni.setStorageSync('visit_' + this.result?.metadata?.name, true)
+                                this.closeAllPop();
+                                this.fnGetData();
+                            } else {
+                                uni.showToast({
+                                    title: '密码错误',
+                                    icon: 'none'
+                                });
+                            }
+                        }).catch(err => {
                         console.log(err);
                     });
                     return;
@@ -900,22 +879,23 @@ export default {
                         });
                     }
                     return;
-              case 4:
-                this.$httpApi.v2.checkPostPasswordAccess(this.validVisitModal.value, this.result?.metadata?.name).then(res => {
-                  if (res.code === 200) {
-                    uni.setStorageSync('visit_' + this.result?.metadata?.name, true)
-                    this.closeAllPop();
-                    this.fnGetData();
-                  } else {
-                    uni.showToast({
-                      title: '密码错误',
-                      icon: 'none'
+                case 4:
+                    this.$httpApi.v2.checkPostPasswordAccess(this.validVisitModal.value, this.result?.metadata?.name)
+                        .then(res => {
+                            if (res.code === 200) {
+                                uni.setStorageSync('visit_' + this.result?.metadata?.name, true)
+                                this.closeAllPop();
+                                this.fnGetData();
+                            } else {
+                                uni.showToast({
+                                    title: '密码错误',
+                                    icon: 'none'
+                                });
+                            }
+                        }).catch(err => {
+                        console.log(err);
                     });
-                  }
-                }).catch(err => {
-                  console.log(err);
-                });
-                return;
+                    return;
                 default:
                     return;
             }

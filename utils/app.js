@@ -7,7 +7,7 @@ export const Platform = {
  * 检查当前环境是什么环境
  */
 export const checkPlatform = (name) => {
-	return uni.getSystemInfoSync().platform == name;
+	return uni.getSystemInfoSync().platform === name;
 }
 
 // 默认的应用设置
@@ -20,7 +20,7 @@ export const _DefaultAppSettings = {
 	},
 	// 布局配置
 	layout: {
-		// h_row_col1 = 一行一列 
+		// h_row_col1 = 一行一列
 		// h_row_col2 = 一行两列
 		home: 'h_row_col1',
 		// lr_image_text=左图右文
@@ -51,7 +51,7 @@ export const _DefaultAppSettings = {
 	},
 	about: {
 		showAdmin: false, // 显示后台登录入口
-		showAllCount: false, // 默认显示所有的统计信息（关于页面） 
+		showAllCount: false, // 默认显示所有的统计信息（关于页面）
 	},
 	// 文章配置
 	article: {

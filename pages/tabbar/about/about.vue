@@ -142,7 +142,7 @@ export default {
             const _imgUrlOr = this.calcDefaultImageConfig.aboutProfileImageUrl;
             if (this.$utils.checkIsUrl(_imgUrlOr)) {
                 return {
-                    backgroundImage: `url(${_imgUrlOr})`
+                    backgroundImage: `url(${this.$utils.checkImageUrl(_imgUrlOr)})`
                 };
             } else {
                 return {
@@ -151,7 +151,7 @@ export default {
             }
         },
         calcWaveUrl() {
-            return this.calcDefaultImageConfig.waveImageUrl;
+            return this.$utils.checkImageUrl(this.calcDefaultImageConfig.waveImageUrl);
         },
         copyrightConfig() {
             return this.haloConfigs.basicConfig.copyrightConfig;

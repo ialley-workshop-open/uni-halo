@@ -1,10 +1,10 @@
 <template>
     <view class="app-page bg-white round-3 pa-46">
         <!-- 通过配置 -->
-        <view style="min-height: 100%;" v-html="disclaimersContent"></view>
+        <view v-if="disclaimersContent" style="min-height: 100%;" v-html="disclaimersContent"></view>
 
         <!-- 静态写法 -->
-        <block v-if="false">
+        <block v-else>
             <view class="text-weight-b text-size-lg text-align-center">《 本博客免责声明 》</view>
             <view v-if="false" class="text-size-s text-align-center mt-12 text-grey-darken-1">—— 博主：{{ bloggerInfo.nickname }} ——</view>
             <view class="mt-32">1、本博客属于个人非赢利性质的网站，所有转载的文章都以遵循原作者的版权声明注明了文章来源。</view>
@@ -14,7 +14,7 @@
                 4、如果本博客转载的文章不符合作者的版权声明或者作者不想让本博客转载您的文章，请邮件告知
                 <text class="text-bg-gradient-light-blue-accent ml-12 mr-12 ">
                     <text class="iconfont icon-mail-fill text-size-m mr-6"></text>
-                    studio@925i.cn
+                    {{ bloggerInfo.email }}
                 </text>
                 ，博主将会在第一时间删除相关信息！
             </view>
@@ -37,7 +37,12 @@ export default {
         disclaimersContent() {
             const configs = this.$tm.vx.getters().getAppConfigs;
             return configs.basicConfig.disclaimers.content
-        }
+        },
+        bloggerInfo() {
+            const blogger = this.haloConfigs.authorConfig.blogger;
+            blogger.avatar = this.$utils.checkAvatarUrl(blogger.avatar)
+            return blogger;
+        },
     }
 };
 </script>

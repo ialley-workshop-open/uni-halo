@@ -140,14 +140,8 @@ export default {
         },
         calcProfileStyle() {
             const _imgUrlOr = this.calcDefaultImageConfig.aboutProfileImageUrl;
-            if (this.$utils.checkIsUrl(_imgUrlOr)) {
-                return {
-                    backgroundImage: `url(${this.$utils.checkImageUrl(_imgUrlOr)})`
-                };
-            } else {
-                return {
-                    background: _imgUrlOr
-                };
+            return {
+                backgroundImage: `url(${this.$utils.checkImageUrl(_imgUrlOr)})`
             }
         },
         calcWaveUrl() {

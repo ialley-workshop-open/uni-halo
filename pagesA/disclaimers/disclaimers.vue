@@ -34,9 +34,12 @@
 <script>
 export default {
     computed: {
+        haloConfigs() {
+            return this.$tm.vx.getters().getConfigs
+        },
         disclaimersContent() {
-            const configs = this.$tm.vx.getters().getAppConfigs;
-            return configs.basicConfig.disclaimers.content
+            const basicConfig = this.haloConfigs.basicConfig;
+            return basicConfig?.disclaimers.content
         },
         bloggerInfo() {
             const blogger = this.haloConfigs.authorConfig.blogger;

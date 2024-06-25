@@ -300,7 +300,7 @@ export default {
                     path: '/pagesA/setting/setting',
                     isAdmin: false,
                     type: 'page',
-                    show: true
+                    show: false
                 },
                 {
                     key: 'admin',

@@ -25,7 +25,7 @@ export default {
     },
     methods: {
         fnCheckShowStarted() {
-            if (!this.configs.startConfig.enable) {
+            if (!this.configs.startConfig.enabled) {
                 uni.switchTab({
                     url: '/pages/tabbar/home/home'
                 });

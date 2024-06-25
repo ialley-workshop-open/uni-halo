@@ -19,7 +19,7 @@
                     <tm-translate animation-name="fadeUp" :wait="calcAniWait(index)">
                         <!-- 色彩版本 -->
                         <view v-if="!globalAppSettings.links.useSimple" class="info flex pt-24 pb-24 pl-12 pr-12"
-                              :class="{ 'border-b-1': index != dataList.length - 1 }" @click="fnCopyLink(link)">
+                              :class="{ 'border-b-1': index !== dataList.length - 1 }" @click="fnOnLinkEvent(link)">
                             <view class="link-logo">
                                 <cache-image class="link-logo_img" radius="12rpx" :url="link.spec.logo"
                                              :fileMd5="link.spec.logo" mode="aspectFill"></cache-image>
@@ -47,7 +47,7 @@
                             </view>
                         </view>
                         <!-- 简洁版本 -->
-                        <view v-else class="link-card flex ml-24 mr-24 pt-24 pb-24" @click="fnCopyLink(link)">
+                        <view v-else class="link-card flex ml-24 mr-24 pt-24 pb-24" @click="fnOnLinkEvent(link)">
                             <image class="logo shadow-6" :src="link.spec.logo" mode="aspectFill"></image>
                             <view class="info pl-24">
                                 <view class="name text-size-g">{{ link.spec.displayName }}</view>
@@ -63,61 +63,6 @@
                 </block>
             </view>
 
-            <!-- 如果大于一个分组：使用联系人的索引形式 dataList.length > 1 -->
-            <block v-if="false">
-                <block v-for="(team, index) in dataList" :key="index">
-                    <tm-translate animation-name="fadeUp" :wait="calcAniWait(index)">
-                        <view class="grey-lighten-4 text  text-size-s text-weight-b px-32 py-12">{{ team.title }}</view>
-                        <block v-for="(link, linkIndex) in team.children" :key="link.metadata.name">
-                            <tm-translate animation-name="fadeUp" :wait="calcAniWait(linkIndex)">
-                                <!-- 色彩版本 -->
-                                <view v-if="!globalAppSettings.links.useSimple"
-                                      class="info flex pt-24 pb-24 pl-12 pr-12" :class="{
-										'border-b-1':
-											linkIndex != team.children.length - 1 || index == dataList.length - 1
-									}" @click="fnCopyLink(link)">
-                                    <view class="link-logo">
-                                        <cache-image class="link-logo_img" radius="12rpx" :url="link.spec.logo"
-                                                     :fileMd5="link.spec.logo" mode="aspectFill"></cache-image>
-                                    </view>
-                                    <view class="flex flex-col pl-30 info-detail">
-                                        <view class="link-card_name text-size-l text-weight-b text-red">
-                                            {{ link.spec.displayName }}
-                                        </view>
-                                        <view class="poup-tag ml--10 mt-6">
-                                            <tm-tags color="bg-gradient-amber-accent" :shadow="0" size="s" model="fill">
-                                                ID：{{ link.metadata.name }}
-                                            </tm-tags>
-                                            <tm-tags color=" bg-gradient-light-blue-lighten" :shadow="0" size="s"
-                                                     model="fill">
-                                                {{ link.spec.groupName || '暂未分组' }}
-                                            </tm-tags>
-                                        </view>
-                                        <view class="link-card_desc text-overflow text-size-s mt-4">
-                                            博客简介：{{ link.spec.description || '这个博主很懒，没写简介~' }}
-                                        </view>
-                                    </view>
-                                </view>
-                                <!-- 简洁版本 -->
-                                <view v-else class="link-card flex ml-24 mr-24 pt-24 pb-24" @click="fnCopyLink(link)">
-                                    <image class="logo shadow-6" :src="link.spec.logo" mode="aspectFill"></image>
-                                    <view class="info pl-24">
-                                        <view class="name text-size-g">{{ link.spec.displayName }}</view>
-                                        <view class="desc mt-12 text-size-s text-grey-darken-1">
-                                            {{ link.spec.description }}
-                                        </view>
-                                        <view v-if="false" class="link mt-12 text-size-m text-grey-darken-1">
-                                            <text class="iconfont icon-link mr-6 text-size-s"></text>
-                                            {{ link.spec.url }}
-                                        </view>
-                                    </view>
-                                </view>
-                            </tm-translate>
-                        </block>
-                    </tm-translate>
-                </block>
-            </block>
-
             <!-- 返回顶部 -->
             <tm-flotbutton color="light-blue" @click="fnToTopPage" size="m" icon="icon-angle-up"></tm-flotbutton>
             <tm-flotbutton v-if="haloPluginConfigs.submitLink.enabled" :offset="[16,80]" label="申请"
@@ -128,32 +73,29 @@
                 <view class="poup pa-36">
                     <view class="info flex">
                         <view class="poup-logo bg-gradient-amber-accent pa-4 shadow-24">
-                            <image class="poup-logo_img" :src="detail.data.logo" mode="aspectFill"></image>
+                            <image class="poup-logo_img" :src="$utils.checkImageUrl(detail.data.spec.logo)" mode="aspectFill"></image>
                         </view>
                         <view class="pl-24 info-detail">
-                            <view class="poup-name text-size-lg text-weight-b">{{ detail.data.name }}</view>
+                            <view class="poup-name text-size-lg text-weight-b">{{ detail.data.spec.displayName }}</view>
                             <view class="poup-tag ml--10">
-                                <tm-tags color="bg-gradient-amber-accent" size="n" model="fill">
-                                    ID：{{ detail.data.id }}
-                                </tm-tags>
                                 <tm-tags color="bg-gradient-light-blue-lighten" size="n" model="fill">
-                                    {{ detail.data.team || '暂未分组' }}
+                                    {{ detail.data.spec.groupName  }}
                                 </tm-tags>
                             </view>
                             <view class="poup-link text-size-m" @click="fnCopyLink(detail.data)">
-                                <text class="text-orange">{{ detail.data.url }}</text>
+                                <text class="text-orange">{{ detail.data.spec.url }}</text>
                                 <text class="iconfont icon-copy text-size-s ml-6 text-grey"></text>
                             </view>
                         </view>
                     </view>
 
                     <view class="poup-desc mt-20">
-                        博客简介：{{ detail.data.description || '这个博主很懒，没写简介~' }}
+                        博客简介：{{ detail.data.spec.description || '这个博主很懒，没写简介~' }}
                     </view>
 
                     <!-- 博客预览图 -->
                     <view class="mt-24">
-                        <tm-images :width="568" :round="2" :src="calcSiteThumbnail(detail.data.url)"
+                        <tm-images :width="568" :round="2" :src="calcSiteThumbnail(detail.data.spec.url)"
                                    mode="aspectFill"></tm-images>
                     </view>
                 </view>
@@ -199,6 +141,7 @@ export default {
             hasNext: false,
             isLoadMore: false,
             loadMoreText: '',
+            linkGroupList: [],
             dataList: [],
             cacheDataList: [],
             colors: [
@@ -212,7 +155,7 @@ export default {
         };
     },
     computed: {
-        haloPluginConfigs(){
+        haloPluginConfigs() {
             return this.$tm.vx.getters().getConfigs.pluginConfig;
         },
         calcSiteThumbnail(val) {
@@ -226,8 +169,8 @@ export default {
         }
     },
     onLoad() {
-        this.fnSetPageTitle('朋友圈');
-        this.fnGetData();
+        this.fnSetPageTitle('友情链接');
+        this.fnGetLinkGroupData();
     },
     onPullDownRefresh() {
         this.isLoadMore = false;
@@ -249,16 +192,29 @@ export default {
         }
     },
     methods: {
-        fnRandomColor() {
-            const _r = GetRandomNumberByRange(0, this.colors.length - 1);
-            return this.colors[_r];
+        fnGetLinkGroupData() {
+            this.$httpApi.v2
+                .getFriendLinkGroupList({
+                    page: 1,
+                    size: 0
+                })
+                .then(res => {
+                    this.linkGroupList = res.items;
+                    this.fnGetData()
+                })
+                .catch(err => {
+                    console.error(err);
+                });
+        },
+        findLinkGroupDisplayNameByGroupMetadataName(groupName) {
+            if (this.linkGroupList.length === 0) return groupName || "未分组"
+            return this.linkGroupList.find(item => item.metadata.name === groupName)?.spec?.displayName || groupName || "未分组"
         },
         fnGetData() {
             if (!this.isLoadMore) {
                 this.loading = 'loading';
             }
             this.loadMoreText = '';
-
             this.$httpApi.v2
                 .getFriendLinkList(this.queryParams)
                 .then(res => {
@@ -267,6 +223,7 @@ export default {
                     this.hasNext = res.hasNext;
                     const list = res.items.map(item => {
                         item.spec.logo = this.$utils.checkAvatarUrl(item.spec.logo)
+                        item.spec.groupName = this.findLinkGroupDisplayNameByGroupMetadataName(item.spec?.groupName)
                         return item;
                     })
                     this.dataList = this.dataList.concat(list);

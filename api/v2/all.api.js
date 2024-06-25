@@ -139,6 +139,12 @@ export default {
 		})
 	},
 
+	/**
+	 * 获取友链分组
+	 */
+	getFriendLinkGroupList: (params) => {
+		return HttpHandler.Get(`/apis/core.halo.run/v1alpha1/linkgroups`, params)
+	},
 
 	/**
 	 * 获取友链

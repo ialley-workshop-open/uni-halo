@@ -97,7 +97,8 @@
                 </view>
 
                 <!-- 版权声明 -->
-                <view v-if="postDetailConfig && postDetailConfig.copyrightEnabled" class="copyright-wrap bg-white mt-24 pa-24 round-4">
+                <view v-if="postDetailConfig && postDetailConfig.copyrightEnabled"
+                      class="copyright-wrap bg-white mt-24 pa-24 round-4">
                     <view class="copyright-title text-weight-b">版权声明</view>
                     <view
                         class="copyright-content mt-12  grey-lighten-5 text-grey-darken-2 round-4 pt-12 pb-12 pl-24 pr-24 ">
@@ -107,7 +108,8 @@
                         <view v-if="postDetailConfig.copyrightDesc" class="copyright-text text-size-s mt-12">
                             版权说明：{{ postDetailConfig.copyrightDesc }}
                         </view>
-                        <view v-if="postDetailConfig.copyrightViolation" class="copyright-text text-size-s mt-12 text-red">
+                        <view v-if="postDetailConfig.copyrightViolation"
+                              class="copyright-text text-size-s mt-12 text-red">
                             侵权处理：{{ postDetailConfig.copyrightViolation }}
                         </view>
                     </view>
@@ -116,8 +118,9 @@
                 <!-- 评论展示区域 -->
                 <block v-if="postDetailConfig && postDetailConfig.showComment">
                     <view v-if="result" class="comment-wrap bg-white mt-24 pa-24 round-4">
-                        <commentList :disallowComment="!result.spec.allowComment" :postName="result.metadata.name"
-                                     :post="result" @on-comment-detail="fnOnShowCommentDetail" @on-loaded="fnOnCommentLoaded">
+                        <commentList ref="commentListRef" :disallowComment="!result.spec.allowComment"
+                                     :postName="result.metadata.name" :post="result" @on-comment="fnOnComment"
+                                     @on-comment-detail="fnOnShowCommentDetail" @on-loaded="fnOnCommentLoaded">
                         </commentList>
                     </view>
                 </block>
@@ -203,6 +206,11 @@
         <tm-dialog v-model="showGetPassword" title="免费获取验证码" content="是否前往获取验证码？" @confirm="toAdvertise"
                    @cancel="closeAllPop"></tm-dialog>
 
+        <!-- 评论弹窗 -->
+        <block v-if="calcIsShowComment">
+            <comment-modal :show="commentModal.show" :title="commentModal.title" :postName="commentModal.postName"
+                           :isComment="commentModal.isComment" @on-close="fnOnCommentModalClose"></comment-modal>
+        </block>
     </view>
 </template>
 
@@ -220,6 +228,7 @@ import tmMore from '@/tm-vuetify/components/tm-more/tm-more.vue';
 import mpHtml from '@/components/mp-html/components/mp-html/mp-html.vue';
 import commentList from '@/components/comment-list/comment-list.vue';
 import commentItem from '@/components/comment-item/comment-item.vue';
+import commentModal from '@/components/comment-modal/comment-modal.vue';
 
 import rCanvas from '@/components/r-canvas/r-canvas.vue';
 import barrage from '@/components/barrage/barrage.vue';
@@ -239,7 +248,8 @@ export default {
         commentList,
         commentItem,
         rCanvas,
-        barrage
+        barrage,
+        commentModal
     },
     mixins: [haloWxShareMixin],
     data() {
@@ -277,7 +287,13 @@ export default {
             visitType: 0, // 0 未加密 1 后端部分隐藏 2 前端部分隐藏 3 全部隐藏
             visitPwd: undefined,
             showValidVisitMore: true,
-            showGetPassword: false
+            showGetPassword: false,
+            commentModal: {
+                show: false,
+                isComment: false,
+                postName: "",
+                title: ""
+            }
         };
     },
     computed: {
@@ -285,7 +301,7 @@ export default {
             return this.$tm.vx.getters().getConfigs;
         },
         postDetailConfig() {
-            return this.haloConfigs.postDetailConfig;
+            return this.haloConfigs.basicConfig.postDetailConfig;
         },
         calcUrl() {
             return url => {
@@ -297,7 +313,7 @@ export default {
         },
         // 获取博主信息
         bloggerInfo() {
-            let blogger = this.$tm.vx.getters().getConfigs.authorConfig.blogger;
+            const blogger = this.$tm.vx.getters().getConfigs.authorConfig.blogger;
             blogger.avatar = this.$utils.checkAvatarUrl(blogger.avatar, true);
             return blogger;
         },
@@ -310,12 +326,16 @@ export default {
                 return '';
             }
         },
+
+        calcIsShowComment() {
+            return this.postDetailConfig.showComment
+        }
     },
     watch: {
         haloConfigs: {
             deep: true,
             immediate: true,
-            handler: (newVal) => {
+            handler: function (newVal) {
                 if (!newVal) return;
                 this.fnHandleSetFlotButtonItems(newVal);
             }
@@ -394,13 +414,11 @@ export default {
                 });
         },
         fnHandleSetFlotButtonItems(configs) {
-
-            const actions = [
-                {
-                    icon: 'icon-share1',
-                    color: 'bg-gradient-blue-accent',
-                    use: true,
-                },
+            const actions = [{
+                icon: 'icon-share1',
+                color: 'bg-gradient-blue-accent',
+                use: true,
+            },
                 {
                     icon: 'icon-like',
                     color: 'bg-gradient-orange-accent',
@@ -431,25 +449,32 @@ export default {
         },
 
         fnToComment() {
-            if (!this.haloConfig.basicConfig.postDetailConfig.showComment) {
+            if (!this.calcIsShowComment) {
                 return;
             }
             if (!this.result.spec.allowComment) {
                 return uni.$tm.toast('文章已开启禁止评论！');
             }
-            this.$Router.push({
-                path: '/pagesA/comment/comment',
-                query: {
-                    isComment: true,
-                    postName: this.result.metadata.name,
-                    title: this.result.spec.title,
-                    from: 'posts',
-                    formPage: 'comment_list',
-                    type: 'post'
-                }
-            });
+            this.commentModal.isComment = true;
+            this.commentModal.postName = this.result.metadata.name;
+            this.commentModal.title = this.result.spec.title;
+            this.commentModal.show = true;
         },
-
+        fnOnComment(data) {
+            this.commentModal.isComment = data.isComment;
+            this.commentModal.postName = data.name;
+            this.commentModal.title = data.title;
+            this.commentModal.show = true;
+        },
+        fnOnCommentModalClose(refresh) {
+            if (refresh && this.$refs.commentListRef) {
+                this.$refs.commentListRef.fnGetData()
+            }
+            this.commentModal.show = false;
+            this.commentModal.isComment = false;
+            this.commentModal.postName = "";
+            this.commentModal.title = "";
+        },
         fnDoLikes() {
             this.$httpApi
                 .postLikePost(this.result.id)
@@ -624,7 +649,7 @@ export default {
                 // 小程序信息
                 await this.$refs.rCanvas
                     .drawImage({
-                        url: this.haloConfig.imagesConfig.miniCodeImageUrl,
+                        url: this.$utils.checkImageUrl(this.haloConfig.imagesConfig.miniCodeImageUrl),
                         x: 20,
                         y: 360,
                         w: 80,
@@ -730,7 +755,6 @@ export default {
             });
         },
         async fnOnCommentLoaded(data) {
-            console.log("data", data)
             const _list = [];
             const _handleData = list => {
                 return new Promise(resolve => {

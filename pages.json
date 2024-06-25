@@ -226,16 +226,6 @@
           }
         },
         {
-          "path": "comment/comment",
-          "style": {
-            "navigationBarTitleText": "",
-            "enablePullDownRefresh": false
-          },
-          "meta": {
-            "auth": "login"
-          }
-        },
-        {
           "path": "disclaimers/disclaimers",
           "style": {
             "navigationBarTitleText": "免责声明",

@@ -41,7 +41,7 @@
         </view>
 
         <view class="user-info__container flex flex-col flex-center">
-            <image class="user-info__avatar" :src="startConfig.logo" mode="aspectFill"></image>
+            <image class="user-info__avatar" :src="$utils.checkImageUrl(startConfig.logo)" mode="aspectFill"></image>
             <view class="user-info__nick-name">「 {{ startConfig.title }} 」</view>
         </view>
 
@@ -72,7 +72,7 @@ export default {
         },
         pageStyle() {
             if (this.startConfig.bg) {
-                const _bg = this.$utils.checkIsUrl(this.startConfig.bg) ? `url(${this.startConfig.bg})` : this
+                const _bg = this.$utils.checkIsUrl(this.startConfig.bg) ? `url(${this.$utils.checkImageUrl(this.startConfig.bg)})` : this
                     .startConfig.bg;
                 return {
                     background: _bg + '!important'

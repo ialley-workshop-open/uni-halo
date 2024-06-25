@@ -128,7 +128,7 @@
             <!-- 返回顶部 -->
             <tm-flotbutton :offset="[16, 80]" icon="icon-angle-up" color="bg-gradient-light-blue-accent"
                            @click="fnToTopPage()"></tm-flotbutton>
-            <tm-flotbutton :actions="btnOption.actions" actions-pos="left" :show-text="true"
+            <tm-flotbutton :actions="flotButtonActions" actions-pos="left" :show-text="true"
                            color="bg-gradient-orange-accent" @change="fnOnFlotButtonChange"></tm-flotbutton>
         </block>
 
@@ -156,7 +156,7 @@
                         </view>
                     </view>
                     <block v-else>
-                        <view v-if="commentDetail.list.length == 0" class="poup-empty flex flex-center">
+                        <view v-if="commentDetail.list.length === 0" class="poup-empty flex flex-center">
                             <tm-empty icon="icon-shiliangzhinengduixiang-" label="没有更多评论啦~"></tm-empty>
                         </view>
 
@@ -246,22 +246,8 @@ export default {
         return {
             loading: 'loading',
             markdownConfig: MarkdownConfig,
-            btnOption: {
-                actions: [
-                    // {
-                    // 	icon: 'icon-like',
-                    // 	color: 'bg-gradient-orange-accent'
-                    // },
-                    {
-                        icon: 'icon-commentdots-fill',
-                        color: 'bg-gradient-green-accent'
-                    },
-                    {
-                        icon: 'icon-share1',
-                        color: 'bg-gradient-blue-accent'
-                    }
-                ]
-            },
+
+            flotButtonActions: [],
             queryParams: {
                 name: null
             },
@@ -299,7 +285,7 @@ export default {
             return this.$tm.vx.getters().getConfigs;
         },
         postDetailConfig() {
-            return this.$tm.vx.getters().getConfigs.postDetailConfig;
+            return this.haloConfigs.postDetailConfig;
         },
         calcUrl() {
             return url => {
@@ -325,7 +311,16 @@ export default {
             }
         },
     },
-    watch: {},
+    watch: {
+        haloConfigs: {
+            deep: true,
+            immediate: true,
+            handler: (newVal) => {
+                if (!newVal) return;
+                this.fnHandleSetFlotButtonItems(newVal);
+            }
+        }
+    },
     onLoad(e) {
         this.fnSetPageTitle('文章加载中...');
         this.queryParams.name = e.name;
@@ -398,7 +393,28 @@ export default {
                     uni.stopPullDownRefresh();
                 });
         },
+        fnHandleSetFlotButtonItems(configs) {
 
+            const actions = [
+                {
+                    icon: 'icon-share1',
+                    color: 'bg-gradient-blue-accent',
+                    use: true,
+                },
+                {
+                    icon: 'icon-like',
+                    color: 'bg-gradient-orange-accent',
+                    use: false,
+                },
+                {
+                    icon: 'icon-commentdots-fill',
+                    color: 'bg-gradient-green-accent',
+                    use: configs?.basicConfig?.postDetailConfig?.showComment
+                }
+            ]
+
+            this.flotButtonActions = actions.filter(x => x.use === true)
+        },
         // 浮动按钮点击
         fnOnFlotButtonChange(index) {
             switch (index) {
@@ -406,10 +422,10 @@ export default {
                 // 	this.fnDoLikes();
                 // 	break;
                 case 0:
-                    this.fnToComment();
+                    this.fnShowShare();
                     break;
                 case 1:
-                    this.fnShowShare();
+                    this.fnToComment();
                     break;
             }
         },

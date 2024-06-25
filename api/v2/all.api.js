@@ -143,7 +143,11 @@ export default {
 	 * 获取友链分组
 	 */
 	getFriendLinkGroupList: (params) => {
-		return HttpHandler.Get(`/apis/core.halo.run/v1alpha1/linkgroups`, params)
+		return HttpHandler.Get(`/apis/core.halo.run/v1alpha1/linkgroups`, params,{
+			custom: {
+				systemToken: HaloTokenConfig.systemToken
+			}
+		})
 	},
 
 	/**

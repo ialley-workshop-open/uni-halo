@@ -70,7 +70,7 @@
                            @click="toSubmitLinkPage"></tm-flotbutton>
             <!-- 详情弹窗 -->
             <tm-poup v-model="detail.show" :width="640" height="auto" position="center" :round="6">
-                <view class="poup pa-36">
+                <view class="poup pa-36" v-if="detail.data">
                     <view class="info flex">
                         <view class="poup-logo bg-gradient-amber-accent pa-4 shadow-24">
                             <image class="poup-logo_img" :src="$utils.checkImageUrl(detail.data.spec.logo)" mode="aspectFill"></image>
@@ -79,7 +79,7 @@
                             <view class="poup-name text-size-lg text-weight-b">{{ detail.data.spec.displayName }}</view>
                             <view class="poup-tag ml--10">
                                 <tm-tags color="bg-gradient-light-blue-lighten" size="n" model="fill">
-                                    {{ detail.data.spec.groupName  }}
+                                    {{ detail.data.spec.groupName }}
                                 </tm-tags>
                             </view>
                             <view class="poup-link text-size-m" @click="fnCopyLink(detail.data)">
@@ -115,8 +115,6 @@ import tmEmpty from '@/tm-vuetify/components/tm-empty/tm-empty.vue';
 import tmImages from '@/tm-vuetify/components/tm-images/tm-images.vue';
 import tmPoup from '@/tm-vuetify/components/tm-poup/tm-poup.vue';
 
-import {GetRandomNumberByRange} from '@/utils/random.js';
-
 export default {
     components: {
         tmSkeleton,
@@ -136,14 +134,13 @@ export default {
             },
             detail: {
                 show: false,
-                data: {}
+                data: null
             },
             hasNext: false,
             isLoadMore: false,
             loadMoreText: '',
             linkGroupList: [],
             dataList: [],
-            cacheDataList: [],
             colors: [
                 '#39B449',
                 '#E44C41',
@@ -176,7 +173,6 @@ export default {
         this.isLoadMore = false;
         this.queryParams.page = 1;
         this.dataList = []
-        this.cacheDataList = []
         this.fnGetData();
     },
     onReachBottom(e) {
@@ -222,7 +218,7 @@ export default {
                     console.log(res);
                     this.hasNext = res.hasNext;
                     const list = res.items.map(item => {
-                        item.spec.logo = this.$utils.checkAvatarUrl(item.spec.logo)
+                        item.spec.logo = this.$utils.checkAvatarUrl(item.spec?.logo)
                         item.spec.groupName = this.findLinkGroupDisplayNameByGroupMetadataName(item.spec?.groupName)
                         return item;
                     })

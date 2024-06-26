@@ -169,7 +169,7 @@ export default {
                 }
                 this.$httpApi.v2.addPostComment(commentForm)
                     .then(res => {
-                        uni.$tm.toast('评论成功！');
+                        uni.$tm.toast('评论成功，可能需要审核！');
                         // 更新评论者信息
                         this.handleSetVisitor();
                         this.handleClose(true)
@@ -196,7 +196,7 @@ export default {
             }
             this.$httpApi.v2.addPostCommentReply(this.form.postName, replyForm)
                 .then(res => {
-                    uni.$tm.toast('回复成功！');
+                    uni.$tm.toast('回复成功，可能需要审核！');
                     // 更新评论者信息
                     this.handleSetVisitor();
                     this.handleClose(true)

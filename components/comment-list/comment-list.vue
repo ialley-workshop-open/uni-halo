@@ -30,8 +30,7 @@
                         <text class="text-red text-size-s">- 文章已开启禁止评论 -</text>
                     </tm-empty>
                     <tm-empty v-else icon="icon-shiliangzhinengduixiang-" label="暂无评论">
-                        <tm-button theme="light-blue" :dense="true" :shadow="0" size="m"
-                                   @click="fnToComment(null)">抢沙发
+                        <tm-button theme="light-blue" :dense="true" :shadow="0" size="m" @click="fnToComment(null)">抢沙发
                         </tm-button>
                     </tm-empty>
                 </view>
@@ -146,11 +145,9 @@ export default {
                 return uni.$tm.toast('文章已禁止评论！');
             }
             let _comment = {};
+            console.log('data', data)
             if (data) {
-                let {
-                    type,
-                    comment
-                } = data;
+                let {type, comment} = data;
                 // 来自用户
                 _comment = {
                     isComment: false,
@@ -165,16 +162,14 @@ export default {
                 _comment = {
                     isComment: true,
                     postName: this.post.metadata.name,
-                    title: '评论文章：' + this.post.spec.title,
+                    title: '新增评论',
                     formPage: 'comment_list',
                     from: 'posts',
                     type: 'post'
                 };
             }
 
-            this.$emit("on-comment", {
-                _comment
-            })
+            this.$emit("on-comment", _comment)
         },
         fnCopyContent(content) {
             uni.$tm.u.setClipboardData(content);

@@ -77,7 +77,7 @@ export default {
 	},
 	// 提交回复
 	addPostCommentReply: (commentName, data) => {
-		return HttpHandler.Post(`/apis/api.halo.run/v1alpha1/comments/${commentName}/replay`, data)
+		return HttpHandler.Post(`/apis/api.halo.run/v1alpha1/comments/${commentName}/reply`, data)
 	},
 
 	/**

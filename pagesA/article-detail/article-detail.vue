@@ -317,11 +317,7 @@ export default {
 
         // 原文链接：个人资质=可以打开公众号文章；非个人：任意链接地址（需在小程序后台配置）
         originalURL() {
-            if ('unihalo_originalURL' in this.result?.metadata?.annotations) {
-                return this.result?.metadata?.annotations?.unihalo_originalURL;
-            } else {
-                return '';
-            }
+            return this.result?.metadata?.annotations?.unihalo_originalURL || ""
         },
 
         calcIsShowComment() {
@@ -445,12 +441,12 @@ export default {
             }
             this.commentModal.isComment = true;
             this.commentModal.postName = this.result.metadata.name;
-            this.commentModal.title = this.result.spec.title;
+            this.commentModal.title = "新增评论";
             this.commentModal.show = true;
         },
         fnOnComment(data) {
             this.commentModal.isComment = data.isComment;
-            this.commentModal.postName = data.name;
+            this.commentModal.postName = data.postName;
             this.commentModal.title = data.title;
             this.commentModal.show = true;
         },

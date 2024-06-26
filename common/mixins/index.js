@@ -60,7 +60,7 @@ export default {
                 // 设置页面标题
                 fnSetPageTitle(title) {
                     uni.setNavigationBarTitle({
-                        title: title || (this.haloConfig && this.haloConfig.startConfig.title) || "uni-halo",
+                        title: title || this.haloConfig?.appConfig?.startConfig?.title || "uni-halo",
                     })
                 },
 

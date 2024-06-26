@@ -1,6 +1,6 @@
 <template>
     <view class="app-page">
-        <view v-if="loading != 'success'" class="loading-wrap">
+        <view v-if="loading !== 'success'" class="loading-wrap">
             <tm-skeleton model="card"></tm-skeleton>
             <tm-skeleton model="card"></tm-skeleton>
             <tm-skeleton model="card"></tm-skeleton>
@@ -44,7 +44,7 @@
             <view class="category">
                 <view class="category-type">
                     <text class="text-weight-b">分类：</text>
-                    <text v-if="result.categories.length == 0" class="category-tag is-empty">未选择分类</text>
+                    <text v-if="result.categories.length === 0" class="category-tag is-empty">未选择分类</text>
                     <block v-else>
                         <text class="category-tag" v-for="(item, index) in result.categories" :key="index"
                               @click="fnToCate(item)">
@@ -54,7 +54,7 @@
                 </view>
                 <view class="mt-18 category-type">
                     <text class="text-weight-b">标签：</text>
-                    <text v-if="result.tags.length == 0" class="category-tag is-empty">未选择标签</text>
+                    <text v-if="result.tags.length === 0" class="category-tag is-empty">未选择标签</text>
                     <block v-else>
                         <text class="category-tag" :style="{ backgroundColor: item.color }"
                               v-for="(item, index) in result.tags" :key="index" @click="fnToTag(item)">
@@ -145,12 +145,12 @@
                 </view>
 
                 <scroll-view :scroll-y="true" class="poup-body">
-                    <view v-if="commentDetail.loading != 'success'" class="poup-loading-wrap flex flex-center">
-                        <view v-if="commentDetail.loading == 'loading'" class="loading flex flex-center flex-col">
+                    <view v-if="commentDetail.loading !== 'success'" class="poup-loading-wrap flex flex-center">
+                        <view v-if="commentDetail.loading === 'loading'" class="loading flex flex-center flex-col">
                             <text class="e-loading-icon iconfont icon-loading text-blue"></text>
                             <view class="text-size-n text-grey-lighten-1 py-12 mt-12">加载中，请稍等...</view>
                         </view>
-                        <view v-else-if="commentDetail.loading == 'error'" class="error">
+                        <view v-else-if="commentDetail.loading === 'error'" class="error">
                             <tm-empty icon="icon-wind-cry" label="加载失败">
                                 <tm-button theme="bg-gradient-light-blue-accent" size="m" @click="fnGetChildComments()">
                                     刷新试试
@@ -629,7 +629,7 @@ export default {
                     });
                 await this.$refs.rCanvas
                     .drawText({
-                        text: this.result.content.raw,
+                        text: this.result?.status?.excerpt || "文章暂无摘要信息",
                         max_width: 312,
                         line_clamp: 2,
                         x: 12,

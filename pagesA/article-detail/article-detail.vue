@@ -233,8 +233,6 @@ import commentModal from '@/components/comment-modal/comment-modal.vue';
 import rCanvas from '@/components/r-canvas/r-canvas.vue';
 import barrage from '@/components/barrage/barrage.vue';
 
-import {haloWxShareMixin} from '@/common/mixins/wxshare.mixin.js';
-
 export default {
     components: {
         tmSkeleton,
@@ -251,7 +249,6 @@ export default {
         barrage,
         commentModal
     },
-    mixins: [haloWxShareMixin],
     data() {
         return {
             loading: 'loading',
@@ -394,15 +391,6 @@ export default {
 
                     this.fnSetPageTitle('文章详情');
                     this.loading = 'success';
-                    this.fnSetWxShareConfig({
-                        title: this.result.spec.title,
-                        desc: this.result.content.raw,
-                        imageUrl: this.$utils.checkThumbnailUrl(this.result.spec.cover),
-                        path: `/pagesA/article-detail/article-detail?name=${this.result.metadata.name}`,
-                        copyLink: this.$baseApiUrl,
-                        query: {}
-                    });
-
                 })
                 .catch(err => {
                     console.log("错误", err)

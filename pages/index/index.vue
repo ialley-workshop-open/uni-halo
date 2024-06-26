@@ -14,7 +14,7 @@ export default {
     onLoad() {
         uni.$tm.vx.actions('config/fetchConfigs').then((res) => {
             // #ifdef MP-WEIXIN
-            uni.$tm.vx.commit('setWxShare', res.shareConfig);
+            // uni.$tm.vx.commit('setWxShare', res.shareConfig);
             // #endif
             this.fnCheckShowStarted();
         }).catch((err) => {

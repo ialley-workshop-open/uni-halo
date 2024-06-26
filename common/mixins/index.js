@@ -42,18 +42,6 @@ export default {
                     }
                 }
             },
-            watch: {
-                haloConfig: {
-                    deep: true,
-                    immediate: true,
-                    handler(newVal) {
-                        if (!newVal) return;
-                        // #ifdef MP-WEIXIN
-                        uni.$tm.vx.commit('setWxShare', newVal.shareConfig);
-                        // #endif
-                    }
-                }
-            },
             onLoad() {
                 this.fnResetSetAniWaitIndex()
             },

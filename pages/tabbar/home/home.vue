@@ -1,7 +1,9 @@
 <template>
     <view class="app-page">
         <tm-menubars iconColor="white" color="white" :flat="true" :showback="false">
-            <image slot="left" class="logo ml-24 round-24" :src="bloggerInfo.avatar" mode="scaleToFill"></image>
+            <view slot="left">
+                <image class="logo ml-24 round-24" :src="appInfo.logo" mode="scaleToFill"/>
+            </view>
             <view class="search-input round-12 pt-12 pb-12 flex pl-24" @click="fnToSearch">
                 <text class="search-input_icon iconfont text-size-m icon-search text-grey"></text>
                 <view class="search-input_text pl-12 text-size-m text-grey">搜索文章...</view>
@@ -118,14 +120,20 @@ export default {
             categoryList: [],
         };
     },
-
     computed: {
+        haloConfigs() {
+            return this.$tm.vx.getters().getConfigs;
+        },
         bloggerInfo() {
-            let blogger = this.$tm.vx.getters().getConfigs.authorConfig.blogger;
-            console.log('blogger----------------', blogger)
+            const blogger = this.$tm.vx.getters().getConfigs.authorConfig.blogger;
             blogger.avatar = this.$utils.checkAvatarUrl(blogger.avatar, true);
             return blogger;
         },
+        appInfo() {
+            const appInfo = this.haloConfigs.appConfig.appInfo;
+            appInfo.logo = this.$utils.checkImageUrl(appInfo.logo)
+            return appInfo;
+        }
     },
     onLoad() {
         this.fnSetPageTitle();

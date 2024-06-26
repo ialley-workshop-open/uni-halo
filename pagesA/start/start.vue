@@ -68,7 +68,7 @@ export default {
     },
     computed: {
         startConfig() {
-            return this.$tm.vx.getters().getConfigs.startConfig;
+            return this.$tm.vx.getters().getConfigs.appConfig.startConfig;
         },
         pageStyle() {
             if (this.startConfig.bg) {

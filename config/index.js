@@ -6,7 +6,7 @@ export const DefaultAppConfigs = {
 	loveConfig: {},
 	imagesConfig: {},
 	authorConfig: {},
-	startConfig: {},
+	appConfig: {},
 	pluginConfig: {},
 	adConfig: {},
 }

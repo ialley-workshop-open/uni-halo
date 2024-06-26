@@ -1,14 +1,14 @@
 // 微信分享配置
 import HaloTokenConfig from '@/config/token.config.js'
 import {jsonToUrlParams2} from '@/utils/url.params.js'
-import {checkImageUrl} from '@/utils/index.js'
+import utils from '@/utils/index.js'
 
 export const haloWxShareMixin = {
     computed: {
         haloWxShareData() {
             const configs = this.$tm.vx.getters().getConfigs?.shareConfig;
             if(!configs) return {};
-            configs.imageUrl = checkImageUrl(configs.imageUrl)
+            configs.imageUrl = utils.checkImageUrl(configs.imageUrl)
             return configs
         }
     },

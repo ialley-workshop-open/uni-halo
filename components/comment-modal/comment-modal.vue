@@ -2,7 +2,7 @@
     <tm-poup v-model="isShow" position="bottom" height="71vh" @change="handleOnChange">
         <view class="title text-align-center">{{ calcTitle }}</view>
         <tm-form @submit="fnOnSubmit">
-            <tm-input :auto-focus="true" name="content" :vertical="true" required :height="220" input-type="textarea"
+            <tm-input name="content" :vertical="true" required :height="220" input-type="textarea"
                       bg-color="grey-lighten-5" :maxlength="200" :borderBottom="false" placeholder="请输入内容,不超过200字符..."
                       v-model="form.content"></tm-input>
             <tm-input name="author" align="right" required title="我的昵称" placeholder="请输入您的昵称..."

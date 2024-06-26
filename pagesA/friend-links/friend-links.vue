@@ -273,7 +273,7 @@ export default {
 
         fnCopyLink(link) {
             uni.setClipboardData({
-                data: `${link.name}:${link.url}`,
+                data: `${link.spec.displayName}:${link.spec.url}`,
                 showToast: false,
                 success: () => {
                     uni.showToast({

@@ -26,7 +26,6 @@
         <!-- 社交联系方式列表 -->
         <view class="contact ma-50 mt-0 pt-12">
             <block v-if="calcIsNotEmpty">
-
                 <block v-for="(item, index) in result" :key="index">
                     <view v-if="item.value" class="item mt-24 flex" @click="fnOnClick(item)">
                         <view class="left">
@@ -37,9 +36,9 @@
                     </view>
                 </block>
             </block>
-           <view  v-else class="mt-12 pt-12">
-               <tm-empty icon="icon-shiliangzhinengduixiang-" label="暂无联系方式"/>
-           </view>
+            <view v-else class="mt-12 pt-12">
+                <tm-empty icon="icon-shiliangzhinengduixiang-" label="暂无联系方式"/>
+            </view>
         </view>
     </view>
 </template>
@@ -137,36 +136,47 @@ export default {
             return blogger;
         },
         socialConfig() {
-            return this.authorConfig.social
+            return this.authorConfig.social;
         },
         calcIsNotEmpty() {
             return this.result.some((item) => item.value !== "");
         }
     },
+    watch: {
+        socialConfig: {
+            handler(newVal) {
+                if (!newVal) return;
+                this.fnGetData();
+            },
+            deep: true,
+            immediate: true
+        }
+    },
     onLoad() {
         this.fnSetPageTitle('联系博主');
-    },
-    created() {
-        this.fnGetData();
     },
     methods: {
         fnGetData() {
             for (let key in this.socialConfig) {
+                if (key === 'enabled') {
+                    continue;
+                }
                 this.result.find(x => x.key === key).value = this.socialConfig[key];
             }
         },
         fnOnClick(item) {
-            if (this.globalAppSettings.contact.isLinkCopy && this.$utils.checkIsUrl(item.value)) {
-                uni.navigateTo({
-                    url: '/pagesC/website/website?data=' +
-                        JSON.stringify({
-                            title: item.name,
-                            url: item.value
-                        })
-                });
-            } else {
-                this.$utils.copyText(item.value, item.name + ' 已复制！');
-            }
+            this.$utils.copyText(item.value, item.name + ' 已复制！');
+            // if (this.globalAppSettings.contact.isLinkCopy && this.$utils.checkIsUrl(item.value)) {
+            //     uni.navigateTo({
+            //         url: '/pagesC/website/website?data=' +
+            //             JSON.stringify({
+            //                 title: item.name,
+            //                 url: item.value
+            //             })
+            //     });
+            // } else {
+            //     this.$utils.copyText(item.value, item.name + ' 已复制！');
+            // }
         }
     }
 };

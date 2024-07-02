@@ -8,7 +8,6 @@ export const DefaultAppConfigs = {
 	authorConfig: {},
 	appConfig: {},
 	pluginConfig: {},
-	adConfig: {},
 }
 
 /**

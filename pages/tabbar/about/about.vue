@@ -181,37 +181,38 @@ export default {
             // #ifdef MP-WEIXIN
             _isWx = true;
             // #endif
-            this.navList = [{
-                key: 'archives',
-                title: '文章归档',
-                leftIcon: 'halocoloricon-classify',
-                leftIconColor: 'red',
-                rightText: '已归档的文章',
-                path: '/pagesA/archives/archives',
-                isAdmin: false,
-                type: 'page',
-                show: false
-            }, {
-                key: 'love',
-                title: '恋爱日记',
-                leftIcon: 'halocoloricon-attent',
-                leftIconColor: 'red',
-                rightText: '甜蜜恋人的专属',
-                path: '/pagesA/love/love',
-                isAdmin: false,
-                type: 'page',
-                show: this.haloConfigs.loveConfig.loveEnabled
-            }, {
-                key: 'disclaimers',
-                title: '友情链接',
-                leftIcon: 'icon-lianjie',
-                leftIconColor: 'blue',
-                rightText: '看看朋友们吧',
-                path: '/pagesA/friend-links/friend-links',
-                isAdmin: false,
-                type: 'page',
-                show: true
-            },
+            this.navList = [
+                {
+                    key: 'archives',
+                    title: '文章归档',
+                    leftIcon: 'halocoloricon-classify',
+                    leftIconColor: 'red',
+                    rightText: '已归档的文章',
+                    path: '/pagesA/archives/archives',
+                    isAdmin: false,
+                    type: 'page',
+                    show: false
+                }, {
+                    key: 'love',
+                    title: '恋爱日记',
+                    leftIcon: 'halocoloricon-attent',
+                    leftIconColor: 'red',
+                    rightText: '甜蜜恋人的专属',
+                    path: '/pagesA/love/love',
+                    isAdmin: false,
+                    type: 'page',
+                    show: this.haloConfigs.loveConfig.loveEnabled
+                }, {
+                    key: 'disclaimers',
+                    title: '友情链接',
+                    leftIcon: 'icon-lianjie',
+                    leftIconColor: 'blue',
+                    rightText: '看看朋友们吧',
+                    path: '/pagesA/friend-links/friend-links',
+                    isAdmin: false,
+                    type: 'page',
+                    show: true
+                },
                 {
                     key: 'disclaimers',
                     title: '免责声明',
@@ -232,7 +233,7 @@ export default {
                     path: '/pagesA/contact/contact',
                     isAdmin: false,
                     type: 'page',
-                    show: true
+                    show: this.haloConfigs.authorConfig.social.enabled
                 },
                 {
                     key: 'session',
@@ -291,28 +292,28 @@ export default {
                 // 	type: 'poup',
                 // 	show: true
                 // },
-                {
-                    key: 'setting',
-                    title: '应用设置',
-                    leftIcon: 'icon-cog',
-                    leftIconColor: 'indigo',
-                    rightText: `进入系统常用设置`,
-                    path: '/pagesA/setting/setting',
-                    isAdmin: false,
-                    type: 'page',
-                    show: false
-                },
-                {
-                    key: 'admin',
-                    title: '后台管理',
-                    leftIcon: 'icon-lock',
-                    leftIconColor: 'gray',
-                    rightText: '博客后台系统入口',
-                    path: '/pagesB/admin/admin',
-                    isAdmin: true,
-                    type: 'page',
-                    show: this.globalAppSettings.about.showAdmin
-                }
+                // {
+                //     key: 'setting',
+                //     title: '应用设置',
+                //     leftIcon: 'icon-cog',
+                //     leftIconColor: 'indigo',
+                //     rightText: `进入系统常用设置`,
+                //     path: '/pagesA/setting/setting',
+                //     isAdmin: false,
+                //     type: 'page',
+                //     show: false
+                // },
+                // {
+                //     key: 'admin',
+                //     title: '后台管理',
+                //     leftIcon: 'icon-lock',
+                //     leftIconColor: 'gray',
+                //     rightText: '博客后台系统入口',
+                //     path: '/pagesB/admin/admin',
+                //     isAdmin: true,
+                //     type: 'page',
+                //     show: false
+                // }
             ];
         },
         fnGetData() {

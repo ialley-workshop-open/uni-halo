@@ -55,8 +55,8 @@ export default {
         }
     },
     computed: {
-        adConfigs() {
-            return this.$tm.vx.getters().getConfigs.adConfig;
+        toolsPluginConfigs() {
+            return this.$tm.vx.getters().getConfigs?.pluginConfig?.toolsPlugin || {};
         }
     },
     onLoad(options) {
@@ -76,7 +76,7 @@ export default {
         adLoad() {
             if (wx.createRewardedVideoAd) {
                 videoAd = wx.createRewardedVideoAd({
-                    adUnitId: this.adConfigs.rewardedVideoAdId //你的广告key
+                    adUnitId: this.toolsPluginConfigs.rewardedVideoAdId //你的广告key
                 })
                 videoAd.onError(err => {
                 })
@@ -91,7 +91,7 @@ export default {
             }
         },
         openVideoAd: function () {
-            if (videoAd && this.adConfigs.rewardedVideoAdId != '') {
+            if (videoAd && this.toolsPluginConfigs.rewardedVideoAdId !== '') {
                 videoAd.show().catch(err => {
                     // 失败重试
                     console.log("广告拉取失败")

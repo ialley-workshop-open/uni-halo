@@ -21,7 +21,27 @@
                 <tm-empty icon="icon-shiliangzhinengduixiang-" label="博主还没有分享图片~"></tm-empty>
             </view>
             <block v-else>
-                <block v-for="(item, index) in dataList" :key="index">
+                <tm-flowLayout ref="wafll" style="width: 100%;">
+                    <template v-slot:left="{ hdata }">
+                        <tm-translate animation-name="fadeUp">
+                            <view class="card round-3 overflow white">
+                                <tm-images :previmage="false" :src="hdata.item.spec.cover"
+                                           @click="fnPreview(hdata.item)"></tm-images>
+                            </view>
+                        </tm-translate>
+                    </template>
+                    <template v-slot:right="{ hdata }">
+                        <tm-translate animation-name="fadeUp">
+                            <view class="card round-3  overflow white">
+                                <tm-images :previmage="false" :src="hdata.item.spec.cover"
+                                           @click="fnPreview(hdata.item)"></tm-images>
+                            </view>
+                        </tm-translate>
+                    </template>
+                </tm-flowLayout>
+
+                <!-- 瀑布流 -->
+                <!-- <block v-for="(item, index) in dataList" :key="index">
                     <tm-translate style="box-sizing: border-box;padding: 6rpx;width: 50%;height: 250rpx;"
                                   animation-name="fadeUp" :wait="calcAniWait(index)">
                         <view style="border-radius: 12rpx;overflow: hidden;width: 100%;height: 250rpx;">
@@ -29,11 +49,12 @@
                                    @click="fnPreview(index)"/>
                         </view>
                     </tm-translate>
-                </block>
+                </block> -->
 
                 <tm-flotbutton @click="fnToTopPage" color="light-blue" size="m" icon="icon-angle-up"></tm-flotbutton>
                 <view class="load-text">{{ loadMoreText }}</view>
             </block>
+
         </view>
     </view>
 </template>
@@ -149,7 +170,6 @@ export default {
             this.$httpApi.v2
                 .getPhotoListByGroupName(this.queryParams)
                 .then(res => {
-                    console.log("相册 res", res)
                     this.hasNext = res.hasNext;
                     this.loading = 'success';
                     if (res.items.length != 0) {
@@ -163,6 +183,10 @@ export default {
                         } else {
                             this.dataList = _list;
                         }
+                        this.$nextTick(() => {
+                            this.$refs.wafll.clear();
+                            this.$refs.wafll.pushData(this.dataList);
+                        })
                     }
                     this.loadMoreText = res.hasNext ? '上拉加载更多' : '呜呜，没有更多数据啦~';
 
@@ -188,15 +212,10 @@ export default {
                 this.cache.dataList = [...this.cache.dataList, ...dataList];
             }
         },
-
-        // 瀑布流组件点击事件
-        fnOnClick(data) {
-            console.log('点击数据', data);
-        },
         // 预览
-        fnPreview(index) {
+        fnPreview(data) {
             uni.previewImage({
-                current: index,
+                current: this.dataList.findIndex(x => x.metadata.name === data.metadata.name),
                 urls: this.dataList.map(x => x.spec.cover),
                 indicator: 'number',
                 loop: true

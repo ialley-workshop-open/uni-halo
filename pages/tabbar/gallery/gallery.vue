@@ -8,7 +8,7 @@
         <!-- 占位区域 -->
         <view v-if="category.list.length > 0" style="width: 100vw;height: 90rpx;"></view>
         <!-- 加载区域 -->
-        <view v-if="loading != 'success'" class="loading-wrap">
+        <view v-if="loading !== 'success'" class="loading-wrap">
             <tm-skeleton model="card"></tm-skeleton>
             <tm-skeleton model="card"></tm-skeleton>
             <tm-skeleton model="card"></tm-skeleton>
@@ -16,12 +16,12 @@
         </view>
         <!-- 内容区域 -->
         <view class="content" v-else>
-            <view v-if="dataList.length == 0" class="content-empty">
+            <view v-if="dataList.length === 0" class="content-empty">
                 <!-- 空布局 -->
                 <tm-empty icon="icon-shiliangzhinengduixiang-" label="博主还没有分享图片~"></tm-empty>
             </view>
             <block v-else>
-                <tm-flowLayout ref="wafll" style="width: 100%;">
+                <tm-flowLayout ref="wafll" model="desc" style="width: 100%;">
                     <template v-slot:left="{ hdata }">
                         <tm-translate animation-name="fadeUp">
                             <view class="card round-3 overflow white">
@@ -141,7 +141,10 @@ export default {
             this.queryParams.group = this.category.list[index].name;
             this.queryParams.page = 1;
             this.fnToTopPage();
-            this.fnGetData();
+            this.$nextTick(() => {
+                this.$refs.wafll.clear();
+                this.fnGetData();
+            })
         },
         fnGetCategory() {
             this.$httpApi.v2.getPhotoGroupList({
@@ -158,7 +161,6 @@ export default {
                     this.queryParams.group = this.category.list[0].name;
                     this.fnGetData();
                 }
-
             });
         },
         fnGetData() {
@@ -172,7 +174,7 @@ export default {
                 .then(res => {
                     this.hasNext = res.hasNext;
                     this.loading = 'success';
-                    if (res.items.length != 0) {
+                    if (res.items.length !== 0) {
                         const _list = res.items.map((item, index) => {
                             item.spec.cover = this.$utils.checkImageUrl(item.spec.cover);
                             return item;
@@ -184,8 +186,7 @@ export default {
                             this.dataList = _list;
                         }
                         this.$nextTick(() => {
-                            this.$refs.wafll.clear();
-                            this.$refs.wafll.pushData(this.dataList);
+                            this.$refs.wafll.pushData(_list)
                         })
                     }
                     this.loadMoreText = res.hasNext ? '上拉加载更多' : '呜呜，没有更多数据啦~';

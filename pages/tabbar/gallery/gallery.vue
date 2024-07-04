@@ -21,35 +21,38 @@
                 <tm-empty icon="icon-shiliangzhinengduixiang-" label="博主还没有分享图片~"></tm-empty>
             </view>
             <block v-else>
-                <tm-flowLayout ref="wafll" model="desc" style="width: 100%;">
-                    <template v-slot:left="{ hdata }">
-                        <tm-translate animation-name="fadeUp">
-                            <view class="card round-3 overflow white">
-                                <tm-images :previmage="false" :src="hdata.item.spec.cover"
-                                           @click="fnPreview(hdata.item)"></tm-images>
-                            </view>
-                        </tm-translate>
-                    </template>
-                    <template v-slot:right="{ hdata }">
-                        <tm-translate animation-name="fadeUp">
-                            <view class="card round-3  overflow white">
-                                <tm-images :previmage="false" :src="hdata.item.spec.cover"
-                                           @click="fnPreview(hdata.item)"></tm-images>
-                            </view>
-                        </tm-translate>
-                    </template>
-                </tm-flowLayout>
-
-                <!-- 瀑布流 -->
-                <!-- <block v-for="(item, index) in dataList" :key="index">
-                    <tm-translate style="box-sizing: border-box;padding: 6rpx;width: 50%;height: 250rpx;"
+                <block v-if="galleryConfig.useWaterfall">
+                    <!--瀑布流-->
+                    <tm-flowLayout ref="wafll" style="width: 100%;">
+                        <template v-slot:left="{ hdata }">
+                            <tm-translate animation-name="fadeUp">
+                                <view class="card round-3 overflow white">
+                                    <tm-images :previmage="false" :src="hdata.item.spec.cover"
+                                               @click="fnPreview(hdata.item)"></tm-images>
+                                </view>
+                            </tm-translate>
+                        </template>
+                        <template v-slot:right="{ hdata }">
+                            <tm-translate animation-name="fadeUp">
+                                <view class="card round-3  overflow white">
+                                    <tm-images :previmage="false" :src="hdata.item.spec.cover"
+                                               @click="fnPreview(hdata.item)"></tm-images>
+                                </view>
+                            </tm-translate>
+                        </template>
+                    </tm-flowLayout>
+                </block>
+                <!--   列表   -->
+                <block v-else>
+                    <tm-translate v-for="(item, index) in dataList" :key="index"
+                                  style="box-sizing: border-box;padding: 6rpx;width: 50%;height: 250rpx;"
                                   animation-name="fadeUp" :wait="calcAniWait(index)">
                         <view style="border-radius: 12rpx;overflow: hidden;width: 100%;height: 250rpx;">
                             <image style="width: 100%;height: 100%;" mode="aspectFill" :src="item.spec.cover"
-                                   @click="fnPreview(index)"/>
+                                   @click="fnPreview(item)"/>
                         </view>
                     </tm-translate>
-                </block> -->
+                </block>
 
                 <tm-flotbutton @click="fnToTopPage" color="light-blue" size="m" icon="icon-angle-up"></tm-flotbutton>
                 <view class="load-text">{{ loadMoreText }}</view>
@@ -96,24 +99,27 @@ export default {
                 page: 1,
                 group: ""
             },
-            cache: {
-                dataList: [],
-                total: 0
-            },
             isLoadMore: false,
             loadMoreText: '',
             hasNext: false,
             dataList: []
         };
     },
-    filters: {
-        filterTakeTime(val) {
-            return uni.$tm.dayjs(val).format('DD/MM/YYYY');
+    computed: {
+        galleryConfig() {
+            return this.$tm.vx.getters().getConfigs?.pageConfig?.galleryConfig || {useWaterfall: true, pageTitle: "图库"};
         }
     },
-    onLoad() {
-        this.fnSetPageTitle('个人图库');
-        this.fnGetCategory();
+    watch: {
+        galleryConfig: {
+            handler(newValue, oldValue) {
+                if (!newValue) return;
+                this.fnSetPageTitle(newValue.pageTitle);
+                this.fnGetCategory();
+            },
+            deep: true,
+            immediate: true
+        }
     },
     onPullDownRefresh() {
         this.dataList = []
@@ -136,15 +142,19 @@ export default {
     methods: {
         fnOnCategoryChange(index) {
             this.fnResetSetAniWaitIndex();
-            this.cache.dataList = []
-            this.dataList = [];
             this.queryParams.group = this.category.list[index].name;
             this.queryParams.page = 1;
             this.fnToTopPage();
-            this.$nextTick(() => {
-                this.$refs.wafll.clear();
+            if (this.galleryConfig.useWaterfall) {
+                this.$nextTick(() => {
+                    this.$refs.wafll.clear();
+                    this.dataList = [];
+                    this.fnGetData();
+                })
+            } else {
+                this.dataList = [];
                 this.fnGetData();
-            })
+            }
         },
         fnGetCategory() {
             this.$httpApi.v2.getPhotoGroupList({
@@ -179,23 +189,23 @@ export default {
                             item.spec.cover = this.$utils.checkImageUrl(item.spec.cover);
                             return item;
                         });
-                        this.fnCacheDataList(_list);
                         if (this.isLoadMore) {
                             this.dataList = this.dataList.concat(_list);
                         } else {
                             this.dataList = _list;
                         }
-                        this.$nextTick(() => {
-                            this.$refs.wafll.pushData(_list)
-                        })
+                        if (this.galleryConfig.useWaterfall) {
+                            this.$nextTick(() => {
+                                console.log('_list', _list)
+                                this.$refs.wafll.pushData(_list)
+                            })
+                        }
                     }
                     this.loadMoreText = res.hasNext ? '上拉加载更多' : '呜呜，没有更多数据啦~';
-
                 })
                 .catch(err => {
                     console.error(err);
                     this.loading = 'error';
-                    this.waterfall.loading = 'finish';
                     this.loadMoreText = '加载失败，请下拉刷新！';
                 })
                 .finally(() => {
@@ -205,14 +215,7 @@ export default {
                     }, 500);
                 });
         },
-        // 缓存数据
-        fnCacheDataList(dataList) {
-            if (this.queryParams.page == 1) {
-                this.cache.dataList = dataList;
-            } else {
-                this.cache.dataList = [...this.cache.dataList, ...dataList];
-            }
-        },
+
         // 预览
         fnPreview(data) {
             uni.previewImage({

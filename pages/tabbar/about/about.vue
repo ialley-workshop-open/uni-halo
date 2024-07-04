@@ -132,43 +132,36 @@ export default {
         haloConfigs() {
             return this.$tm.vx.getters().getConfigs
         },
-        calcDefaultImageConfig() {
-            return this.haloConfigs.imagesConfig
+        pageConfig() {
+            return this.$tm.vx.getters().getConfigs?.pageConfig?.aboutConfig || {};
         },
         bloggerInfo() {
             return this.haloConfigs.authorConfig.blogger;
         },
         calcProfileStyle() {
-            const _imgUrlOr = this.calcDefaultImageConfig.aboutProfileImageUrl;
+            const _imgUrlOr = this.pageConfig.bgImageUrl;
             return {
                 backgroundImage: `url(${this.$utils.checkImageUrl(_imgUrlOr)})`
             }
         },
         calcWaveUrl() {
-            return this.$utils.checkImageUrl(this.calcDefaultImageConfig.waveImageUrl);
+            return this.$utils.checkImageUrl(this.pageConfig.waveImageUrl);
         },
         copyrightConfig() {
             return this.haloConfigs.basicConfig.copyrightConfig;
         }
     },
     watch: {
-        globalAppSettings: {
-            deep: true,
-            handler(val) {
-                this.statisticsShowMore = val.about.showAllCount;
-                this.fnGetNavList();
-            }
-        },
         haloConfigs: {
+            handler(val) {
+                if (!val) return;
+                this.fnGetNavList();
+            },
             deep: true,
             immediate: true,
-            handler(val) {
-                this.fnGetNavList();
-            }
         }
     },
     created() {
-        this.statisticsShowMore = this.globalAppSettings.about.showAllCount;
         this.fnGetData();
     },
     onPullDownRefresh() {

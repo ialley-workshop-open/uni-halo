@@ -633,7 +633,7 @@ export default {
                 // 小程序信息
                 await this.$refs.rCanvas
                     .drawImage({
-                        url: this.$utils.checkImageUrl(this.haloConfig.imagesConfig.miniCodeImageUrl),
+                        url: this.$utils.checkImageUrl(this.haloConfigs?.appConfig?.appInfo?.qrCodeImageUrl),
                         x: 20,
                         y: 360,
                         w: 80,

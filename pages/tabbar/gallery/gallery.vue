@@ -107,7 +107,7 @@ export default {
     },
     computed: {
         galleryConfig() {
-            return this.$tm.vx.getters().getConfigs?.pageConfig?.galleryConfig || {useWaterfall: true, pageTitle: "图库"};
+            return this.$tm.vx.getters().getConfigs?.pageConfig?.galleryConfig;
         }
     },
     watch: {

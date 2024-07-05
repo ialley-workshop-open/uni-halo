@@ -23,24 +23,7 @@
             <block v-else>
                 <block v-if="galleryConfig.useWaterfall">
                     <!--瀑布流-->
-                    <tm-flowLayout ref="wafll" style="width: 100%;">
-                        <template v-slot:left="{ hdata }">
-                            <tm-translate animation-name="fadeUp">
-                                <view class="card round-3 overflow white">
-                                    <tm-images :previmage="false" :src="hdata.item.spec.cover"
-                                               @click="fnPreview(hdata.item)"></tm-images>
-                                </view>
-                            </tm-translate>
-                        </template>
-                        <template v-slot:right="{ hdata }">
-                            <tm-translate animation-name="fadeUp">
-                                <view class="card round-3  overflow white">
-                                    <tm-images :previmage="false" :src="hdata.item.spec.cover"
-                                               @click="fnPreview(hdata.item)"></tm-images>
-                                </view>
-                            </tm-translate>
-                        </template>
-                    </tm-flowLayout>
+                    <tm-flowLayout-custom ref="wafll" style="width: 100%;" @click="fnOnFlowClick"></tm-flowLayout-custom>
                 </block>
                 <!--   列表   -->
                 <block v-else>
@@ -48,7 +31,7 @@
                                   style="box-sizing: border-box;padding: 6rpx;width: 50%;height: 250rpx;"
                                   animation-name="fadeUp" :wait="calcAniWait(index)">
                         <view style="border-radius: 12rpx;overflow: hidden;width: 100%;height: 250rpx;">
-                            <image style="width: 100%;height: 100%;" mode="aspectFill" :src="item.spec.cover"
+                            <image style="width: 100%;height: 100%;" mode="aspectFill" :src="item.spec.url"
                                    @click="fnPreview(item)"/>
                         </view>
                     </tm-translate>
@@ -70,10 +53,13 @@ import tmTags from '@/tm-vuetify/components/tm-tags/tm-tags.vue';
 import tmEmpty from '@/tm-vuetify/components/tm-empty/tm-empty.vue';
 import tmIcons from '@/tm-vuetify/components/tm-icons/tm-icons.vue';
 import tmImages from '@/tm-vuetify/components/tm-images/tm-images.vue';
-import tmFlowLayout from '@/tm-vuetify/components/tm-flowLayout/tm-flowLayout.vue';
+import tmFlowLayoutCustom from '@/tm-vuetify/components/tm-flowLayout-custom/tm-flowLayout-custom.vue';
 import tmTabs from '@/tm-vuetify/components/tm-tabs/tm-tabs.vue';
 
 export default {
+    options: {
+        multipleSlots: true
+    },
     components: {
         tmSkeleton,
         tmTranslate,
@@ -82,7 +68,7 @@ export default {
         tmEmpty,
         tmIcons,
         tmImages,
-        tmFlowLayout,
+        tmFlowLayoutCustom,
         tmTabs
     },
     data() {
@@ -107,7 +93,7 @@ export default {
     },
     computed: {
         galleryConfig() {
-            return this.$tm.vx.getters().getConfigs?.pageConfig?.galleryConfig;
+            return this.$tm.vx.getters().getConfigs.pageConfig.galleryConfig;
         }
     },
     watch: {
@@ -159,7 +145,7 @@ export default {
         fnGetCategory() {
             this.$httpApi.v2.getPhotoGroupList({
                 page: 1,
-                size: 9999
+                size: 0
             }).then(res => {
                 this.category.list = res.items.map(item => {
                     return {
@@ -186,7 +172,7 @@ export default {
                     this.loading = 'success';
                     if (res.items.length !== 0) {
                         const _list = res.items.map((item, index) => {
-                            item.spec.cover = this.$utils.checkImageUrl(item.spec.cover);
+                            item.spec.url = this.$utils.checkImageUrl(item.spec.url || item.spec.cover);
                             return item;
                         });
                         if (this.isLoadMore) {
@@ -196,7 +182,6 @@ export default {
                         }
                         if (this.galleryConfig.useWaterfall) {
                             this.$nextTick(() => {
-                                console.log('_list', _list)
                                 this.$refs.wafll.pushData(_list)
                             })
                         }
@@ -215,12 +200,14 @@ export default {
                     }, 500);
                 });
         },
-
+        fnOnFlowClick({item}) {
+            this.fnPreview(item)
+        },
         // 预览
         fnPreview(data) {
             uni.previewImage({
                 current: this.dataList.findIndex(x => x.metadata.name === data.metadata.name),
-                urls: this.dataList.map(x => x.spec.cover),
+                urls: this.dataList.map(x => x.spec.url),
                 indicator: 'number',
                 loop: true
             });
@@ -237,18 +224,13 @@ export default {
     flex-direction: column;
     padding-bottom: 24rpx;
     background-color: #fafafa;
-
-    &.is-balck {
-        background-color: #212121;
-    }
 }
 
 .content {
     display: flex;
     flex-wrap: wrap;
     box-sizing: border-box;
-    padding: 0 24rpx;
-    padding-top: 24rpx;
+    padding: 24rpx 24rpx 0;
     gap: 12rpx 0;
 
     .content-empty {
@@ -263,10 +245,6 @@ export default {
 .loading-wrap {
     box-sizing: border-box;
     padding: 24rpx;
-}
-
-.card {
-    box-shadow: 0rpx 4rpx 24rpx rgba(0, 0, 0, 0.03);
 }
 
 .load-text {

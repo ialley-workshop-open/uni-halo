@@ -8,7 +8,7 @@ export const DefaultAppConfigs = {
 	authorConfig: {},
 	appConfig: {},
 	pluginConfig: {},
-	adConfig: {},
+	pageConfig:{}
 }
 
 /**
@@ -19,7 +19,7 @@ export const getAppConfigs = () => {
 	if (configs) return JSON.parse(configs)
 
 	uni.setStorageSync(_AppConfigKey, JSON.stringify(DefaultAppConfigs))
-	return configs;
+	return DefaultAppConfigs;
 }
 
 /**

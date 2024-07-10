@@ -123,14 +123,13 @@ export default {
         fnGetData() {
             this.loading = 'loading';
             this.queryParams.group = this.loveConfig.lovePhoto.groupName
-            console.log('this.loveConfig------------',this.loveConfig)
             this.$httpApi.v2
                 .getPhotoListByGroupName(this.queryParams)
                 .then(res => {
                     console.log("相册 res", res)
                     this.loading = 'success';
                     this.dataList = res.items.map((item, index) => {
-                        item['image'] = this.$utils.checkImageUrl(item.spec.cover);
+                        item['image'] = this.$utils.checkImageUrl(item.spec.cover || item.spec.url);
                         item['takeTime'] = this.$tm.dayjs(item.metadata.creationTimestamp).format(
                             'DD/MM/YYYY');
                         return item;
@@ -161,13 +160,13 @@ export default {
         fnChange(isNext) {
             throttle(() => {
                 if (isNext) {
-                    if (this.swiperIndex == this.dataList.length - 1) {
+                    if (this.swiperIndex === this.dataList.length - 1) {
                         this.swiperIndex = 0;
                     } else {
                         this.swiperIndex += 1;
                     }
                 } else {
-                    if (this.swiperIndex == 0) {
+                    if (this.swiperIndex === 0) {
                         this.swiperIndex = this.dataList.length - 1;
                     } else {
                         this.swiperIndex -= 1;

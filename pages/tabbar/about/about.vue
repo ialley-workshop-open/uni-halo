@@ -132,43 +132,36 @@ export default {
         haloConfigs() {
             return this.$tm.vx.getters().getConfigs
         },
-        calcDefaultImageConfig() {
-            return this.haloConfigs.imagesConfig
+        pageConfig() {
+            return this.$tm.vx.getters().getConfigs?.pageConfig?.aboutConfig || {};
         },
         bloggerInfo() {
             return this.haloConfigs.authorConfig.blogger;
         },
         calcProfileStyle() {
-            const _imgUrlOr = this.calcDefaultImageConfig.aboutProfileImageUrl;
+            const _imgUrlOr = this.pageConfig.bgImageUrl;
             return {
                 backgroundImage: `url(${this.$utils.checkImageUrl(_imgUrlOr)})`
             }
         },
         calcWaveUrl() {
-            return this.$utils.checkImageUrl(this.calcDefaultImageConfig.waveImageUrl);
+            return this.$utils.checkImageUrl(this.pageConfig.waveImageUrl);
         },
         copyrightConfig() {
             return this.haloConfigs.basicConfig.copyrightConfig;
         }
     },
     watch: {
-        globalAppSettings: {
-            deep: true,
-            handler(val) {
-                this.statisticsShowMore = val.about.showAllCount;
-                this.fnGetNavList();
-            }
-        },
         haloConfigs: {
+            handler(val) {
+                if (!val) return;
+                this.fnGetNavList();
+            },
             deep: true,
             immediate: true,
-            handler(val) {
-                this.fnGetNavList();
-            }
         }
     },
     created() {
-        this.statisticsShowMore = this.globalAppSettings.about.showAllCount;
         this.fnGetData();
     },
     onPullDownRefresh() {
@@ -181,37 +174,38 @@ export default {
             // #ifdef MP-WEIXIN
             _isWx = true;
             // #endif
-            this.navList = [{
-                key: 'archives',
-                title: '文章归档',
-                leftIcon: 'halocoloricon-classify',
-                leftIconColor: 'red',
-                rightText: '已归档的文章',
-                path: '/pagesA/archives/archives',
-                isAdmin: false,
-                type: 'page',
-                show: false
-            }, {
-                key: 'love',
-                title: '恋爱日记',
-                leftIcon: 'halocoloricon-attent',
-                leftIconColor: 'red',
-                rightText: '甜蜜恋人的专属',
-                path: '/pagesA/love/love',
-                isAdmin: false,
-                type: 'page',
-                show: this.haloConfigs.loveConfig.loveEnabled
-            }, {
-                key: 'disclaimers',
-                title: '友情链接',
-                leftIcon: 'icon-lianjie',
-                leftIconColor: 'blue',
-                rightText: '看看朋友们吧',
-                path: '/pagesA/friend-links/friend-links',
-                isAdmin: false,
-                type: 'page',
-                show: true
-            },
+            this.navList = [
+                {
+                    key: 'archives',
+                    title: '文章归档',
+                    leftIcon: 'halocoloricon-classify',
+                    leftIconColor: 'red',
+                    rightText: '已归档的文章',
+                    path: '/pagesA/archives/archives',
+                    isAdmin: false,
+                    type: 'page',
+                    show: false
+                }, {
+                    key: 'love',
+                    title: '恋爱日记',
+                    leftIcon: 'halocoloricon-attent',
+                    leftIconColor: 'red',
+                    rightText: '甜蜜恋人的专属',
+                    path: '/pagesA/love/love',
+                    isAdmin: false,
+                    type: 'page',
+                    show: this.haloConfigs.loveConfig.loveEnabled
+                }, {
+                    key: 'disclaimers',
+                    title: '友情链接',
+                    leftIcon: 'icon-lianjie',
+                    leftIconColor: 'blue',
+                    rightText: '看看朋友们吧',
+                    path: '/pagesA/friend-links/friend-links',
+                    isAdmin: false,
+                    type: 'page',
+                    show: true
+                },
                 {
                     key: 'disclaimers',
                     title: '免责声明',
@@ -232,7 +226,7 @@ export default {
                     path: '/pagesA/contact/contact',
                     isAdmin: false,
                     type: 'page',
-                    show: true
+                    show: this.haloConfigs.authorConfig.social.enabled
                 },
                 {
                     key: 'session',
@@ -291,28 +285,28 @@ export default {
                 // 	type: 'poup',
                 // 	show: true
                 // },
-                {
-                    key: 'setting',
-                    title: '应用设置',
-                    leftIcon: 'icon-cog',
-                    leftIconColor: 'indigo',
-                    rightText: `进入系统常用设置`,
-                    path: '/pagesA/setting/setting',
-                    isAdmin: false,
-                    type: 'page',
-                    show: false
-                },
-                {
-                    key: 'admin',
-                    title: '后台管理',
-                    leftIcon: 'icon-lock',
-                    leftIconColor: 'gray',
-                    rightText: '博客后台系统入口',
-                    path: '/pagesB/admin/admin',
-                    isAdmin: true,
-                    type: 'page',
-                    show: this.globalAppSettings.about.showAdmin
-                }
+                // {
+                //     key: 'setting',
+                //     title: '应用设置',
+                //     leftIcon: 'icon-cog',
+                //     leftIconColor: 'indigo',
+                //     rightText: `进入系统常用设置`,
+                //     path: '/pagesA/setting/setting',
+                //     isAdmin: false,
+                //     type: 'page',
+                //     show: false
+                // },
+                // {
+                //     key: 'admin',
+                //     title: '后台管理',
+                //     leftIcon: 'icon-lock',
+                //     leftIconColor: 'gray',
+                //     rightText: '博客后台系统入口',
+                //     path: '/pagesB/admin/admin',
+                //     isAdmin: true,
+                //     type: 'page',
+                //     show: false
+                // }
             ];
         },
         fnGetData() {

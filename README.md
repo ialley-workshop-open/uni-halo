@@ -11,9 +11,8 @@
 <br />
 <p align="center">
 	<a href="https://b.925i.cn">作者博客</a>
-	<a href="https://uni-halo.925i.cn">文档地址（等待更新v2版本说明）</a>
-	<a href="https://gitee.com/ialley-workshop-open/uni-halo">Gitee仓库</a>
-	<a href="https://github.com/ialley-workshop-open/uni-halo">Github仓库</a>
+	<a href="https://uni-halo.925i.cn">官方文档</a> 
+	<a href="https://github.com/ialley-workshop-open/uni-halo">仓库地址</a>
 </p>
 
 ---
@@ -24,50 +23,25 @@
 |:----------------------------------------------:|:---------------------------------------------:|:---------------------------------------------:|
 | ![支付宝赞赏](https://b.925i.cn/skm/zf_zfb_skm.png) | ![微信赞赏](https://b.925i.cn/skm/zf_wx_zsm.png)	 | ![QQ赞赏](https://b.925i.cn/skm/zf_qq_skm.png)	 |
 
+## 一、项目介绍
 
-## 🧐 功能介绍
+基于 Halo 2.x 提供的 API 接口，为微信小程序提供的一套开源的博客应用。
 
-#### 🍻 基础功能
+- 完全免费开源，包括程序源码、插件源码
+- 页面支持插件配置
+- 使用最新流行的技术栈
+- 支持特色功能，恋爱日记
+- 理论支持编译为 小程序（推荐）、APP
 
-`重要说明：2.0版本 暂时去掉后台管理功能。`
 
-- 用户端：文章列表、文章分类、文章详情、图库、友链、瞬间等
+### 在线预览
 
-<br/>
+微信内容扫描下方二维码，即可在线预览小程序。
 
-#### 💞 特色功能
+![QQ交流群](https://blog.925i.cn/upload/xiaochengxu.gif)
 
-- 恋爱日记：精心为您设计了秀恩爱的模块，秀出关于你们的故事、情侣甜蜜相册、恋爱记录清单，为您的恋爱保驾护航。
 
-<br/>
-
-#### 😘 插件配置
-
-已支持通过插件配置，插件地址 [plugin-uni-halo](https://github.com/ialley-workshop-open/plugin-uni-halo)
-
-<br/>
-
-## 😎 文档源码
-
-- 作者博客：[https://b.925i.cn/](https://b.925i.cn/)
-- 官方文档（待更新v2版本说明）：[https://uni-halo.925i.cn/](https://uni-halo.925i.cn/)
-- Gitee ：[https://gitee.com/ialley-workshop-open/uni-halo](https://gitee.com/ialley-workshop-open/uni-halo)
-- Github ：[https://github.com/ialley-workshop-open/uni-halo](https://github.com/ialley-workshop-open/uni-halo)
-
-  <br/>
-
-## 😏 在线体验
-
-说明：微信扫码、或搜索【小莫唐尼】即可在线体验已上线小程序！！！
-
-![https://img.925i.cn/file/a0c1a95b49b5db7f78248.png](https://img.925i.cn/file/a0c1a95b49b5db7f78248.png)
-
-<br/>
-## 😘 界面预览
-
-##### 📱 用户端
-
-说明：以下仅为部分截图
+### 部分截图
 
 |首页|分类|图库|
 |:--:|:--:|:--:|
@@ -78,25 +52,51 @@
 |![瞬间](https://blog.925i.cn/upload/41EE8ADBFAE709A483A6E5F814C6A6E4.jpg)|![我的](https://blog.925i.cn/upload/9AEFE8DA4671A3C7F20F76FF3F9D15C9.jpg)|
 
 
-##### 📱 恋爱日记
-
-说明：以下仅为部分截图
+### 恋爱日记 
 
 |主页|恋爱清单|
 |:--:|:--:|
 |![主页](https://uni-halo.925i.cn/assets/love_001.6bf8b4e9.jpg)|![恋爱清单](https://uni-halo.925i.cn/assets/love_002.a08bd8d6.jpg)|
 <br/>
 
-## 🙋 使用交流
+
+### 功能介绍
+
+- 基础功能：文章列表、文章分类、文章详情、个人图库、友情链接、我的瞬间
+
+- 特色功能：恋爱日记，精心为您设计了秀恩爱的模块，秀出关于你们的故事、情侣甜蜜相册、恋爱记录清单，为您的恋爱保驾护航。
+ 
+
+## 二、配套插件
+
+### 下载地址
+- 代码仓库：[https://github.com/ialley-workshop-open/plugin-uni-halo](https://github.com/ialley-workshop-open/plugin-uni-halo)
+- 仓库版本：[https://github.com/ialley-workshop-open/plugin-uni-halo/releases](https://github.com/ialley-workshop-open/plugin-uni-halo/releases)
+- 应用市场：[https://www.halo.run/store/apps/app-ryemX](https://www.halo.run/store/apps/app-ryemX)
+ 
+### 使用方式
+
+直接下载安装插件，在插件市场安装即可，安装完成后，需要配置插件，配置完成后，即可使用插件提供的功能。
+
+
+## 三、相关文档
+
+- 作者主页：[https://www.xiaoxiaomo.cn/](https://www.xiaoxiaomo.cn/)
+- 作者博客：[https://blog.925i.cn/](https://blog.925i.cn/)
+- 官方文档：[https://uni-halo.925i.cn/](https://uni-halo.925i.cn/) 
+- 代码仓库：[https://github.com/ialley-workshop-open/uni-halo](https://github.com/ialley-workshop-open/uni-halo)
+- 插件地址：[https://github.com/ialley-workshop-open/plugin-uni-halo](https://github.com/ialley-workshop-open/uni-halo) 
+- 应用市场：[https://www.halo.run/store/apps/app-ryemX](https://www.halo.run/store/apps/app-ryemX)
+
+
+## 四、使用交流
 
 - 提交 issues：[Github Issues](https://github.com/ialley-workshop-open/uni-halo/issues)
   丨 [Gitee Issues](https://gitee.com/ialley-workshop-open/uni-halo/issues)
 - 微信交流群：由于微信交流群时效性太短，所以有需要的话可以先加入QQ群，再邀请进微信群
 - QQ 交流群：632969367
--
-快速加群：[![632969367](https://pub.idqqimg.com/wpa/images/group.png)](https://qm.qq.com/cgi-bin/qm/qr?k=cuam7lhrB_vHuvjw2mzUO1sOKdF9KRyM&jump_from=webapi&authKey=d6bJhNaqupTTfoMDWDIeYUTAs44Ax7p64SsM/5NRtFhXE09YexDO15Izuyth6XAi)
 
-![QQ群号：632969367](https://img.925i.cn/file/b83b9e79695779c4344f3.png)
+![QQ交流群](https://blog.925i.cn/upload/qun.png)
 
 <br/>
 

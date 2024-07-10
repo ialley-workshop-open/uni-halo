@@ -1,5 +1,5 @@
 <template>
-    <view class="app-page bg-gradient-blue-lighten-b" :class="calcPageClass" :style="calcPageStyle">
+    <view class="app-page bg-gradient-blue-lighten-b" :class="calcPageClass" :style="[calcPageStyle]">
         <view v-if="calcBackgroundType!=='video'" class="tn-satr">
             <view class="sky"></view>
             <view class="stars">
@@ -46,9 +46,12 @@
                :show-progress="false"></video>
 
         <cover-view v-if="startConfig.title || startConfig.logo" class="title-container">
+
             <cover-view v-if="startConfig.logo" class="app-logo">
-                <cover-image class="app-logo-image" :src="$utils.checkImageUrl(startConfig.logo)"
-                             mode="aspectFill"></cover-image>
+                <view class="app-logo-border">
+                    <cover-image class="app-logo-image" :src="$utils.checkImageUrl(startConfig.logo)"
+                                 mode="aspectFill"></cover-image>
+                </view>
             </cover-view>
 
             <cover-view v-if="startConfig.title" class="app-title" :style="startConfig.titleStyle">
@@ -178,14 +181,20 @@ export default {
 .app-logo {
     width: 200rpx;
     height: 200rpx;
-    border: 8rpx solid rgba(255, 255, 255, 0.35);
-    border-radius: 50%;
-    box-shadow: 0rpx 0rpx 80rpx 0rpx rgba(0, 0, 0, 0.15);
-    overflow: hidden;
+
+    &-border {
+        width: 100%;
+        height: 100%;
+        box-sizing: border-box;
+        border: 8rpx solid rgba(255, 255, 255, 0.35);
+        border-radius: 50%;
+        overflow: hidden;
+    }
 
     &-image {
         width: 100%;
         height: 100%;
+        border-radius: 50%;
     }
 }
 

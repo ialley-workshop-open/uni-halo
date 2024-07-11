@@ -48,10 +48,10 @@
         <cover-view v-if="startConfig.title || startConfig.logo" class="title-container">
 
             <cover-view v-if="startConfig.logo" class="app-logo">
-                <view class="app-logo-border">
+                <cover-view class="app-logo-border">
                     <cover-image class="app-logo-image" :src="$utils.checkImageUrl(startConfig.logo)"
                                  mode="aspectFill"></cover-image>
-                </view>
+                </cover-view>
             </cover-view>
 
             <cover-view v-if="startConfig.title" class="app-title" :style="startConfig.titleStyle">

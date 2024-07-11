@@ -90,7 +90,6 @@ import tmIcons from '@/tm-vuetify/components/tm-icons/tm-icons.vue';
 import tmEmpty from '@/tm-vuetify/components/tm-empty/tm-empty.vue';
 
 import eSwiper from '@/components/e-swiper/e-swiper.vue';
-import qs from 'qs'
 
 export default {
     components: {
@@ -209,15 +208,8 @@ export default {
                 });
             };
 
-            const paramsStr = qs.stringify(this.queryParams, {
-                allowDots: true,
-                encodeValuesOnly: true,
-                skipNulls: true,
-                encode: true,
-                arrayFormat: 'repeat'
-            })
             uni.request({
-                url: this.$baseApiUrl + '/apis/api.content.halo.run/v1alpha1/posts?' + paramsStr,
+                url: this.$baseApiUrl + '/apis/api.content.halo.run/v1alpha1/posts',
                 method: 'GET',
                 params: this.queryParams,
                 success: (res) => {
@@ -241,25 +233,14 @@ export default {
         },
         // 文章列表
         fnGetArticleList() {
-            // uni.showLoading({
-            // 	mask: true,
-            // 	title: '加载中...'
-            // });
             // 设置状态为加载中
             if (!this.isLoadMore) {
                 this.loading = 'loading';
             }
             this.loadMoreText = '加载中...';
 
-            const paramsStr = qs.stringify(this.queryParams, {
-                allowDots: true,
-                encodeValuesOnly: true,
-                skipNulls: true,
-                encode: true,
-                arrayFormat: 'repeat'
-            })
             uni.request({
-                url: this.$baseApiUrl + '/apis/api.content.halo.run/v1alpha1/posts?' + paramsStr,
+                url: this.$baseApiUrl + '/apis/api.content.halo.run/v1alpha1/posts?',
                 method: 'GET',
                 params: this.queryParams,
                 success: (res) => {

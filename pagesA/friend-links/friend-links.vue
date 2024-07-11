@@ -290,9 +290,9 @@ export default {
             });
         },
         toSubmitLinkPage() {
-            this.$Router.push({
-                path: '/pagesA/submit-link/submit-link'
-            });
+            uni.navigateTo({
+                url: '/pagesA/submit-link/submit-link'
+            })
         }
     }
 };

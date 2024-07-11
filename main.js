@@ -1,10 +1,5 @@
 import App from "./App";
 import Vue from "vue";
-import {
-	router,
-	RouterMount
-} from './router/router.js'
-Vue.use(router)
 
 // 挂载全局工具类
 import utils from "./utils/index.js";
@@ -75,10 +70,4 @@ const app = new Vue({
 	...App,
 });
 
-// #ifdef H5
-RouterMount(app, router, '#app')
-// #endif
-
-// #ifndef H5
-app.$mount(); //为了兼容小程序及app端必须这样写才有效果
-// #endif
+app.$mount();

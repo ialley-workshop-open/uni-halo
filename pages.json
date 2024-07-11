@@ -185,20 +185,7 @@
               }
             }
           }
-        },
-        {
-          "path": "journal/journal",
-          "style": {
-            "navigationBarTitleText": "个人日记",
-            "enablePullDownRefresh": true,
-            "app-plus": {
-              "pullToRefresh": {
-                "color": "#03a9f4",
-                "style": "circle"
-              }
-            }
-          }
-        },
+        }, 
         {
           "path": "articles/articles",
           "style": {
@@ -272,13 +259,7 @@
               }
             }
           }
-        },
-        {
-          "path": "test-page/test-page",
-          "style": {
-            "navigationBarTitleText": ""
-          }
-        },
+        }, 
         {
           "path": "advertise/advertise",
           "style": {

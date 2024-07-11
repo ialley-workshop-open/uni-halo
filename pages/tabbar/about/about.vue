@@ -174,38 +174,37 @@ export default {
             // #ifdef MP-WEIXIN
             _isWx = true;
             // #endif
-            this.navList = [
-                {
-                    key: 'archives',
-                    title: '文章归档',
-                    leftIcon: 'halocoloricon-classify',
-                    leftIconColor: 'red',
-                    rightText: '已归档的文章',
-                    path: '/pagesA/archives/archives',
-                    isAdmin: false,
-                    type: 'page',
-                    show: false
-                }, {
-                    key: 'love',
-                    title: '恋爱日记',
-                    leftIcon: 'halocoloricon-attent',
-                    leftIconColor: 'red',
-                    rightText: '甜蜜恋人的专属',
-                    path: '/pagesA/love/love',
-                    isAdmin: false,
-                    type: 'page',
-                    show: this.haloConfigs.loveConfig.loveEnabled
-                }, {
-                    key: 'disclaimers',
-                    title: '友情链接',
-                    leftIcon: 'icon-lianjie',
-                    leftIconColor: 'blue',
-                    rightText: '看看朋友们吧',
-                    path: '/pagesA/friend-links/friend-links',
-                    isAdmin: false,
-                    type: 'page',
-                    show: true
-                },
+            this.navList = [{
+                key: 'archives',
+                title: '文章归档',
+                leftIcon: 'halocoloricon-classify',
+                leftIconColor: 'red',
+                rightText: '已归档的文章',
+                path: '/pagesA/archives/archives',
+                isAdmin: false,
+                type: 'page',
+                show: false
+            }, {
+                key: 'love',
+                title: '恋爱日记',
+                leftIcon: 'halocoloricon-attent',
+                leftIconColor: 'red',
+                rightText: '甜蜜恋人的专属',
+                path: '/pagesA/love/love',
+                isAdmin: false,
+                type: 'page',
+                show: this.haloConfigs.loveConfig.loveEnabled
+            }, {
+                key: 'disclaimers',
+                title: '友情链接',
+                leftIcon: 'icon-lianjie',
+                leftIconColor: 'blue',
+                rightText: '看看朋友们吧',
+                path: '/pagesA/friend-links/friend-links',
+                isAdmin: false,
+                type: 'page',
+                show: true
+            },
                 {
                     key: 'disclaimers',
                     title: '免责声明',
@@ -400,9 +399,9 @@ export default {
                         break;
                 }
             } else if (type == 'page') {
-                this.$Router.push({
-                    path: path
-                });
+                uni.navigateTo({
+                    url: path
+                })
             }
         },
 

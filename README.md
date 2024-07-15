@@ -10,9 +10,10 @@
 
 <br />
 <p align="center">
-	<a href="https://b.925i.cn">作者博客</a>
+	<a href="https://www.xiaoxiaomo.cn">作者主页</a>
 	<a href="https://uni-halo.925i.cn">官方文档</a> 
 	<a href="https://github.com/ialley-workshop-open/uni-halo">仓库地址</a>
+	<a href="https://github.com/ialley-workshop-open/plugin-uni-halo">插件仓库</a>
 </p>
 
 ---

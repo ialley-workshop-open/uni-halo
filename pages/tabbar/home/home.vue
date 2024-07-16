@@ -2,7 +2,7 @@
     <view class="app-page">
         <tm-menubars iconColor="white" color="white" :flat="true" :showback="false">
             <view slot="left">
-                <image class="logo ml-24 round-24" :src="appInfo.logo" mode="scaleToFill"/>
+                <image @click="fnOnLogoToPage" class="logo ml-24 round-24" :src="appInfo.logo" mode="scaleToFill"/>
             </view>
             <view class="search-input round-12 pt-12 pb-12 flex pl-24" @click="fnToSearch">
                 <text class="search-input_icon iconfont text-size-m icon-search text-grey"></text>
@@ -62,8 +62,7 @@
                 </view>
             </view>
             <view v-if="articleList.length == 0" class="article-empty">
-                <tm-empty icon="icon-shiliangzhinengduixiang-"
-                          label="博主还没有发表任何内容~"></tm-empty>
+                <tm-empty icon="icon-shiliangzhinengduixiang-" label="博主还没有发表任何内容~"></tm-empty>
             </view>
             <block v-else>
                 <view :class="globalAppSettings.layout.home">
@@ -217,7 +216,7 @@ export default {
                 arrayFormat: 'repeat'
             })
             uni.request({
-                url: this.$baseApiUrl + '/apis/api.content.halo.run/v1alpha1/posts?'+ paramsStr,
+                url: this.$baseApiUrl + '/apis/api.content.halo.run/v1alpha1/posts?' + paramsStr,
                 method: 'GET',
                 success: (res) => {
                     this.bannerList = _format(res.data.items);
@@ -333,6 +332,11 @@ export default {
             uni.navigateTo({
                 url: '/pagesA/articles/articles'
             });
+        },
+        fnOnLogoToPage() {
+            uni.switchTab({
+                url: '/pages/tabbar/about/about'
+            })
         }
     }
 };

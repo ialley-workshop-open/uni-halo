@@ -1,0 +1,26 @@
+{
+  "name": "uni-halo",
+  "version": "1.0.0",
+  "description": "<p align=\"center\">\r     <img alt=\"logo\" src=\"https://b.925i.cn/uni_halo/uni_halo_logo.png\" width=\"120\" height=\"120\" style=\"margin-bottom: 10px;\">\r </p>\r <h3 align=\"center\" style=\"margin: 30px 0 30px;font-weight: bold;font-size:40px;\">uni-halo</h3>\r <h3 align=\"center\">uni-halo 基于Halo一款现代化的开源博客/CMS系统API开发的可多端编译应用</h3>",
+  "repository": {
+    "type": "git",
+    "url": "git+https://gitee.com/ialley-workshop-open/uni-halo.git"
+  },
+  "keywords": [
+    "uni-halo",
+    "小莫唐尼",
+    "巷子工坊"
+  ],
+  "author": "巷子工坊丨小莫唐尼",
+  "license": "AGPL-3.0",
+  "bugs": {
+    "url": "https://gitee.com/ialley-workshop-open/uni-halo/issues"
+  },
+  "homepage": "https://uni-halo.925i.cn",
+  "devDependencies": {
+    "vue-i18n": "^9.1.10"
+  },
+  "dependencies": {
+    "qs": "^6.12.1"
+  }
+}

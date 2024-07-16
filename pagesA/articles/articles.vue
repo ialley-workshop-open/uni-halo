@@ -34,7 +34,7 @@
                         <rich-text style="font-size: 28rpx;margin-top: 16rpx;color: #555;"
                                    :nodes="article.content"></rich-text>
                         <text style="font-size: 24rpx;margin-top: 24rpx;color:#888">
-                            发布日期：{{ {d: article.publishTimestamp, f: 'yyyy年MM月dd日'} | formatTime }}
+                            最近更新：{{ {d: article.updateTimestamp, f: 'yyyy年MM月dd日 HH点mm分ss秒'} | formatTime }}
                         </text>
                     </view>
                 </tm-translate>

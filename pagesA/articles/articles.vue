@@ -22,7 +22,7 @@
                 <!-- 空布局 -->
                 <tm-empty v-if="!queryParams.keyword" icon="icon-shiliangzhinengduixiang-" label="请输入关键词搜索"></tm-empty>
                 <tm-empty v-else icon="icon-shiliangzhinengduixiang-"
-                          :label="`未搜到 ${queryParams.keyword} 相关文章`"></tm-empty>
+                          :label="`未搜到 ${queryParams.keyword} 相关内容`"></tm-empty>
             </view>
             <block v-else>
                 <!-- 文章卡片 -->
@@ -88,7 +88,7 @@ export default {
         };
     },
     onLoad() {
-        this.fnSetPageTitle('文章列表');
+        this.fnSetPageTitle('内容搜索');
     },
     created() {
         if (!this.queryParams.keyword) {

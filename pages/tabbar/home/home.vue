@@ -6,10 +6,10 @@
             </view>
             <view class="search-input round-12 pt-12 pb-12 flex pl-24" @click="fnToSearch">
                 <text class="search-input_icon iconfont text-size-m icon-search text-grey"></text>
-                <view class="search-input_text pl-12 text-size-m text-grey">搜索文章...</view>
+                <view class="search-input_text pl-12 text-size-m text-grey">搜索内容...</view>
             </view>
             <!-- #ifdef APP-PLUS || H5 -->
-            <view slot="right" class="mr-24 text-size-m text-grey">uni-halo</view>
+            <view slot="right" class="mr-24 text-size-m text-grey">{{ appInfo.name }}</view>
             <!-- #endif -->
         </tm-menubars>
         <view v-if="loading !== 'success' && articleList.length===0" class="loading-wrap">
@@ -40,7 +40,7 @@
             </view>
             <scroll-view class="category" scroll-x="true">
                 <view v-if="categoryList.length == 0" class="cate-empty round-3 mr-5 flex flex-center text-grey">
-                    还没有任何文章分类~
+                    还没有任何分类~
                 </view>
                 <block v-else>
                     <view class="content" v-for="(category, index) in categoryList" :key="category.metadata.name"
@@ -52,7 +52,7 @@
 
             <!-- 最新文章 -->
             <view class="flex flex-between mt-24 mb-24 pl-24 pr-24">
-                <view class="page-item_title text-weight-b">文章列表</view>
+                <view class="page-item_title text-weight-b">最新列表</view>
                 <view class="show-more flex flex-center bg-white round-3" @click="fnToArticlesPage">
                     <text class="iconfont icon-angle-right text-size-s text-grey-darken-1"></text>
                 </view>
@@ -63,7 +63,7 @@
             </view>
             <view v-if="articleList.length == 0" class="article-empty">
                 <tm-empty icon="icon-shiliangzhinengduixiang-"
-                          label="博主还没有发表任何文章~"></tm-empty>
+                          label="博主还没有发表任何内容~"></tm-empty>
             </view>
             <block v-else>
                 <view :class="globalAppSettings.layout.home">

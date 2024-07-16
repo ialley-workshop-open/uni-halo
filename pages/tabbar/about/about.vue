@@ -22,7 +22,7 @@
                                 <tm-flop :startVal="0" :decimals="0" :endVal="statistics.post"
                                          :duration="3000"></tm-flop>
                             </view>
-                            <view class="mt-6 text-align-center text-size-s text-grey-darken-1">文章总数</view>
+                            <view class="mt-6 text-align-center text-size-s text-grey-darken-1">内容数量</view>
                         </view>
                         <view class="item flex-1 text-align-center">
                             <view class="number text-size-xl text-bg-gradient-green-accent">
@@ -133,7 +133,10 @@ export default {
             return this.$tm.vx.getters().getConfigs
         },
         pageConfig() {
-            return this.$tm.vx.getters().getConfigs?.pageConfig?.aboutConfig || {};
+            return this.haloConfigs.pageConfig.aboutConfig;
+        },
+        postDetailConfig() {
+            return this.haloConfigs.basicConfig.postDetailConfig;
         },
         bloggerInfo() {
             return this.haloConfigs.authorConfig.blogger;

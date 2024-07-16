@@ -29,7 +29,7 @@
                             <text class="value">{{ result.stats.upvote }}</text>
                             <text class="label">喜欢</text>
                         </view>
-                        <view class="count-item">
+                        <view v-if="postDetailConfig && postDetailConfig.showComment" class="count-item">
                             <text class="value">{{ result.stats.comment }}</text>
                             <text class="label">评论</text>
                         </view>

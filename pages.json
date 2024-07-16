@@ -107,7 +107,7 @@
         {
           "path": "article-detail/article-detail",
           "style": {
-            "navigationBarTitleText": "文章详情",
+            "navigationBarTitleText": "内容详情",
             "enablePullDownRefresh": true,
             "app-plus": {
               "pullToRefresh": {
@@ -163,7 +163,7 @@
         {
           "path": "archives/archives",
           "style": {
-            "navigationBarTitleText": "文章归档",
+            "navigationBarTitleText": "归档",
             "enablePullDownRefresh": true,
             "app-plus": {
               "pullToRefresh": {
@@ -189,7 +189,7 @@
         {
           "path": "articles/articles",
           "style": {
-            "navigationBarTitleText": "文章列表",
+            "navigationBarTitleText": "内容搜索",
             "enablePullDownRefresh": true,
             "app-plus": {
               "pullToRefresh": {

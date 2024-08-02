@@ -232,6 +232,7 @@ import commentModal from '@/components/comment-modal/comment-modal.vue';
 
 import rCanvas from '@/components/r-canvas/r-canvas.vue';
 import barrage from '@/components/barrage/barrage.vue';
+import {getAppConfigs} from '@/config/index.js'
 
 export default {
     components: {
@@ -358,7 +359,9 @@ export default {
                     }
                     const visitFlag = uni.getStorageSync('visit_' + this.result?.metadata?.name);
 
-                    if (!visitFlag) {
+                    const toolsPluginEnabled = getAppConfigs().pluginConfig.toolsPlugin?.enabled;
+
+                    if (toolsPluginEnabled && !visitFlag) {
                         const annotationsMap = res?.metadata?.annotations;
                         if (('restrictReadEnable' in annotationsMap) && annotationsMap.restrictReadEnable ===
                             'true') {
@@ -631,9 +634,10 @@ export default {
 
                 this.drawDashedLine(this.$refs.rCanvas.ctx, 14, 356, 332, 0.5, [8, 5, 5, 5], '#999');
                 // 小程序信息
+                const _qrCodeImageUrl = await this.qrCodeImageUrl();
                 await this.$refs.rCanvas
                     .drawImage({
-                        url: this.$utils.checkImageUrl(this.haloConfigs?.appConfig?.appInfo?.qrCodeImageUrl),
+                        url: this.$utils.checkImageUrl(_qrCodeImageUrl),
                         x: 20,
                         y: 360,
                         w: 80,
@@ -924,6 +928,16 @@ export default {
                     return;
             }
         },
+        async qrCodeImageUrl() {
+          const useDynamicQRCode = this.haloConfigs?.appConfig?.appInfo?.useDynamicQRCode;
+          if (useDynamicQRCode) {
+            const qrCodeImg = await this.$httpApi.v2.getQRCodeImg(this.result.metadata.name);
+            return qrCodeImg;
+          } else {
+            return this.haloConfigs?.appConfig?.appInfo?.qrCodeImageUrl;
+          }
+        }
+
     }
 };
 </script>

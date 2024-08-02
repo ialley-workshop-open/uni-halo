@@ -5,24 +5,37 @@
 <script>
 const homePagePath = '/pages/tabbar/home/home'
 const startPagePath = '/pagesA/start/start'
+const articleDetailPath = '/pagesA/article-detail/article-detail';
 export default {
     computed: {
         configs() {
             return this.$tm.vx.getters().getConfigs;
         }
     },
-    onLoad() {
-        uni.$tm.vx.actions('config/fetchConfigs').then((res) => {
-            // #ifdef MP-WEIXIN
-            // uni.$tm.vx.commit('setWxShare', res.shareConfig);
-            // #endif
-            this.fnCheckShowStarted();
-        }).catch((err) => {
-            uni.switchTab({
-                url: homePagePath
+  onLoad: function (options) {
+    uni.$tm.vx.actions('config/fetchConfigs').then(async (res) => {
+      if (options.scene) {
+        if ('' !== options.scene) {
+          const postId = await this.getPostIdByQRCode(options.scene);
+          if (postId) {
+            uni.redirectTo({
+              url: articleDetailPath + `?name=${postId}`,
+              animationType: 'slide-in-right'
             });
-        })
-    },
+          }
+        }
+      }
+
+      // #ifdef MP-WEIXIN
+      // uni.$tm.vx.commit('setWxShare', res.shareConfig);
+      // #endif
+      this.fnCheckShowStarted();
+    }).catch((err) => {
+      uni.switchTab({
+        url: homePagePath
+      });
+    })
+  },
     methods: {
         fnCheckShowStarted() {
             if (!this.configs.appConfig.startConfig.enabled) {
@@ -51,6 +64,15 @@ export default {
                     url: startPagePath
                 });
             }
+        },
+        async getPostIdByQRCode(key) {
+          const response = await this.$httpApi.v2.getQRCodeInfo(key);
+          if (response) {
+            if(response && response.postId) {
+              return response.postId;
+            }
+          }
+          return null;
         }
     }
 };

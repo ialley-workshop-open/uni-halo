@@ -200,5 +200,17 @@ export default {
 	 */
 	submitLink(form) {
 		return HttpHandler.Post(`/apis/linksSubmit.muyin.site/v1alpha1/submit`, form, null)
+	},
+	/**
+	 * 获取二维码信息
+	 */
+	getQRCodeInfo: (key) => {
+		return HttpHandler.Get(`/apis/api.uni.uhalo.pro/v1alpha1/plugins/plugin-uni-halo/getQRCodeInfo/${key}`, null,)
+	},
+	/**
+	 * 获取二维码图片
+	 */
+	getQRCodeImg: (postId) => {
+		return HttpHandler.Get(`/apis/api.uni.uhalo.pro/v1alpha1/plugins/plugin-uni-halo/getQRCodeImg/${postId}`, null,)
 	}
 }

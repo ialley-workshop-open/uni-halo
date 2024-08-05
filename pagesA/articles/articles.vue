@@ -84,6 +84,11 @@ export default {
             dataList: []
         };
     },
+    computed: {
+      haloConfigs() {
+        return this.$tm.vx.getters().getConfigs;
+      },
+    },
     onLoad() {
         this.fnSetPageTitle('内容搜索');
     },
@@ -125,8 +130,11 @@ export default {
             }
         },
         fnGetData() {
+            if (this.haloConfigs.basicConfig.auditModeEnabled) {
+              return;
+            }
             // 设置状态为加载中
-			this.loading = 'loading';
+			      this.loading = 'loading';
             this.$httpApi.v2
                 .getPostListByKeyword(this.queryParams)
                 .then(res => {

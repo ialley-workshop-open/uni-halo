@@ -152,6 +152,9 @@ export default {
         };
     },
     computed: {
+        haloConfigs() {
+            return this.$tm.vx.getters().getConfigs;
+        },
         haloPluginConfigs() {
             return this.$tm.vx.getters().getConfigs.pluginConfig;
         },
@@ -207,6 +210,9 @@ export default {
             return this.linkGroupList.find(item => item.metadata.name === groupName)?.spec?.displayName || groupName || "未分组"
         },
         fnGetData() {
+            if (this.haloConfigs.basicConfig.auditModeEnabled) {
+              return;
+            }
             if (!this.isLoadMore) {
                 this.loading = 'loading';
             }

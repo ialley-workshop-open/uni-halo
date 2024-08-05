@@ -167,6 +167,9 @@ export default {
         },
 
         fnGetCategoryList() {
+            if (this.haloConfigs.basicConfig.auditModeEnabled) {
+              return;
+            }
             this.$httpApi.v2
                 .getCategoryList({})
                 .then(res => {
@@ -191,6 +194,9 @@ export default {
         },
         // 获取轮播图
         fnGetBanner() {
+            if (this.haloConfigs.basicConfig.auditModeEnabled) {
+              return;
+            }
             const _this = this;
             const _format = function (list) {
                 return list.map((item, index) => {
@@ -239,6 +245,9 @@ export default {
         },
         // 文章列表
         fnGetArticleList() {
+            if (this.haloConfigs.basicConfig.auditModeEnabled) {
+                return;
+            }
             // 设置状态为加载中
             if (!this.isLoadMore) {
                 this.loading = 'loading';

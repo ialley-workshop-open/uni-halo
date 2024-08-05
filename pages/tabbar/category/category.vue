@@ -62,7 +62,11 @@
 				loadMoreText: '加载中...'
 			};
 		},
-
+    computed: {
+      haloConfigs() {
+        return this.$tm.vx.getters().getConfigs;
+      },
+    },
 		onLoad() {
 			this.fnGetData();
 		},
@@ -86,6 +90,9 @@
 		},
 		methods: {
 			fnGetData() {
+        if (this.haloConfigs.basicConfig.auditModeEnabled) {
+          return;
+        }
 				uni.showLoading({
 					mask: true,
 					title: '加载中...'

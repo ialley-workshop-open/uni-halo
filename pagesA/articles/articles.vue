@@ -26,7 +26,7 @@
             </view>
             <block v-else>
                 <!-- 文章卡片 -->
-                <tm-translate v-for="(article, index) in dataList" :key="article.name" animation-name="fadeUp"
+                <tm-translate v-for="(article, index) in dataList" :key="article.metadataName" animation-name="fadeUp"
                               :wait="calcAniWait(index)">
                     <view class="article-card" @click="fnToArticleDetail(article)">
                         <rich-text style="font-size: 32rpx;font-weight: bold;color: #333;"
@@ -40,7 +40,7 @@
                 </tm-translate>
 
                 <tm-flotbutton @click="fnToTopPage" size="m" color="light-blue" icon="icon-angle-up"></tm-flotbutton>
-                <view class="load-text">{{ loadMoreText }}</view>
+
             </block>
         </view>
     </view>
@@ -81,9 +81,6 @@ export default {
                 dataList: [],
                 total: 0
             },
-            hasNext: false,
-            isLoadMore: false,
-            loadMoreText: '加载中...',
             dataList: []
         };
     },
@@ -99,7 +96,6 @@ export default {
     },
     onPullDownRefresh() {
         this.fnResetSetAniWaitIndex();
-        this.isLoadMore = false;
         this.fnGetData();
     },
 
@@ -121,7 +117,7 @@ export default {
         },
         fnOnSearch() {
             this.fnResetSetAniWaitIndex();
-            this.isLoadMore = false;
+
             if (!this.queryParams.keyword) {
                 this.dataList = []
             } else {
@@ -129,34 +125,17 @@ export default {
             }
         },
         fnGetData() {
-            // uni.showLoading({
-            // 	mask: true,
-            // 	title: '加载中...'
-            // });
             // 设置状态为加载中
-            if (!this.isLoadMore) {
-                this.loading = 'loading';
-            }
-            this.loadMoreText = '加载中...';
+			this.loading = 'loading';
             this.$httpApi.v2
                 .getPostListByKeyword(this.queryParams)
                 .then(res => {
-                    console.log('请求结果：');
-                    console.log(res);
-
                     this.loading = 'success';
-                    this.loadMoreText = res.hasNext ? '上拉加载更多' : '呜呜，没有更多数据啦~';
-                    this.hasNext = res.hasNext;
-                    if (this.isLoadMore) {
-                        this.dataList = this.dataList.concat(res.hits);
-                    } else {
-                        this.dataList = res.hits;
-                    }
+                    this.dataList = res.hits;
                 })
                 .catch(err => {
                     console.error(err);
                     this.loading = 'error';
-                    this.loadMoreText = '加载失败，请下拉刷新！';
                 })
                 .finally(() => {
                     setTimeout(() => {
@@ -169,7 +148,7 @@ export default {
         //跳转文章详情
         fnToArticleDetail(article) {
             uni.navigateTo({
-                url: '/pagesA/article-detail/article-detail?name=' + article.name,
+                url: '/pagesA/article-detail/article-detail?name=' + article.metadataName,
                 animationType: 'slide-in-right'
             });
         }

@@ -111,13 +111,13 @@ export default {
         this.dataList = []
         this.isLoadMore = false;
         this.queryParams.page = 1;
-        this.fnGetData();
+        this.fnGetData(true);
     },
     onReachBottom(e) {
         if (this.hasNext) {
             this.queryParams.page += 1;
             this.isLoadMore = true;
-            this.fnGetData();
+            this.fnGetData(false);
         } else {
             uni.showToast({
                 icon: 'none',
@@ -130,17 +130,9 @@ export default {
             this.fnResetSetAniWaitIndex();
             this.queryParams.group = this.category.list[index].name;
             this.queryParams.page = 1;
-            this.fnToTopPage();
-            if (this.galleryConfig.useWaterfall) {
-                this.$nextTick(() => {
-                    this.$refs.wafll.clear();
-                    this.dataList = [];
-                    this.fnGetData();
-                })
-            } else {
-                this.dataList = [];
-                this.fnGetData();
-            }
+            this.fnToTopPage(); 
+            this.dataList = [];
+            this.fnGetData(true); 
         },
         fnGetCategory() {
             this.$httpApi.v2.getPhotoGroupList({
@@ -155,11 +147,11 @@ export default {
                 });
                 if (this.category.list.length !== 0) {
                     this.queryParams.group = this.category.list[0].name;
-                    this.fnGetData();
+                    this.fnGetData(true);
                 }
             });
         },
-        fnGetData() {
+        fnGetData(isClearWallfull = false) {
             // 设置状态为加载中
             if (!this.isLoadMore) {
                 this.loading = 'loading';
@@ -182,6 +174,9 @@ export default {
                         }
                         if (this.galleryConfig.useWaterfall) {
                             this.$nextTick(() => {
+								if(isClearWallfull){
+									this.$refs.wafll.clear()
+								}
                                 this.$refs.wafll.pushData(_list)
                             })
                         }

@@ -204,12 +204,12 @@ export default {
                         mp4: '',
                         id: item.metadata.name,
                         nickname: item.owner.displayName,
-                        avatar: _this.$utils.checkImageUrl(item.owner.avatar),
+                        avatar: _this.$utils.checkAvatarUrl(item.owner.avatar),
                         address: '',
                         createTime: uni.$tm.dayjs(item.spec.publishTime).fromNow(),
                         title: item.spec.title,
-                        src: _this.$utils.checkImageUrl(item.spec.cover),
-                        image: _this.$utils.checkImageUrl(item.spec.cover)
+                        src: _this.$utils.checkThumbnailUrl(item.spec.cover),
+                        image: _this.$utils.checkThumbnailUrl(item.spec.cover)
                     };
                 });
             };

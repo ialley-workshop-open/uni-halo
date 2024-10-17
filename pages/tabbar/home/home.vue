@@ -21,14 +21,14 @@
             <tm-skeleton model="listAvatr"></tm-skeleton>
         </view>
         <block v-else>
-            <view class="bg-white pb-24">
+            <view v-if="!haloConfigs.basicConfig.auditModeEnabled" class="bg-white pb-24">
                 <view class="banner bg-white ml-24 mr-24 mt-12 round-3" v-if="bannerList.length != 0">
                     <e-swiper :dotPosition="globalAppSettings.banner.dotPosition" :autoplay="true"
                               :useDot="globalAppSettings.banner.useDot" :list="bannerList"
                               @on-click="fnOnBannerClick"></e-swiper>
                 </view>
             </view>
-            <view class="flex flex-between mt-16 mb-24 pl-24 pr-24">
+            <view v-if="!haloConfigs.basicConfig.auditModeEnabled" class="flex flex-between mt-16 mb-24 pl-24 pr-24">
                 <view class="page-item_title text-weight-b ">精品分类</view>
                 <view class="show-more flex flex-center bg-white round-3" @click="fnToCategoryPage">
                     <text class="iconfont icon-angle-right text-size-s text-grey-darken-1"></text>
@@ -38,7 +38,7 @@
                     <text class="iconfont icon-angle-right  text-size-s "></text>
                 </view>
             </view>
-            <scroll-view class="category" scroll-x="true">
+            <scroll-view v-if="!haloConfigs.basicConfig.auditModeEnabled" class="category" scroll-x="true">
                 <view v-if="categoryList.length == 0" class="cate-empty round-3 mr-5 flex flex-center text-grey">
                     还没有任何分类~
                 </view>
@@ -194,9 +194,7 @@ export default {
         },
         // 获取轮播图
         fnGetBanner() {
-            if (this.haloConfigs.basicConfig.auditModeEnabled) {
-              return;
-            }
+            
             const _this = this;
             const _format = function (list) {
                 return list.map((item, index) => {
@@ -245,9 +243,6 @@ export default {
         },
         // 文章列表
         fnGetArticleList() {
-            if (this.haloConfigs.basicConfig.auditModeEnabled) {
-                return;
-            }
             // 设置状态为加载中
             if (!this.isLoadMore) {
                 this.loading = 'loading';

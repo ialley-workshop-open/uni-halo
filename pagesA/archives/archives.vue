@@ -41,28 +41,26 @@
 								</view>
 								<block v-if="item.posts.length != 0">
 									<block v-for="(post, postIndex) in item.posts" :key="post.metadata.name">
-										<tm-translate animation-name="fadeUp" :wait="calcAniWait(postIndex)">
-											<view class="flex post shadow-3 pa-24 mb-24"
-												:class="[globalAppSettings.layout.cardType]"
-												@click="fnToArticleDetail(post)">
-												<image class="post-thumbnail"
-													:src="$utils.checkThumbnailUrl(post.spec.cover)" mode="aspectFill">
-												</image>
-												<view class="post-info pl-20">
-													<view class="post-info_title text-overflow">{{ post.spec.title }}
-													</view>
-													<view
-														class="post-info_summary text-overflow-2 mt-12 text-size-s text-grey-darken-1">
-														{{ post.status.excerpt }}
-													</view>
-													<view class="post-info_time mt-12  text-size-s text-grey-darken-1">
-														<text class="iconfont icon-clock text-size-s mr-6"></text>
-														<text class="time-label">发布时间：</text>
-														{{ {d: post.spec.publishTime, f: 'yyyy年MM月dd日 星期w'} | formatTime }}
-													</view>
+										<view class="flex post shadow-3 pa-24 mb-24"
+											:class="[globalAppSettings.layout.cardType]"
+											@click="fnToArticleDetail(post)">
+											<image class="post-thumbnail"
+												:src="$utils.checkThumbnailUrl(post.spec.cover)" mode="aspectFill">
+											</image>
+											<view class="post-info pl-20">
+												<view class="post-info_title text-overflow">{{ post.spec.title }}
+												</view>
+												<view
+													class="post-info_summary text-overflow-2 mt-12 text-size-s text-grey-darken-1">
+													{{ post.status.excerpt }}
+												</view>
+												<view class="post-info_time mt-12  text-size-s text-grey-darken-1">
+													<text class="iconfont icon-clock text-size-s mr-6"></text>
+													<text class="time-label">发布时间：</text>
+													{{ {d: post.spec.publishTime, f: 'yyyy年MM月dd日 星期w'} | formatTime }}
 												</view>
 											</view>
-										</tm-translate>
+										</view>
 									</block>
 								</block>
 								<view v-else class="post-empty text-size-m text-grey-darken-1">该日期下暂无归档文章！</view>
@@ -146,6 +144,7 @@
 				this.fnResetSetAniWaitIndex();
 				this.queryParams.page = 0;
 				this.dataList = this.handleGetShowDataList(this.handleGetPosts(this.cacheDataList))
+				this.fnToTopPage();
 			},
 			fnGetData() {
 				if (this.isLoadMore) {
@@ -154,9 +153,8 @@
 					})
 				} else {
 					this.loading = 'loading';
-					this.loadMoreText = "加载中...";
 				}
-
+				this.loadMoreText = "加载中...";
 				const paramsStr = qs.stringify(this.queryParams, {
 					allowDots: true,
 					encodeValuesOnly: true,
@@ -173,7 +171,10 @@
 						const posts = this.handleGetPosts(data.items)
 						const showDataList = this.handleGetShowDataList(posts)
 						if (this.isLoadMore) {
-							this.cacheDataList = this.cacheDataList.concat(data.items);
+							this.cacheDataList = this.handleUniqueCacheDatalist([...this.cacheDataList, ...
+								data
+								.items
+							]);
 							this.handleMergeDataList2(showDataList)
 						} else {
 							this.dataList = []
@@ -185,6 +186,7 @@
 						this.loadMoreText = data.hasNext ? '上拉加载更多' : '呜呜，没有更多数据啦~';
 						uni.hideLoading();
 						uni.stopPullDownRefresh();
+
 					},
 					fail: (err) => {
 						this.loading = 'error';
@@ -237,11 +239,11 @@
 					}
 					dataListResult.push(postData)
 				})
-				if (this.tab.activeIndex == 1) {
-					dataListResult.sort((a, b) => {
-						return Number(b.year) - Number(a.year)
-					})
-				}
+
+				dataListResult.sort((a, b) => {
+					return Number(b.sort) - Number(a.sort)
+				})
+
 				return dataListResult;
 			},
 			handleMergeDataList(list1, list2) {
@@ -270,22 +272,31 @@
 				return Object.values(merged);
 			},
 			handleMergeDataList2(list) {
-				const tempList = [...list]
-				this.dataList.forEach((item, index) => {
+				list.forEach((item, index) => {
 					const find = this.dataList.find(x => x.key == item.key)
 					if (find) {
 						item.posts.forEach(post => {
-							if (!find.posts.some(x => x.metadata.name == post.metadata.name)) {
+							if (!find.posts.find(x => x.metadata.name == post.metadata.name)) {
 								find.posts.push(post)
 							}
 						})
-						tempList.splice(index, 1)
 					}
 				})
-				tempList.forEach(post => {
-					this.dataList.push(post)
+				list.forEach(post => {
+					if (!this.dataList.find(x => x.key === post.key)) {
+						this.dataList.push(post)
+					}
 				})
-				console.log("this.dataList", this.dataList)
+
+				this.dataList.sort((a, b) => {
+					return Number(b.sort) - Number(a.sort)
+				})
+			},
+			handleUniqueCacheDatalist(dataList) {
+				const seen = new Set();
+				return dataList.filter(item => {
+					return seen.has(item.metadata.name) ? false : seen.add(item.metadata.name);
+				});
 			},
 			fnToArticleDetail(article) {
 				uni.navigateTo({

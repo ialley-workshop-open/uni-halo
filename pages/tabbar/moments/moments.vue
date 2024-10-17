@@ -37,13 +37,21 @@
                                          :content="moment.spec.content.html" :markdown="true" :showLineNumber="true"
                                          :showLanguageName="true" :copyByLongPress="true"/>
                             </view>
-                            <view v-if="moment.spec.content.medium.length!==0" class="images"
-                                  :class="['images-'+moment.spec.content.medium.length]">
-                                <view class="image-item" v-for="(image,mediumIndex) in moment.spec.content.medium"
+                            <view class="mb-12 mt--12" v-if="moment.videos.length!==0"
+                                  style="display: flex; flex-direction: column; gap: 12rpx 0;padding: 0 24rpx; ">
+                                <video
+                                    style="width:100%;height: 400rpx;border-radius: 12rpx;"
+                                    v-for="(video,index) in moment.videos"
+                                    :key="index" :src="video.url"></video>
+                            </view>
+                            <view v-if="moment.images.length!==0" class="images"
+                                  :class="['images-'+moment.images.length]">
+                                <view class="image-item"
+                                      v-for="(image,mediumIndex) in moment.images"
                                       :key="mediumIndex">
                                     <image mode="aspectFill" style="width: 100%;height: 100%;border-radius: 6rpx;"
                                            :src="image.url"
-                                           @click="handlePreview(mediumIndex,moment.spec.content.medium)"/>
+                                           @click="handlePreview(mediumIndex,moment.images)"/>
                                 </view>
                             </view>
                         </view>
@@ -143,11 +151,15 @@ export default {
                             displayName: this.bloggerInfo.nickname,
                             avatar: this.$utils.checkAvatarUrl(this.bloggerInfo.avatar)
                         }
-                        item.spec.content.medium
+                        item.spec.content.medium.map(medium => {
+                            medium.url = this.$utils.checkThumbnailUrl(medium.url, true)
+                        })
+
+                        item['images'] = item.spec.content.medium
                             .filter(x => x.type === 'PHOTO')
-                            .map(medium => {
-                                medium.url = this.$utils.checkThumbnailUrl(medium.url, true)
-                            })
+
+                        item['videos'] = item.spec.content.medium
+                            .filter(x => x.type === 'VIDEO')
                         return item;
                     })
 

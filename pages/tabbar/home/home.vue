@@ -9,7 +9,7 @@
                 <view class="search-input_text pl-12 text-size-m text-grey">搜索内容...</view>
             </view>
             <!-- #ifdef APP-PLUS || H5 -->
-            <view slot="right" class="mr-24 text-size-m text-grey">{{ appInfo.name }}</view>
+            <view slot="right" class="mr-24 text-size-m text-grey text-overflow">{{ appInfo.name }}</view>
             <!-- #endif -->
         </tm-menubars>
         <view v-if="loading !== 'success' && articleList.length===0" class="loading-wrap">

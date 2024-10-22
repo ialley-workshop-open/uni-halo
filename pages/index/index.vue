@@ -37,7 +37,7 @@
 			})
 		},
 		methods: {
-			fnCheckShowStarted() {
+			fnCheckShowStarted() {  
 				if (!this.configs.appConfig.startConfig.enabled) {
 					uni.switchTab({
 						url: homePagePath

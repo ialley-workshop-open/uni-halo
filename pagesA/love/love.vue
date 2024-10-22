@@ -7,7 +7,7 @@
                     <image class="avatar" :src="$utils.checkAvatarUrl(loveConfig.loveInfo.boyAvatar)" mode="aspectFit"></image>
                     <view class="name">{{ loveConfig.loveInfo.boyNickname }}</view>
                 </view>
-                <image class="like" :src="$utils.checkImageUrl(loveConfig.loveImageUrl)" mode="scaleToFill"></image>
+                <image class="like" :src="$utils.checkImageUrl(loveConfig.pageImages.heartImageUrl)" mode="scaleToFill"></image>
                 <view class="girl">
                     <image class="avatar" :src="$utils.checkAvatarUrl(loveConfig.loveInfo.girlAvatar)" mode="aspectFit"></image>
                     <view class="name">{{ loveConfig.loveInfo.girlNickname }}</view>
@@ -43,7 +43,7 @@
             <block v-for="(nav, index) in navList" :key="index">
                 <view v-if="nav.use" class="list-item" @click="fnToPage(nav.key)">
                     <view class="left">
-                        <image class="icon" :src="nav.iconImageUrl" mode="aspectFit"></image>
+                        <image class="icon" :src="$utils.checkImageUrl(nav.iconImageUrl)" mode="aspectFit"></image>
                     </view>
                     <view class="right">
                         <view class="name">{{ nav.title }}</view>

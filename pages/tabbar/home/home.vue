@@ -170,7 +170,7 @@
 			},
 
 			fnGetCategoryList() {
-				if (this.haloConfigs.pageConfig.homeConfig.useCategory) {
+				if (!this.haloConfigs.pageConfig.homeConfig.useCategory) {
 					return;
 				}
 				this.$httpApi.v2

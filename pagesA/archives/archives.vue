@@ -1,78 +1,86 @@
 <template>
 	<view class="app-page">
-		<view class="e-fixed">
-			<tm-tabs color="light-blue" v-model="tab.activeIndex" :list="tab.list" align="center"
-				@change="fnOnTabChange"></tm-tabs>
-		</view>
-		<!-- 占位区域 -->
-		<view style="width: 100vw;height: 90rpx;"></view>
-
-		<!-- 骨架屏：加载区域 -->
-		<view v-if="loading != 'success'" class="loading-wrap">
-			<tm-skeleton model="listAvatr"></tm-skeleton>
-			<tm-skeleton model="listAvatr"></tm-skeleton>
-			<tm-skeleton model="listAvatr"></tm-skeleton>
-		</view>
-
-		<!-- 加载完成区域 -->
-		<block v-else>
-			<view v-if="dataList.length == 0" class="list-empty flex flex-center">
-				<tm-empty icon="icon-shiliangzhinengduixiang-" label="暂无归档的文章"></tm-empty>
+		<view class="auditModeEnabled" v-if="haloConfigs.basicConfig.auditModeEnabled">
+			<view>你好呀，很开心认识你！</view>
+			<view style="margin-top: 36rpx;">
+				{{haloConfigs.appConfig.appInfo.name}}
 			</view>
-			<view v-else class="e-timeline tm-timeline mt-24">
-				<block v-for="(item, index) in dataList" :key="index">
-					<view class="tm-timeline-item tm-timeline-item--leftDir">
-						<view style="width: 160rpx;">
-							<view :style="{ width: '24rpx', height: '24rpx' }" :class="[black_tmeme ? 'bk' : '']"
-								class="flex-center rounded tm-timeline-jidian border-white-a-2 grey-lighten-2 light-blue shadow-primary-4">
-							</view>
-							<view :style="{ marginTop: '-24rpx' }"
-								:class="[index !== dataList.length - 1 ? 'tm-timeline-item-boder' : '', black_tmeme ? 'bk' : '']"
-								class="grey-lighten-2"></view>
-						</view>
-						<view class="tm-timeline-item-content relative">
-							<view class="tm-timeline-item-left">
-								<view class="flex time text-weight-b mb-24">
-									<text>{{ item.year }}年</text>
-									<text v-if="tab.activeIndex == 0">{{ item.month }}月</text>
-									<view class="text-size-s text-grey-darken-1 ml-12">
-										（共 {{ item.posts.length }} 篇文章）
-									</view>
+		</view>
+		<block v-else>
+			<view class="e-fixed">
+				<tm-tabs color="light-blue" v-model="tab.activeIndex" :list="tab.list" align="center"
+					@change="fnOnTabChange"></tm-tabs>
+			</view>
+			<!-- 占位区域 -->
+			<view style="width: 100vw;height: 90rpx;"></view>
+
+			<!-- 骨架屏：加载区域 -->
+			<view v-if="loading != 'success'" class="loading-wrap">
+				<tm-skeleton model="listAvatr"></tm-skeleton>
+				<tm-skeleton model="listAvatr"></tm-skeleton>
+				<tm-skeleton model="listAvatr"></tm-skeleton>
+			</view>
+
+			<!-- 加载完成区域 -->
+			<block v-else>
+				<view v-if="dataList.length == 0" class="list-empty flex flex-center">
+					<tm-empty icon="icon-shiliangzhinengduixiang-" label="暂无归档的文章"></tm-empty>
+				</view>
+				<view v-else class="e-timeline tm-timeline mt-24">
+					<block v-for="(item, index) in dataList" :key="index">
+						<view class="tm-timeline-item tm-timeline-item--leftDir">
+							<view style="width: 160rpx;">
+								<view :style="{ width: '24rpx', height: '24rpx' }" :class="[black_tmeme ? 'bk' : '']"
+									class="flex-center rounded tm-timeline-jidian border-white-a-2 grey-lighten-2 light-blue shadow-primary-4">
 								</view>
-								<block v-if="item.posts.length != 0">
-									<block v-for="(post, postIndex) in item.posts" :key="post.metadata.name">
-										<view class="flex post shadow-3 pa-24 mb-24"
-											:class="[globalAppSettings.layout.cardType]"
-											@click="fnToArticleDetail(post)">
-											<image class="post-thumbnail"
-												:src="$utils.checkThumbnailUrl(post.spec.cover)" mode="aspectFill">
-											</image>
-											<view class="post-info pl-20">
-												<view class="post-info_title text-overflow">{{ post.spec.title }}
-												</view>
-												<view
-													class="post-info_summary text-overflow-2 mt-12 text-size-s text-grey-darken-1">
-													{{ post.status.excerpt }}
-												</view>
-												<view class="post-info_time mt-12  text-size-s text-grey-darken-1">
-													<text class="iconfont icon-clock text-size-s mr-6"></text>
-													<text class="time-label">发布时间：</text>
-													{{ {d: post.spec.publishTime, f: 'yyyy年MM月dd日 星期w'} | formatTime }}
+								<view :style="{ marginTop: '-24rpx' }"
+									:class="[index !== dataList.length - 1 ? 'tm-timeline-item-boder' : '', black_tmeme ? 'bk' : '']"
+									class="grey-lighten-2"></view>
+							</view>
+							<view class="tm-timeline-item-content relative">
+								<view class="tm-timeline-item-left">
+									<view class="flex time text-weight-b mb-24">
+										<text>{{ item.year }}年</text>
+										<text v-if="tab.activeIndex == 0">{{ item.month }}月</text>
+										<view class="text-size-s text-grey-darken-1 ml-12">
+											（共 {{ item.posts.length }} 篇文章）
+										</view>
+									</view>
+									<block v-if="item.posts.length != 0">
+										<block v-for="(post, postIndex) in item.posts" :key="post.metadata.name">
+											<view class="flex post shadow-3 pa-24 mb-24"
+												:class="[globalAppSettings.layout.cardType]"
+												@click="fnToArticleDetail(post)">
+												<image class="post-thumbnail"
+													:src="$utils.checkThumbnailUrl(post.spec.cover)" mode="aspectFill">
+												</image>
+												<view class="post-info pl-20">
+													<view class="post-info_title text-overflow">{{ post.spec.title }}
+													</view>
+													<view
+														class="post-info_summary text-overflow-2 mt-12 text-size-s text-grey-darken-1">
+														{{ post.status.excerpt }}
+													</view>
+													<view class="post-info_time mt-12  text-size-s text-grey-darken-1">
+														<text class="iconfont icon-clock text-size-s mr-6"></text>
+														<text class="time-label">发布时间：</text>
+														{{ {d: post.spec.publishTime, f: 'yyyy年MM月dd日 星期w'} | formatTime }}
+													</view>
 												</view>
 											</view>
-										</view>
+										</block>
 									</block>
-								</block>
-								<view v-else class="post-empty text-size-m text-grey-darken-1">该日期下暂无归档文章！</view>
+									<view v-else class="post-empty text-size-m text-grey-darken-1">该日期下暂无归档文章！</view>
+								</view>
 							</view>
 						</view>
-					</view>
-				</block>
-			</view>
-			<view class="load-text mt-12">{{ loadMoreText }}</view>
-			<!-- 返回顶部 -->
-			<tm-flotbutton @click="fnToTopPage" size="m" color="bg-gradient-light-blue-accent"
-				icon="icon-angle-up"></tm-flotbutton>
+					</block>
+				</view>
+				<view class="load-text mt-12">{{ loadMoreText }}</view>
+				<!-- 返回顶部 -->
+				<tm-flotbutton @click="fnToTopPage" size="m" color="bg-gradient-light-blue-accent"
+					icon="icon-angle-up"></tm-flotbutton>
+			</block>
 		</block>
 	</view>
 </template>
@@ -117,6 +125,9 @@
 			},
 			color_tmeme: function() {
 				return this.$tm.vx.state().tmVuetify.color;
+			},
+			haloConfigs() {
+				return this.$tm.vx.getters().getConfigs;
 			}
 		},
 		created() {
@@ -147,6 +158,9 @@
 				this.fnToTopPage();
 			},
 			fnGetData() {
+				if (this.haloConfigs.basicConfig.auditModeEnabled) {
+					return;
+				}
 				if (this.isLoadMore) {
 					uni.showLoading({
 						title: "加载中..."
@@ -315,6 +329,15 @@
 		display: flex;
 		flex-direction: column;
 		background-color: #fafafd;
+	}
+
+	.auditModeEnabled {
+		width: 100%;
+		height: 80vh;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
 	}
 
 	.loading-wrap {

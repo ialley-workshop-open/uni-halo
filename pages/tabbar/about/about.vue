@@ -190,7 +190,7 @@
 						path: '/pagesA/archives/archives',
 						isAdmin: false,
 						type: 'page',
-						show: true
+						show: !this.haloConfigs.basicConfig.auditModeEnabled
 					}, {
 						key: 'love',
 						title: '恋爱日记',

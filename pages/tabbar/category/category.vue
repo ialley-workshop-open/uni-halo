@@ -1,33 +1,42 @@
 <template>
 	<view class="app-page">
-		<view v-if="loading != 'success'" class="loading-wrap">
-			<tm-skeleton model="listAvatr"></tm-skeleton>
-			<tm-skeleton model="listAvatr"></tm-skeleton>
-			<tm-skeleton model="listAvatr"></tm-skeleton>
-		</view>
-		<!-- 内容区域 -->
-		<view v-else class="app-page-content">
-			<view v-if="dataList.length == 0" class="content-empty flex flex-center" style="height: 70vh;">
-				<!-- 空布局 -->
-				<tm-empty icon="icon-shiliangzhinengduixiang-" label="暂无数据"></tm-empty>
+		<view class="auditModeEnabled" v-if="haloConfigs.basicConfig.auditModeEnabled">
+			<view>你好呀，很开心认识你！</view>
+			<view style="margin-top: 36rpx;">
+				{{haloConfigs.appConfig.appInfo.name}}
 			</view>
-			<block v-else>
-				<tm-translate v-for="(item, index) in dataList" :key="index"
-					style="box-sizing: border-box;width: 50%;padding: 0 8rpx;" animation-name="fadeUp"
-					:wait="calcAniWait(index)">
-					<view class="catgory-card" :style="{backgroundImage:`url(${item.spec.cover})`}">
-						<view class="content" @click="handleToCategory(item)">
-							<view style="font-size: 32rpx;color: #ffffff;">{{ item.spec.displayName }}</view>
-							<view style="font-size: 24rpx;color: #ffffff;margin-top: 6rpx;">共
-								{{ item.postCount }} 篇文章
+		</view>
+		<block v-else>
+			<view v-if="loading != 'success'" class="loading-wrap">
+				<tm-skeleton model="listAvatr"></tm-skeleton>
+				<tm-skeleton model="listAvatr"></tm-skeleton>
+				<tm-skeleton model="listAvatr"></tm-skeleton>
+			</view>
+			<!-- 内容区域 -->
+			<view v-else class="app-page-content">
+				<view v-if="dataList.length == 0" class="content-empty flex flex-center" style="height: 70vh;">
+					<!-- 空布局 -->
+					<tm-empty icon="icon-shiliangzhinengduixiang-" label="暂无数据"></tm-empty>
+				</view>
+				<block v-else>
+					<tm-translate v-for="(item, index) in dataList" :key="index"
+						style="box-sizing: border-box;width: 50%;padding: 0 8rpx;" animation-name="fadeUp"
+						:wait="calcAniWait(index)">
+						<view class="catgory-card" :style="{backgroundImage:`url(${item.spec.cover})`}">
+							<view class="content" @click="handleToCategory(item)">
+								<view style="font-size: 32rpx;color: #ffffff;">{{ item.spec.displayName }}</view>
+								<view style="font-size: 24rpx;color: #ffffff;margin-top: 6rpx;">共
+									{{ item.postCount }} 篇文章
+								</view>
 							</view>
 						</view>
-					</view>
-				</tm-translate>
-				<tm-flotbutton @click="fnToTopPage" size="m" color="light-blue" icon="icon-angle-up"></tm-flotbutton>
-				<view class="load-text">{{ loadMoreText }}</view>
-			</block>
-		</view>
+					</tm-translate>
+					<tm-flotbutton @click="fnToTopPage" size="m" color="light-blue"
+						icon="icon-angle-up"></tm-flotbutton>
+					<view class="load-text">{{ loadMoreText }}</view>
+				</block>
+			</view>
+		</block>
 	</view>
 </template>
 
@@ -62,11 +71,11 @@
 				loadMoreText: '加载中...'
 			};
 		},
-    computed: {
-      haloConfigs() {
-        return this.$tm.vx.getters().getConfigs;
-      },
-    },
+		computed: {
+			haloConfigs() {
+				return this.$tm.vx.getters().getConfigs;
+			},
+		},
 		onLoad() {
 			this.fnGetData();
 		},
@@ -90,9 +99,12 @@
 		},
 		methods: {
 			fnGetData() {
-        if (this.haloConfigs.basicConfig.auditModeEnabled) {
-          return;
-        }
+				if (this.haloConfigs.basicConfig.auditModeEnabled) {
+					uni.setNavigationBarTitle({
+						title: "你好，很高兴认识你！"
+					})
+					return;
+				}
 				uni.showLoading({
 					mask: true,
 					title: '加载中...'
@@ -157,6 +169,15 @@
 		display: flex;
 		flex-direction: column;
 		padding: 24rpx 0;
+	}
+
+	.auditModeEnabled {
+		width: 100%;
+		height: 80vh;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
 	}
 
 	.loading-wrap {

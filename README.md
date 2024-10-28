@@ -1,6 +1,6 @@
 <p align="center">
     <a href="https://uni-halo.925i.cn" target="_blank" rel="noopener noreferrer">
-        <img width="100" src="https://b.925i.cn/uni_halo/uni_halo_logo.png" alt="uni-halo logo" />
+        <img width="100" src="https://uni-halo.925i.cn/logo.png" alt="uni-halo logo" />
     </a>
 </p>
 
@@ -22,7 +22,7 @@
 
 |                支付宝												                 |                微信												                 |                QQ												                 |
 |:----------------------------------------------:|:---------------------------------------------:|:---------------------------------------------:|
-| ![支付宝赞赏](https://b.925i.cn/skm/zf_zfb_skm.png) | ![微信赞赏](https://b.925i.cn/skm/zf_wx_zsm.png)	 | ![QQ赞赏](https://b.925i.cn/skm/zf_qq_skm.png)	 |
+| ![支付宝赞赏](https://blog.925i.cn/upload/zf_zfb_skm.png) | ![微信赞赏](https://blog.925i.cn/upload/zf_wx_zsm.png)	 | ![QQ赞赏](https://blog.925i.cn/upload/zf_qq_skm.png)	 |
 
 ## 一、项目介绍
 

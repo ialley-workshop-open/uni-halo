@@ -5,25 +5,34 @@
  *  时间：2024年06月22日 12:00:44
  *  版本：v0.1.0
  */
-import {DefaultAppConfigs, getAppConfigs, setAppConfigs} from '@/config/index.js'
+import {DefaultAppConfigs, getAppConfigs, setAppConfigs,setAppMockJson,getAppMockJson} from '@/config/index.js'
 import v2Config from '@/api/v2/all.config.js'
 
 export default {
     namespaced: true,
     state: {
         configs: getAppConfigs(),
+        mockJson: getAppMockJson(),
     },
     getters: {
         getConfigs(state) {
             if (state.configs) return state.configs;
             return getAppConfigs()
         },
+        getMockJson(state) {
+            if(state.mockJson) return state.mockJson;
+            return getAppMockJson()
+        }
     },
     mutations: {
         setConfigs(state, data) {
             state.configs = data;
             setAppConfigs(data)
         },
+        setMockJson(state, data) {
+            setAppMockJson(data)
+            state.mockJson = data;
+        }
     },
     actions: {
         fetchConfigs({commit, dispatch}) {
@@ -46,6 +55,31 @@ export default {
         // 设置默认的数据
         setDefaultAppSettings({commit}) {
             commit('setConfigs', JSON.parse(JSON.stringify(DefaultAppConfigs)))
+        },
+        // 请求模拟数据
+        fetchMockJson({state, commit, dispatch}) {
+            return new Promise(async (resolve, reject) => {
+                // const mockJsonUrl = utils.checkUrl(state.configs.basicConfig.auditModeMock)
+                const mockJsonUrl = "https://uni-halo.925i.cn/unihalo.mock.json"
+                uni.request({
+                    url: mockJsonUrl,
+                    method: "GET",
+                    success: (res) => {
+                        console.log("mockJson", res.data)
+                        commit('setMockJson', res.data)
+                        resolve({
+                            ok: true,
+                            data: res.data
+                        })
+                    },
+                    fail: (err) => {
+                        resolve({
+                            ok: false,
+                            data: err
+                        })
+                    }
+                })
+            })
         },
     }
 };

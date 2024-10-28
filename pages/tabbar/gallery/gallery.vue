@@ -94,6 +94,12 @@ export default {
     computed: {
         galleryConfig() {
             return this.$tm.vx.getters().getConfigs.pageConfig.galleryConfig;
+        },
+        haloConfigs() {
+            return this.$tm.vx.getters().getConfigs;
+        },
+        mockJson() {
+            return this.$tm.vx.getters().getMockJson;
         }
     },
     watch: {
@@ -114,6 +120,13 @@ export default {
         this.fnGetData(true);
     },
     onReachBottom(e) {
+        if (this.haloConfigs.basicConfig.auditModeEnabled) {
+            uni.showToast({
+                icon: 'none',
+                title: '没有更多数据了'
+            });
+            return;
+        }
         if (this.hasNext) {
             this.queryParams.page += 1;
             this.isLoadMore = true;
@@ -130,11 +143,15 @@ export default {
             this.fnResetSetAniWaitIndex();
             this.queryParams.group = this.category.list[index].name;
             this.queryParams.page = 1;
-            this.fnToTopPage(); 
+            this.fnToTopPage();
             this.dataList = [];
-            this.fnGetData(true); 
+            this.fnGetData(true);
         },
         fnGetCategory() {
+            if (this.haloConfigs.basicConfig.auditModeEnabled) {
+                this.fnGetData(true);
+                return
+            }
             this.$httpApi.v2.getPhotoGroupList({
                 page: 1,
                 size: 0
@@ -151,7 +168,37 @@ export default {
                 }
             });
         },
-        fnGetData(isClearWallfull = false) {
+        fnGetData(isClearWaterfall = false) {
+            if (this.haloConfigs.basicConfig.auditModeEnabled) {
+                this.dataList = this.mockJson.gallery.list.map(item => {
+                    return {
+                        metadata: {
+                            name: Date.now() * Math.random(),
+                        },
+                        spec: {
+                            url: this.$utils.checkImageUrl(item)
+                        }
+                    }
+                })
+
+                this.loading = 'success';
+
+                if (this.galleryConfig.useWaterfall) {
+                    this.$nextTick(() => {
+                        if (isClearWaterfall) {
+                            this.$refs.wafll.clear()
+                        }
+                        setTimeout(() => {
+                            this.$refs.wafll.pushData(this.dataList)
+                        }, 50)
+                    })
+                }
+                this.loadMoreText = '呜呜，没有更多数据啦~';
+                uni.hideLoading();
+                uni.stopPullDownRefresh();
+                return;
+            }
+
             // 设置状态为加载中
             if (!this.isLoadMore) {
                 this.loading = 'loading';
@@ -174,9 +221,9 @@ export default {
                         }
                         if (this.galleryConfig.useWaterfall) {
                             this.$nextTick(() => {
-								if(isClearWallfull){
-									this.$refs.wafll.clear()
-								}
+                                if (isClearWaterfall) {
+                                    this.$refs.wafll.clear()
+                                }
                                 this.$refs.wafll.pushData(_list)
                             })
                         }

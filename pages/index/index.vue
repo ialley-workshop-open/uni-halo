@@ -29,6 +29,11 @@
 				// #ifdef MP-WEIXIN
 				// uni.$tm.vx.commit('setWxShare', res.shareConfig);
 				// #endif
+				
+				// 获取mockjson
+				await uni.$tm.vx.actions('config/fetchMockJson')
+				
+				// 进入检查
 				this.fnCheckShowStarted();
 			}).catch((err) => {
 				uni.switchTab({

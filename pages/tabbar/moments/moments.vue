@@ -1,13 +1,13 @@
 <template>
     <view class="app-page">
-        <view v-if="loading != 'success'" class="loading-wrap">
+        <view v-if="loading !== 'success'" class="loading-wrap">
             <tm-skeleton model="listAvatr"></tm-skeleton>
             <tm-skeleton model="listAvatr"></tm-skeleton>
             <tm-skeleton model="listAvatr"></tm-skeleton>
         </view>
         <!-- 内容区域 -->
         <view v-else class="app-page-content">
-            <view v-if="dataList.length == 0" class="content-empty flex flex-center" style="min-height: 70vh;">
+            <view v-if="dataList.length === 0" class="content-empty flex flex-center" style="min-height: 70vh;">
                 <!-- 空布局 -->
                 <tm-empty icon="icon-shiliangzhinengduixiang-" label="暂无数据"></tm-empty>
             </view>
@@ -101,6 +101,12 @@ export default {
             let blogger = this.$tm.vx.getters().getConfigs.authorConfig.blogger;
             blogger.avatar = this.$utils.checkAvatarUrl(blogger.avatar, true);
             return blogger;
+        },
+        haloConfigs() {
+            return this.$tm.vx.getters().getConfigs;
+        },
+        mockJson() {
+            return this.$tm.vx.getters().getMockJson;
         }
     },
 
@@ -114,6 +120,13 @@ export default {
     },
 
     onReachBottom(e) {
+        if (this.haloConfigs.basicConfig.auditModeEnabled) {
+            uni.showToast({
+                icon: 'none',
+                title: '没有更多数据了'
+            });
+            return
+        }
         if (this.hasNext) {
             this.queryParams.page += 1;
             this.isLoadMore = true;
@@ -127,6 +140,37 @@ export default {
     },
     methods: {
         fnGetData() {
+            if (this.haloConfigs.basicConfig.auditModeEnabled) {
+                this.dataList = this.mockJson.moments.list.map((item) => {
+                    return {
+                        metadata: {
+                            name: Date.now() * Math.random(),
+                        },
+                        spec: {
+                            user: {
+                                displayName: this.bloggerInfo.nickname,
+                                avatar: this.$utils.checkAvatarUrl(this.bloggerInfo.avatar),
+                            },
+                            content: {
+                                html: item.content
+                            },
+                            releaseTime: item.time
+                        },
+                        images: item.images.map((img) => {
+                            return {
+                                type: "PHOTO",
+                                url: this.$utils.checkThumbnailUrl(img),
+                            }
+                        }),
+                        videos: []
+                    }
+                });
+                this.loading = 'success';
+                this.loadMoreText = '呜呜，没有更多数据啦~';
+                uni.hideLoading();
+                uni.stopPullDownRefresh();
+                return;
+            }
             uni.showLoading({
                 mask: true,
                 title: '加载中...'
@@ -139,9 +183,6 @@ export default {
             this.$httpApi.v2
                 .getMomentList(this.queryParams)
                 .then(res => {
-                    console.log('请求结果：');
-                    console.log(res);
-
                     this.loading = 'success';
                     this.loadMoreText = res.hasNext ? '上拉加载更多' : '呜呜，没有更多数据啦~';
                     this.hasNext = res.hasNext;

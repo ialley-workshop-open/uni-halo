@@ -158,7 +158,7 @@
             "disableHostCheck" : true,
             "proxy" : {
                 "/apis" : {
-                    "target" : "https://demo.halo.run",
+                    "target" : "https://blog.xiaoxiaomo.cn",
                     "changeOrigin" : true,
                     "secure" : false,
                     "pathRewrite" : {
@@ -175,6 +175,10 @@
         },
         "uniStatistics" : {
             "enable" : true
+        },
+        "router" : {
+            "base" : "/uni-halo/",
+            "mode" : "history"
         }
     },
     "_spaceID" : "699a26a5-a6cd-4b54-b603-5155b312a5f5",

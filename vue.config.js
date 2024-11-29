@@ -4,7 +4,7 @@ module.exports = {
 		disableHostCheck: true,
 		proxy: {
 			"/apis": {
-				target: 'https://demo.halo.run',
+				target: 'https://blog.xiaoxiaomo.cn',
 				changeOrigin: true,
 				secure: true,
 				pathRewrite: {

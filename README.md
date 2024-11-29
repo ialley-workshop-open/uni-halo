@@ -22,7 +22,7 @@
 
 |                支付宝												                 |                微信												                 |                QQ												                 |
 |:----------------------------------------------:|:---------------------------------------------:|:---------------------------------------------:|
-| ![支付宝赞赏](https://blog.925i.cn/upload/zf_zfb_skm.png) | ![微信赞赏](https://blog.925i.cn/upload/zf_wx_zsm.png)	 | ![QQ赞赏](https://blog.925i.cn/upload/zf_qq_skm.png)	 |
+| ![支付宝赞赏](https://blog.xiaoxiaomo.cn/upload/zf_zfb_skm.png) | ![微信赞赏](https://blog.xiaoxiaomo.cn/upload/zf_wx_zsm.png)	 | ![QQ赞赏](https://blog.xiaoxiaomo.cn/upload/zf_qq_skm.png)	 |
 
 ## 一、项目介绍
 
@@ -39,18 +39,18 @@
 
 微信内容扫描下方二维码，即可在线预览小程序。
 
-![QQ交流群](https://blog.925i.cn/upload/xiaochengxu.gif)
+![QQ交流群](https://blog.xiaoxiaomo.cn/upload/xiaochengxu.gif)
 
 
 ### 部分截图
 
 |首页|分类|图库|
 |:--:|:--:|:--:|
-|![首页](https://blog.925i.cn/upload/39789CF4434C9CD6A6289D7209AF6EEF.jpg)|![分类](https://blog.925i.cn/upload/19CB6B66F40200045B6F572A9C28C5E8.jpg)|![图库](https://blog.925i.cn/upload/464F22FDB216CE802653A5F03BE34351.jpg)|
+|![首页](https://blog.xiaoxiaomo.cn/upload/39789CF4434C9CD6A6289D7209AF6EEF.jpg)|![分类](https://blog.xiaoxiaomo.cn/upload/19CB6B66F40200045B6F572A9C28C5E8.jpg)|![图库](https://blog.xiaoxiaomo.cn/upload/464F22FDB216CE802653A5F03BE34351.jpg)|
 
 |瞬间|我的|
 |:--:|:--:|
-|![瞬间](https://blog.925i.cn/upload/41EE8ADBFAE709A483A6E5F814C6A6E4.jpg)|![我的](https://blog.925i.cn/upload/9AEFE8DA4671A3C7F20F76FF3F9D15C9.jpg)|
+|![瞬间](https://blog.xiaoxiaomo.cn/upload/41EE8ADBFAE709A483A6E5F814C6A6E4.jpg)|![我的](https://blog.xiaoxiaomo.cn/upload/9AEFE8DA4671A3C7F20F76FF3F9D15C9.jpg)|
 
 
 ### 恋爱日记 
@@ -83,7 +83,7 @@
 ## 三、相关文档
 
 - 作者主页：[https://www.xiaoxiaomo.cn/](https://www.xiaoxiaomo.cn/)
-- 作者博客：[https://blog.925i.cn/](https://blog.925i.cn/)
+- 作者博客：[https://blog.xiaoxiaomo.cn/](https://blog.xiaoxiaomo.cn/)
 - 官方文档：[https://uni-halo.925i.cn/](https://uni-halo.925i.cn/) 
 - 代码仓库：[https://github.com/ialley-workshop-open/uni-halo](https://github.com/ialley-workshop-open/uni-halo)
 - 插件地址：[https://github.com/ialley-workshop-open/plugin-uni-halo](https://github.com/ialley-workshop-open/uni-halo) 
@@ -97,7 +97,7 @@
 - 微信交流群：由于微信交流群时效性太短，所以有需要的话可以先加入QQ群，再邀请进微信群
 - QQ 交流群：632969367
 
-![QQ交流群](https://blog.925i.cn/upload/qun.png)
+![QQ交流群](https://blog.xiaoxiaomo.cn/upload/qun.png)
 
 <br/>
 

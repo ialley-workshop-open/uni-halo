@@ -117,7 +117,7 @@
 
                 <!-- 评论展示区域 -->
                 <block v-if="postDetailConfig && postDetailConfig.showComment">
-                    <view v-if="result" class="comment-wrap bg-white mt-24 pa-24 round-4">
+                    <view v-if="result" id="CommentList" class="comment-wrap bg-white mt-24 pa-24 round-4">
                         <commentList ref="commentListRef" :disallowComment="!result.spec.allowComment"
                                      :postName="result.metadata.name" :post="result" @on-comment="fnOnComment"
                                      @on-comment-detail="fnOnShowCommentDetail" @on-loaded="fnOnCommentLoaded">
@@ -292,7 +292,9 @@ export default {
                 isComment: false,
                 postName: "",
                 title: ""
-            }
+            },
+			
+			commentListScrollTop:0
         };
     },
     computed: {
@@ -413,6 +415,7 @@ export default {
                     this.fnSetPageTitle('文章详情');
                     this.loading = 'success';
                     this.fnHandleSetFlotButtonItems(this.haloConfigs);
+					this.handleQueryCommentListScrollTop()
                 })
                 .catch(err => {
                     console.log("错误", err)
@@ -469,6 +472,13 @@ export default {
             this.commentModal.postName = this.result.metadata.name;
             this.commentModal.title = "新增评论";
             this.commentModal.show = true;
+			
+			setTimeout(()=>{
+				uni.pageScrollTo({
+					scrollTop: this.commentListScrollTop,
+					duration: 100
+				})
+			},300)
         },
         fnOnComment(data) {
             this.commentModal.isComment = data.isComment;
@@ -476,8 +486,10 @@ export default {
             this.commentModal.title = data.title;
             this.commentModal.show = true;
         },
-        fnOnCommentModalClose(refresh) {
-            if (refresh && this.$refs.commentListRef) {
+        fnOnCommentModalClose({refresh,isSubmit}) {
+			console.log("refresh",refresh)
+			console.log("isSubmit",isSubmit)
+            if (refresh && isSubmit && this.$refs.commentListRef) {
                 this.$refs.commentListRef.fnGetData()
             }
             this.commentModal.show = false;
@@ -957,7 +969,18 @@ export default {
             } else {
                 return this.haloConfigs?.appConfig?.appInfo?.qrCodeImageUrl;
             }
-        }
+        },
+		handleQueryCommentListScrollTop(){
+			if(!this.postDetailConfig) return;
+			if(!this.postDetailConfig.showComment) return;
+			this.$nextTick(()=>{
+				setTimeout(()=>{
+					uni.createSelectorQuery().in(this).select('#CommentList').boundingClientRect(res => {
+					    this.commentListScrollTop = res.top - 12;
+					}).exec();
+				}, 2*1000)
+			})
+		}
 
     }
 };

@@ -208,15 +208,17 @@ export default {
         },
         handleOnChange(isOpen) {
             this.isShow = isOpen;
-            if (!isOpen) {
-                this.$emit("on-close", {
-                    refresh: false
-                })
-            }
+			if(!isOpen){
+				this.$emit("on-close", {
+					isSubmit:false,
+					refresh: false
+				})
+			}
         },
         handleClose(refresh = false) {
             this.isShow = false;
             this.$emit("on-close", {
+				isSubmit:true,
                 refresh: refresh
             })
         }

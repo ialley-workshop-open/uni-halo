@@ -6,6 +6,10 @@
                 <text>评论列表</text>
                 <text class="count">（{{ (result && result.total) || 0 }}条）</text>
             </view>
+			<view class="refresh">
+				<text class="icon iconfont icon-sync-alt text-weight-s text-grey-darken-1"></text>
+				<text class="text-weight-s text-grey-darken-1 ml-6" style="font-size: 26rpx;" @click="fnGetData">刷新</text>
+			</view>
         </view>
         <!-- 内容区域 -->
         <view class="comment-list_content">

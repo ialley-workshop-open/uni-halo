@@ -35,7 +35,7 @@
 - 理论支持编译为 小程序（推荐）、APP
 
 
-### 在线预览
+### 在线预览（小莫唐尼）
 
 微信内容扫描下方二维码，即可在线预览小程序。
 
@@ -53,11 +53,10 @@
 |![瞬间](https://blog.xiaoxiaomo.cn/upload/41EE8ADBFAE709A483A6E5F814C6A6E4.jpg)|![我的](https://blog.xiaoxiaomo.cn/upload/9AEFE8DA4671A3C7F20F76FF3F9D15C9.jpg)|
 
 
-### 恋爱日记 
+### 恋爱日记
 
-|主页|恋爱清单|
-|:--:|:--:|
-|![主页](https://uni-halo.925i.cn/assets/love_001.6bf8b4e9.jpg)|![恋爱清单](https://uni-halo.925i.cn/assets/love_002.a08bd8d6.jpg)|
+- 在 uni-halo 中，我们为您准备了一个恋爱日记的模块，您可以在其中记录您的恋爱故事，分享给您的朋友们，请扫示例小程序，在线体验恋爱日记的功能。
+
 <br/>
 
 
@@ -66,7 +65,7 @@
 - 基础功能：文章列表、文章分类、文章详情、个人图库、友情链接、我的瞬间
 
 - 特色功能：恋爱日记，精心为您设计了秀恩爱的模块，秀出关于你们的故事、情侣甜蜜相册、恋爱记录清单，为您的恋爱保驾护航。
- 
+
 
 ## 二、配套插件
 
@@ -74,7 +73,7 @@
 - 代码仓库：[https://github.com/ialley-workshop-open/plugin-uni-halo](https://github.com/ialley-workshop-open/plugin-uni-halo)
 - 仓库版本：[https://github.com/ialley-workshop-open/plugin-uni-halo/releases](https://github.com/ialley-workshop-open/plugin-uni-halo/releases)
 - 应用市场：[https://www.halo.run/store/apps/app-ryemX](https://www.halo.run/store/apps/app-ryemX)
- 
+
 ### 使用方式
 
 直接下载安装插件，在插件市场安装即可，安装完成后，需要配置插件，配置完成后，即可使用插件提供的功能。
@@ -84,18 +83,17 @@
 
 - 作者主页：[https://www.xiaoxiaomo.cn/](https://www.xiaoxiaomo.cn/)
 - 作者博客：[https://blog.xiaoxiaomo.cn/](https://blog.xiaoxiaomo.cn/)
-- 官方文档：[https://uni-halo.925i.cn/](https://uni-halo.925i.cn/) 
+- 官方文档：[https://uni-halo.925i.cn/](https://uni-halo.925i.cn/)
 - 代码仓库：[https://github.com/ialley-workshop-open/uni-halo](https://github.com/ialley-workshop-open/uni-halo)
-- 插件地址：[https://github.com/ialley-workshop-open/plugin-uni-halo](https://github.com/ialley-workshop-open/uni-halo) 
+- 插件地址：[https://github.com/ialley-workshop-open/plugin-uni-halo](https://github.com/ialley-workshop-open/uni-halo)
 - 应用市场：[https://www.halo.run/store/apps/app-ryemX](https://www.halo.run/store/apps/app-ryemX)
 
 
 ## 四、使用交流
 
 - 提交 issues：[Github Issues](https://github.com/ialley-workshop-open/uni-halo/issues)
-  丨 [Gitee Issues](https://gitee.com/ialley-workshop-open/uni-halo/issues)
-- 微信交流群：由于微信交流群时效性太短，所以有需要的话可以先加入QQ群，再邀请进微信群
 - QQ 交流群：632969367
+- 微信交流群：由于微信交流群时效性太短，所以有需要的话可以先加入QQ群，再邀请进微信群
 
 ![QQ交流群](https://blog.xiaoxiaomo.cn/upload/qun.png)
 
@@ -106,6 +104,16 @@
 uni-halo 还在持续更新中，本项目欢迎您的参与，共同维护，逐步完善，将项目做得更强。项目采用 AGPL-3.0 开源协议，本着一切免费的原则，原则上不会收取任何费用及版权，可以放心使用。
 
 如果你想加入我们，可以多提供一些好的建议或者提交 pr，我们将会非常乐意接受您的建议和意见。
+
+<br/>
+
+## 💪 贡献者们
+
+感谢以下所有给 uni-halo 贡献过代码的 [开发者](https://github.com/ialley-workshop-open/uni-halo/graphs/contributors)。
+
+<a href="https://github.com/ialley-workshop-open/uni-halo/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=ialley-workshop-open/uni-halo" />
+</a>
 
 <br/>
 

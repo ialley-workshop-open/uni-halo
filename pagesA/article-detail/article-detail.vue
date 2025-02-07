@@ -580,7 +580,7 @@ export default {
                 lineWidth: 0,
                 lineColor: '#ffffff',
                 colorObj: {
-                    colorList: ['#FFFFFF', 'rgba(13,163,242,0.1)'],
+                    colorList: ['#FFFFFF'],
                     direction: 2
                 },
             }, {

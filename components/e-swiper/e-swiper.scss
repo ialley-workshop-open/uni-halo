@@ -102,6 +102,8 @@
 			width: 100%;
 			box-sizing: border-box;
 			padding: 20rpx 24rpx;
+			background-color: rgba(0, 0, 0, 0.085);
+			backdrop-filter: blur(3rpx);
 			&.no-dot {
 				bottom: 0;
 			}

@@ -66,7 +66,7 @@
 							<text class="text title-text">{{ item.title }}</text>
 						</view>
 						<!-- 用户信息 -->
-						<view class="Bottom-UserInfo">
+						<view v-if="false" class="Bottom-UserInfo">
 							<!-- 头像 -->
 							<view class="UserImage-box">
 								<image :src="item.avatar" class="Image" mode="aspectFill"></image>

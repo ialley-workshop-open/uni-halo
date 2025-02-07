@@ -23,9 +23,14 @@
         <block v-else>
             <view class="bg-white pb-24">
                 <view class="banner bg-white ml-24 mr-24 mt-12 round-3" v-if="bannerList.length !== 0">
-                    <e-swiper :dotPosition="globalAppSettings.banner.dotPosition" :autoplay="true"
-                              :useDot="globalAppSettings.banner.useDot" :list="bannerList"
-                              @on-click="fnOnBannerClick"></e-swiper>
+                    <e-swiper 
+						height="400rpx"
+						dotPosition="right" 
+						:autoplay="true"
+                        :useDot="false" 
+						:list="bannerList"
+                        @on-click="fnOnBannerClick" 
+					/>  
                 </view>
             </view>
             <!-- 精品分类 -->

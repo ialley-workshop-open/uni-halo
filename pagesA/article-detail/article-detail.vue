@@ -131,8 +131,8 @@
             <!-- 返回顶部 -->
             <tm-flotbutton :offset="[16, 80]" icon="icon-angle-up" color="bg-gradient-light-blue-accent"
                            @click="fnToTopPage()"></tm-flotbutton>
-            <tm-flotbutton :actions="flotButtonActions" :click-actions-hiden="false" actions-pos="left" :show-text="true"
-                           color="bg-gradient-orange-accent" @change="fnOnFlotButtonChange"></tm-flotbutton>
+            <tm-flotbutton :actions="flotButtonActions" :click-actions-hiden="false" actions-pos="left"
+                           :show-text="true" color="bg-gradient-orange-accent" @change="fnOnFlotButtonChange"></tm-flotbutton>
         </block>
 
         <!-- 评论详情 -->
@@ -174,7 +174,7 @@
         </tm-poup>
 
         <!-- 海报 -->
-        <tm-poup v-model="poster.show" width="90vw" height="auto" :round="6" :over-close="true" position="center">
+        <!--  <tm-poup v-model="poster.show" width="90vw" height="auto" :round="6" :over-close="true" position="center">
             <view class="poster-content pt-12 bg-white">
                 <view v-if="poster.loading" class="poster-loading flex flex-center text-grey-darken-1">
                     <text class="e-loading-icon iconfont icon-loading"></text>
@@ -182,6 +182,32 @@
                 </view>
                 <block v-if="poster.showCanvas">
                     <r-canvas ref="rCanvas"></r-canvas>
+                    <view class="poster-save ma-24 mt-0 pt-20 flex flex-center">
+                        <tm-button theme="bg-gradient-light-blue-accent" size="m" @click="fnSavePoster()">
+                            保存到相册
+                        </tm-button>
+                        <tm-button v-if="false" theme="bg-gradient-orange-accent" size="m" @click="fnShareTo()">
+                            分享给好友
+                        </tm-button>
+                        <tm-button theme="bg-gradient-blue-grey-accent" size="m" @click="fnOnPosterClose()">
+                            关 闭
+                        </tm-button>
+                    </view>
+                </block>
+            </view>
+        </tm-poup> -->
+        <tm-poup v-model="poster.show" width="90vw" height="auto" :round="6" :over-close="true" position="center">
+            <view class="poster-content pt-12 bg-white">
+                <liu-poster ref="liuPoster" :width="674" :height="940" @change="handleOnPosterChange"></liu-poster>
+                <view v-if="poster.loading" class="poster-loading flex flex-center text-grey-darken-1">
+                    <text class="e-loading-icon iconfont icon-loading"></text>
+                    <text class="ml-6">海报正在生成...</text>
+                </view>
+                <block v-if="!poster.loading">
+                    <image :style="{
+						width:'100%',
+						height:'940rpx'
+					}" :src="poster.url"></image>
                     <view class="poster-save ma-24 mt-0 pt-20 flex flex-center">
                         <tm-button theme="bg-gradient-light-blue-accent" size="m" @click="fnSavePoster()">
                             保存到相册
@@ -273,7 +299,9 @@ export default {
                 show: false,
                 showCanvas: false,
                 loading: true,
-                res: null
+                res: null,
+                url: "",
+                configs: []
             },
 
             metas: [], // 自定义元数据
@@ -293,8 +321,8 @@ export default {
                 postName: "",
                 title: ""
             },
-			
-			commentListScrollTop:0
+
+            commentListScrollTop: 0
         };
     },
     computed: {
@@ -415,7 +443,7 @@ export default {
                     this.fnSetPageTitle('文章详情');
                     this.loading = 'success';
                     this.fnHandleSetFlotButtonItems(this.haloConfigs);
-					this.handleQueryCommentListScrollTop()
+                    this.handleQueryCommentListScrollTop()
                 })
                 .catch(err => {
                     console.log("错误", err)
@@ -434,7 +462,8 @@ export default {
             },
                 {
                     icon: upvote.has("post", this.result?.metadata?.name) ? 'icon-heart-fill' : 'icon-like',
-                    color: upvote.has("post", this.result?.metadata?.name) ? 'bg-gradient-red-accent' : 'bg-gradient-orange-accent',
+                    color: upvote.has("post", this.result?.metadata?.name) ? 'bg-gradient-red-accent' :
+                        'bg-gradient-orange-accent',
                     use: true,
                 },
                 {
@@ -472,13 +501,13 @@ export default {
             this.commentModal.postName = this.result.metadata.name;
             this.commentModal.title = "新增评论";
             this.commentModal.show = true;
-			
-			setTimeout(()=>{
-				uni.pageScrollTo({
-					scrollTop: this.commentListScrollTop,
-					duration: 100
-				})
-			},300)
+
+            setTimeout(() => {
+                uni.pageScrollTo({
+                    scrollTop: this.commentListScrollTop,
+                    duration: 100
+                })
+            }, 300)
         },
         fnOnComment(data) {
             this.commentModal.isComment = data.isComment;
@@ -486,9 +515,12 @@ export default {
             this.commentModal.title = data.title;
             this.commentModal.show = true;
         },
-        fnOnCommentModalClose({refresh,isSubmit}) {
-			console.log("refresh",refresh)
-			console.log("isSubmit",isSubmit)
+        fnOnCommentModalClose({
+                                  refresh,
+                                  isSubmit
+                              }) {
+            console.log("refresh", refresh)
+            console.log("isSubmit", isSubmit)
             if (refresh && isSubmit && this.$refs.commentListRef) {
                 this.$refs.commentListRef.fnGetData()
             }
@@ -516,15 +548,150 @@ export default {
                     uni.$tm.toast('点赞失败');
                 });
         },
-        fnShowShare() {
+        async fnShowShare() {
             this.poster.show = true;
+            await this.handleCreatePoster()
             setTimeout(() => {
                 this.poster.showCanvas = true;
-                this.fnCreatePoster(res => {
-                    this.poster.res = res;
-                });
+                // this.fnCreatePoster(res => {
+                //     this.poster.res = res;
+                // });
+                this.$nextTick(() => {
+                    this.$refs.liuPoster.init(this.poster.configs)
+                })
             }, 500);
         },
+        handleOnPosterChange(url) {
+            this.poster.url = url;
+            this.poster.loading = false
+        },
+        async handleCreatePoster() {
+            const systemInfo = await uni.getSystemInfoSync();
+            const _bloggerAvatar = this.$utils.checkAvatarUrl(this.bloggerInfo.avatar, true);
+            const _articleCover = this.$utils.checkThumbnailUrl(this.result.spec.cover, true);
+            const _qrCodeImageUrl = await this.qrCodeImageUrl();
+            this.poster.configs = [{
+                type: 'color',
+                width: 674,
+                height: 940,
+                x: 0,
+                y: 0,
+                radius: 24,
+                lineWidth: 0,
+                lineColor: '#ffffff',
+                colorObj: {
+                    colorList: ['#FFFFFF', 'rgba(13,163,242,0.1)'],
+                    direction: 2
+                },
+            }, {
+                type: 'image',
+                width: 96,
+                height: 96,
+                x: 24,
+                y: 24,
+                radius: 48,
+                lineWidth: 2,
+                lineColor: '#FFFFFF',
+                path: _bloggerAvatar
+            }, {
+                type: 'text',
+                width: 400,
+                height: 40,
+                x: 140,
+                y: 42,
+                color: '#000000',
+                fontSize: 30,
+                lineHeight: 30,
+                bold: true,
+                content: this.bloggerInfo.nickname
+            }, {
+                type: 'text',
+                width: 400,
+                height: 40,
+                x: 140,
+                y: 90,
+                color: '#666666',
+                fontSize: 24,
+                lineHeight: 24,
+                bold: false,
+                content: this.bloggerInfo.description,
+            }, {
+                type: 'image',
+                width: 624,
+                height: 360,
+                x: 24,
+                y: 152,
+                radius: 12,
+                lineWidth: 0,
+                lineColor: '#FFFFFF',
+                path: _articleCover
+
+            }, {
+                type: 'text',
+                width: 626,
+                height: 40,
+                x: 24,
+                y: 562,
+                color: '#333333',
+                fontSize: 28,
+                lineHeight: 28,
+                bold: true,
+                content: this.result.spec.title
+            }, {
+                type: 'text',
+                width: 626,
+                height: 80,
+                x: 24,
+                y: 612,
+                color: '#333333',
+                fontSize: 24,
+                lineHeight: 40,
+                bold: false,
+                content: this.result?.status?.excerpt || "文章暂无摘要信息"
+            }, {
+                type: 'line',
+                width: 2,
+                color: '#999999',
+                startX: 24,
+                startY: 722,
+                endX: 646,
+                endY: 722,
+                lineType: 'dash',
+            }, {
+                type: 'image',
+                width: 160,
+                height: 160,
+                x: 24,
+                y: 752,
+                radius: 0,
+                lineWidth: 6,
+                lineColor: '#FFFFFF',
+                path: this.$utils.checkImageUrl(_qrCodeImageUrl),
+            }, {
+                type: 'text',
+                width: 300,
+                height: 44,
+                x: 320,
+                y: 772,
+                color: '#333333',
+                fontSize: 32,
+                lineHeight: 44,
+                bold: true,
+                content: '长按识别小程序',
+            }, {
+                type: 'text',
+                width: 442,
+                height: 24,
+                x: 234,
+                y: 872,
+                color: '#333333',
+                fontSize: 24,
+                lineHeight: 24,
+                bold: false,
+                content: '关注我，给你分享更多有趣的知识',
+            }]
+        },
+
         // 绘制虚线：https://blog.csdn.net/a460550542/article/details/124821248
         drawDashedLine(ctx, x, y, w, h, pattern, color) {
             ctx.lineWidth = h;
@@ -729,8 +896,15 @@ export default {
             this.poster.loading = true;
         },
         fnSavePoster() {
-            this.$refs.rCanvas.saveImage(this.poster.res.tempFilePath);
-            uni.$tm.toast('保存成功');
+            // this.$refs.rCanvas.saveImage(this.poster.res.tempFilePath);
+            uni.saveImageToPhotosAlbum({
+                filePath: this.poster.url,
+                success: () => {
+                    uni.$tm.toast('保存成功');
+                }, fail: (e) => {
+                    uni.$tm.toast('保存失败，请重试');
+                }
+            })
         },
         fnShareTo() {
             // #ifdef MP-WEIXIN
@@ -970,17 +1144,18 @@ export default {
                 return this.haloConfigs?.appConfig?.appInfo?.qrCodeImageUrl;
             }
         },
-		handleQueryCommentListScrollTop(){
-			if(!this.postDetailConfig) return;
-			if(!this.postDetailConfig.showComment) return;
-			this.$nextTick(()=>{
-				setTimeout(()=>{
-					uni.createSelectorQuery().in(this).select('#CommentList').boundingClientRect(res => {
-					    this.commentListScrollTop = res.top - 12;
-					}).exec();
-				}, 2*1000)
-			})
-		}
+        handleQueryCommentListScrollTop() {
+            if (!this.postDetailConfig) return;
+            if (!this.postDetailConfig.showComment) return;
+            this.$nextTick(() => {
+                setTimeout(() => {
+                    uni.createSelectorQuery().in(this).select('#CommentList').boundingClientRect(
+                        res => {
+                            this.commentListScrollTop = res.top - 12;
+                        }).exec();
+                }, 2 * 1000)
+            })
+        }
 
     }
 };

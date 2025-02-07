@@ -14,7 +14,7 @@
             <block v-else>
                 <block v-for="(moment, index) in dataList" :key="index">
                     <!--  卡片 -->
-                    <tm-translate animation-name="fadeUp" :wait="calcAniWait()">
+                    <tm-translate v-if="moment.spec.visible==='PUBLIC'" animation-name="fadeUp" :wait="calcAniWait()">
                         <view class="moment-card">
                             <view class="head" style="display: flex;align-items: center;">
                                 <view class="avatar" style="flex-shrink: 0;">
@@ -154,7 +154,8 @@ export default {
                             content: {
                                 html: item.content
                             },
-                            releaseTime: item.time
+                            releaseTime: item.time,
+                            visible: "PUBLIC"
                         },
                         images: item.images.map((img) => {
                             return {

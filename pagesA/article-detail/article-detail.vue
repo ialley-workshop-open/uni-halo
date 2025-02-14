@@ -663,8 +663,8 @@ export default {
                 height: 160,
                 x: 24,
                 y: 752,
-                radius: 0,
-                lineWidth: 6,
+                radius: 12,
+                lineWidth: 0,
                 lineColor: '#FFFFFF',
                 path: this.$utils.checkImageUrl(_qrCodeImageUrl),
             }, {

@@ -214,7 +214,9 @@ export default {
             }
 
             this.$httpApi.v2
-                .getCategoryList({})
+                .getCategoryList({
+					fieldSelector:['spec.hideFromList==false']
+				})
                 .then(res => {
                     this.categoryList = res.items.sort((a, b) => {
                         return b.postCount - a.postCount;

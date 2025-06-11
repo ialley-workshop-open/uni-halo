@@ -3,6 +3,7 @@
  */
 import HaloTokenConfig from '@/config/token.config.js'
 import HttpHandler from '@/common/http/request.js'
+import qs from 'qs'
 
 import {
     getAppConfigs
@@ -42,7 +43,14 @@ export default {
      * @param {Object} params  查询参数
      */
     getCategoryList: (params) => {
-        return HttpHandler.Get('/apis/api.content.halo.run/v1alpha1/categories', params)
+		const param = qs.stringify(params, {
+		    allowDots: true,
+		    encodeValuesOnly: true,
+		    skipNulls: true,
+		    encode: false,
+		    arrayFormat: 'repeat'
+		})
+        return HttpHandler.Get(`/apis/api.content.halo.run/v1alpha1/categories?${param}`,{})
     },
     /**
      * 查询分类下的文章

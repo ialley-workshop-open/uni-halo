@@ -192,7 +192,7 @@ export default {
             this.$httpApi.v2.submitLink(this.form)
                 .then(res => {
                     if (res.code === 200) {
-                        uni.$tm.toast('友链提交成功！');
+                        uni.$tm.toast(res.msg);
                         setTimeout(() => {
                             uni.navigateTo({
                                 url: '/pagesA/friend-links/friend-links',
@@ -204,7 +204,7 @@ export default {
                             });
                         }, 1000);
                     } else {
-                        uni.$tm.toast('操作失败，请重试！');
+                        uni.$tm.toast(res.msg);
                     }
                 })
                 .catch(err => {

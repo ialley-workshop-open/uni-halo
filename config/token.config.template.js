@@ -1,3 +1,5 @@
+import {getAppConfigs} from "@/config/index";
+
 /** 配置后台管理员token */
 const HaloTokenConfig = Object.freeze({
 	
@@ -7,7 +9,7 @@ const HaloTokenConfig = Object.freeze({
 
 
 	/** 管理员token */
-	systemToken: ``,
+	systemToken: getAppConfigs()?.basicConfig?.personalToken,
 	/** 匿名用户token */
 	anonymousToken: ``
 })

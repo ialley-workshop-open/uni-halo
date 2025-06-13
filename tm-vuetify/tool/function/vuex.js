@@ -19,7 +19,6 @@ class vuex {
 		let t = this;
 		const g = this.store.getters
 		let keys = Object.keys(g);
-		console.log(keys)
 		let k = keys.map((el,index)=>{
 			let f = el.split('/');
 			let tst = {}

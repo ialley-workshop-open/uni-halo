@@ -259,13 +259,6 @@
               }
             }
           }
-        }, 
-        {
-          "path": "advertise/advertise",
-          "style": {
-            "navigationBarTitleText": "广告页面",
-            "enablePullDownRefresh": false
-          }
         },
         {
           "path": "submit-link/submit-link",

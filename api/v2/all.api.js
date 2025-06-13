@@ -165,49 +165,49 @@ export default {
         return HttpHandler.Get(`/apis/api.plugin.halo.run/v1alpha1/plugins/PluginLinks/links`, params)
     },
 
-
     /**
-     * 校验文章访问密码
+     * 限制阅读校验
+     * @param restrictType
+     * @param code
+     * @param keyId
+     * @returns {HttpPromise<any>}
      */
-    checkPostVerifyCode: (verifyCode, postId) => {
-        return HttpHandler.Get(`/apis/tools.muyin.site/v1alpha1/verificationCode/check?code=${verifyCode}`, null, {
+    requestRestrictReadCheck: (restrictType, code, keyId) => {
+        const params = {
+            code: code,
+            templateType: 'post',
+            restrictType: restrictType,
+            keyId: keyId
+        }
+        return HttpHandler.Post(`/apis/tools.muyin.site/v1alpha1/restrict-read/check`, params, {
             header: {
                 'Authorization': getAppConfigs().pluginConfig.toolsPlugin?.Authorization,
                 'Wechat-Session-Id': uni.getStorageSync('openid'),
-                'Post-Id': postId
             }
         })
-    },
-
-    /**
-     * 校验文章访问密码
-     */
-    checkPostPasswordAccess: (password, postId) => {
-        return HttpHandler.Get(`/apis/tools.muyin.site/v1alpha1/visitPassword/checkPost?password=${password}`,
-            null, {
-                header: {
-                    'Authorization': getAppConfigs().pluginConfig.toolsPlugin?.Authorization,
-                    'Wechat-Session-Id': uni.getStorageSync('openid'),
-                    'Post-Id': postId
-                }
-            })
     },
 
     /**
      * 获取文章验证码
      */
-    getPostVerifyCode: () => {
-        return HttpHandler.Get(`/apis/tools.muyin.site/v1alpha1/verificationCode/create`, null, {
+    createVerificationCode: () => {
+        return HttpHandler.Get(`/apis/tools.muyin.site/v1alpha1/restrict-read/create`, null, {
             header: {
                 'Authorization': getAppConfigs().pluginConfig.toolsPlugin?.Authorization,
             }
         })
     },
+
     /**
      * 提交友情链接
      */
     submitLink(form) {
-        return HttpHandler.Post(`/apis/linksSubmit.muyin.site/v1alpha1/submit`, form, null)
+        return HttpHandler.Post(`/apis/linksSubmit.muyin.site/v1alpha1/submit`, form, {
+            header: {
+                'Authorization': getAppConfigs().pluginConfig.linksSubmitPlugin?.Authorization,
+                'Wechat-Session-Id': uni.getStorageSync('openid'),
+            }
+        })
     },
     /**
      * 获取二维码信息

@@ -77,23 +77,46 @@
             <view class="content ml-24 mr-24">
                 <!-- markdown渲染 -->
                 <view class="markdown-wrap">
+                  <view v-if="checkPostRestrictRead(result)">
+                    <view v-if="showContentArr.length == 0">
+                      <restrict-read-skeleton
+                          :loading="true"
+                          :lines="3"
+                          :tip-text="`此处内容已隐藏，「${getRestrictReadTypeName(result)}可见」`"
+                          button-text="查看更多"
+                          button-color="#1890ff"
+                          skeleton-color="#f0f0f0"
+                          skeleton-highlight="#e0e0e0"
+                          animation-duration="2"
+                          @refresh="readMore"
+                      />
+                    </view>
+                    <view v-else v-for="showContent in showContentArr">
+                      <mp-html class="evan-markdown" lazy-load :domain="markdownConfig.domain"
+                               :loading-img="markdownConfig.loadingGif" :scroll-table="true" :selectable="true"
+                               :tag-style="markdownConfig.tagStyle" :container-style="markdownConfig.containStyle"
+                               :content="showContent" :markdown="true" :showLineNumber="true" :showLanguageName="true"
+                               :copyByLongPress="true"/>
+                      <restrict-read-skeleton
+                          :loading="true"
+                          :lines="3"
+                          :tip-text="`此处内容已隐藏，「${getRestrictReadTypeName(result)}可见」`"
+                          button-text="查看更多"
+                          button-color="#1890ff"
+                          skeleton-color="#f0f0f0"
+                          skeleton-highlight="#e0e0e0"
+                          animation-duration="2"
+                          @refresh="readMore"
+                      />
+                    </view>
+                  </view>
+                  <view v-else>
                     <mp-html class="evan-markdown" lazy-load :domain="markdownConfig.domain"
                              :loading-img="markdownConfig.loadingGif" :scroll-table="true" :selectable="true"
                              :tag-style="markdownConfig.tagStyle" :container-style="markdownConfig.containStyle"
                              :content="result.content.raw" :markdown="true" :showLineNumber="true" :showLanguageName="true"
                              :copyByLongPress="true"/>
-                    <tm-more v-if="showValidVisitMore" :disabled="true" :maxHeight="1" :isRemovBar="true"
-                             @click="showValidVisitMorePop()">
-                        <view class="text-size-n pa-24">
-                            以下内容已隐藏，请验证后查看完整内容……
-                        </view>
-                        <template v-slot:more="{ data }">
-                            <view class="">
-                                <text class="text-blue text-size-m text-weight-b">文章部分内容已加密点击解锁</text>
-                                <text class="text-blue iconfont icon-lock-fill text-size-s ml-5"></text>
-                            </view>
-                        </template>
-                    </tm-more>
+                  </view>
                 </view>
 
                 <!-- 版权声明 -->
@@ -223,14 +246,41 @@
             </view>
         </tm-poup>
 
-        <!-- 密码访问解密弹窗 -->
-        <tm-dialog :disabled="true" :input-val.sync="validVisitModal.value" title="验证提示" confirmText="立即验证"
-                   :showCancel="validVisitModal.useCancel" model="confirm" v-model="validVisitModal.show"
-                   content="博主设置了需要密码才能查看该文章内容,请输入文章密码进行验证" theme="split" confirmColor="blue shadow-blue-0"
-                   @cancel="closeValidVisitPop" @confirm="fnValidVisitPwd"></tm-dialog>
-        <!-- 是否前往获取验证码 -->
-        <tm-dialog v-model="showGetPassword" title="免费获取验证码" content="是否前往获取验证码？" @confirm="toAdvertise"
-                   @cancel="closeAllPop"></tm-dialog>
+        <!-- 验证码弹窗 -->
+        <tm-dialog v-model="verificationCodeModal.show" :disabled="true" title="验证提示"
+                   :confirmText="verificationCodeModal.confirmText"
+                   :showCancel="true" model="verificationCodeModal.model" theme="split" confirmColor="blue shadow-blue-0"
+                   @cancel="verificationCodeModal.show = false"
+                   @confirm="restrictReadCheckOrViewVideo">
+          <template #default>
+            <view class="pa-20">
+              <!-- 扫码验证模式 -->
+              <view v-if="verificationCodeModal.type === 'scan'" class="flex flex-col flex-center">
+                <text class="mb-20">请扫描下方二维码获取验证码</text>
+                <tm-images
+                    :width="180"
+                    :height="180"
+                    :src="verificationCodeModal.imgUrl"
+                    preview
+                    round="5"
+                ></tm-images>
+                <tm-input bg-color="grey-lighten-5" required v-model="restrictReadInputCode" placeholder="请输入验证码"
+                          :border-bottom="false" :flat="true"></tm-input>
+              </view>
+
+              <!-- 观看视频模式 -->
+              <view v-else class="flex flex-col flex-center">
+                <text class="mb-20">点击观看视频之后，可访问</text>
+              </view>
+            </view>
+          </template>
+        </tm-dialog>
+        <!-- 密码弹窗 -->
+        <tm-dialog v-model="passwordModal.show" :disabled="true" title="验证提示" confirmText="确定" content="请输入密码"
+                   :showCancel="true" model="confirm" theme="split" confirmColor="blue shadow-blue-0"
+                   :input-val.sync="restrictReadInputCode"
+                   @cancel="passwordModal.show = false"
+                   @confirm="restrictReadCheck"></tm-dialog>
 
         <!-- 评论弹窗 -->
         <block v-if="calcIsShowComment">
@@ -260,9 +310,23 @@ import rCanvas from '@/components/r-canvas/r-canvas.vue';
 import barrage from '@/components/barrage/barrage.vue';
 import {getAppConfigs} from '@/config/index.js'
 import {upvote} from '@/utils/upvote.js'
+import {
+  checkPostRestrictRead,
+  copyToClipboard,
+  getRestrictReadTypeName,
+  getShowableContent
+} from "@/utils/restrictRead";
+import HaloTokenConfig from "@/config/token.config";
+import RestrictReadSkeleton from "@/components/restrict-read-skeleton/restrict-read-skeleton.vue";
+import TmImages from "@/tm-vuetify/components/tm-images/tm-images.vue";
+import TmInput from "@/tm-vuetify/components/tm-input/tm-input.vue";
 
+let videoAd = null;
 export default {
     components: {
+      TmInput,
+      TmImages,
+      RestrictReadSkeleton,
         tmSkeleton,
         tmPoup,
         tmFlotbutton,
@@ -305,16 +369,19 @@ export default {
             },
 
             metas: [], // 自定义元数据
-            // 文章加密（弹窗输入密码解密）
-            validVisitModal: {
-                show: false,
-                useCancel: false,
-                value: undefined
+            showContentArr: [],
+            restrictReadInputCode: '',
+            verificationCodeModal: {
+              show: false,
+              model: 'confirm',
+              confirmText: '确定',
+              type: '',
+              imgUrl: '',
+              adId: ''
             },
-            visitType: 0, // 0 未加密 1 后端部分隐藏 2 前端部分隐藏 3 全部隐藏
-            visitPwd: undefined,
-            showValidVisitMore: true,
-            showGetPassword: false,
+            passwordModal: {
+              show: false
+            },
             commentModal: {
                 show: false,
                 isComment: false,
@@ -397,6 +464,8 @@ export default {
         }
     },
     methods: {
+      getRestrictReadTypeName,
+      checkPostRestrictRead,
         fnGetData() {
             this.loading = 'loading';
             this.$httpApi.v2
@@ -409,35 +478,31 @@ export default {
                     if (openid === '' || openid === null) {
                         this.fnGetOpenid();
                     }
-                    const visitFlag = uni.getStorageSync('visit_' + this.result?.metadata?.name);
 
                     const toolsPluginEnabled = getAppConfigs().pluginConfig.toolsPlugin?.enabled;
+                    const restrictRead = checkPostRestrictRead(this.result);
 
-                    if (toolsPluginEnabled && !visitFlag) {
-                        const annotationsMap = res?.metadata?.annotations;
-                        if (('restrictReadEnable' in annotationsMap) && annotationsMap.restrictReadEnable ===
-                            'true') {
-                            this.visitType = 1;
-                            this.showValidVisitMorePop();
-                        } else if ('unihalo_useVisitMorePwd' in annotationsMap) {
-                            this.visitType = 2;
-                            this.visitPwd = annotationsMap.unihalo_useVisitMorePwd;
-                            this.showValidVisitMorePop();
-                        } else if ('unihalo_useVisitPwd' in annotationsMap) {
-                            this.visitType = 3;
-                            this.visitPwd = annotationsMap.unihalo_useVisitPwd;
-                            this.showValidVisitPop();
-                        } else if (('restrictReadEnable' in annotationsMap) && annotationsMap
-                            .restrictReadEnable === 'password') {
-                            this.visitType = 4;
-                            this.showValidVisitPop();
-                        } else {
-                            this.visitType = 0;
-                            this.showValidVisitMore = false;
-                        }
-                        this.fnHideContent();
-                    } else {
-                        this.showValidVisitMore = false;
+                    if (restrictRead && toolsPluginEnabled) {
+                      const verifyCodeType = getAppConfigs().pluginConfig.toolsPlugin?.verifyCodeType;
+                      if (verifyCodeType === 'scan') {
+                        const scanCodeUrl = getAppConfigs().pluginConfig.toolsPlugin?.scanCodeUrl;
+                        this.verificationCodeModal.type = 'scan';
+                        this.verificationCodeModal.imgUrl = this.$utils.checkImageUrl(scanCodeUrl);
+                        this.verificationCodeModal.model = 'confirm';
+                        this.verificationCodeModal.confirmText = '立即验证';
+                      } else if (verifyCodeType === 'advert') {
+                        const rewardedVideoAdId = getAppConfigs().pluginConfig.toolsPlugin?.rewardedVideoAdId;
+                        this.verificationCodeModal.type = 'advert';
+                        this.verificationCodeModal.adId = rewardedVideoAdId;
+                        this.verificationCodeModal.model = 'dialog';
+                        this.verificationCodeModal.confirmText = '观看视频';
+                        // #ifdef MP-WEIXIN
+                        this.adLoad();
+                        // #endif
+                      }
+
+                      const showableContentArr = getShowableContent(this.result);
+                      this.showContentArr = showableContentArr;
                     }
 
                     this.fnSetPageTitle('文章详情');
@@ -1008,39 +1073,35 @@ export default {
                 url: originalURL
             });
         },
-        showValidVisitPop() {
-            this.showValidVisitMore = true;
-            this.validVisitModal.value = undefined;
-            this.validVisitModal.show = true;
-            this.validVisitModal.useCancel = false;
-        },
-        showValidVisitMorePop() {
-            this.showValidVisitMore = true;
-            this.validVisitModal.value = undefined;
-            this.validVisitModal.show = true;
-            this.validVisitModal.useCancel = true;
-        },
-        closeValidVisitPop() {
-            this.validVisitModal.show = false;
-            this.validVisitModal.useCancel = true;
-            this.validVisitModal.value = undefined;
-            if (this.visitType === 1) {
-                // 显示是否前往获取验证弹窗
-                this.validVisitModal.show = true;
-                this.showGetPassword = true;
-            }
-        },
-        closeAllPop() {
-            this.validVisitModal.show = false;
-            this.validVisitModal.useCancel = true;
-            this.validVisitModal.value = undefined;
-            this.showGetPassword = false;
-        },
-        toAdvertise() {
-            this.showGetPassword = false;
-            uni.navigateTo({
-                url: '/pagesA/advertise/advertise'
+        readMore() {
+          const annotations = this.result?.metadata?.annotations;
+          const restrictReadEnable = annotations?.restrictReadEnable;
+          if (restrictReadEnable === 'password') {
+            this.passwordModal.show = true;
+            return;
+          } else if (restrictReadEnable === 'code') {
+            this.verificationCodeModal.show = true;
+            return;
+          } else if (restrictReadEnable === 'comment') {
+            uni.showToast({
+              title: '前往web端评论后访问',
+              icon: 'none'
             });
+          } else if (restrictReadEnable === 'login') {
+            uni.showToast({
+              title: '前往web端登录后访问',
+              icon: 'none'
+            });
+          } else if (restrictReadEnable === 'pay') {
+            uni.showToast({
+              title: '前往web端支付后访问',
+              icon: 'none'
+            });
+          }
+          // 两秒后执行
+          setTimeout(() => {
+            copyToClipboard(`${HaloTokenConfig.BASE_API + this.result.status.permalink}`);
+          }, 2000);
         },
         //   获取openid
         fnGetOpenid() {
@@ -1058,82 +1119,85 @@ export default {
             })
             // #endif
         },
-        //   隐藏内容
-        fnHideContent() {
-            switch (this.visitType) {
-                case 1:
-                    const restrictReadRaw = this.result?.content?.raw.split('<!-- restrictRead start -->')[0];
-                    this.result.content.raw = restrictReadRaw;
-                    return;
-                case 2:
-                case 3:
-                    const length = this.result?.content?.raw?.length;
-                    const first30PercentLength = Math.floor(length * 0.3);
-                    const first30PercentRaw = this.result?.content?.raw?.substring(0, first30PercentLength);
-                    this.result.content.raw = first30PercentRaw;
-                    return;
-                case 4:
-                    this.result.content.raw = "";
-                    return;
-                default:
-                    return;
-            }
+        restrictReadCheckOrViewVideo() {
+          console.log('restrictReadCheckOrViewVideo', this.verificationCodeModal.type)
+          if (this.verificationCodeModal.type === 'advert') {
+            this.openVideoAd();
+          } else {
+            this.restrictReadCheck();
+          }
         },
         //   校验密码
-        fnValidVisitPwd() {
-            switch (this.visitType) {
-                case 0:
-                    return;
-                case 1:
-                    this.$httpApi.v2.checkPostVerifyCode(this.validVisitModal.value, this.result?.metadata?.name).then(
-                        res => {
-                            if (res.code === 200) {
-                                uni.setStorageSync('visit_' + this.result?.metadata?.name, true)
-                                this.closeAllPop();
-                                this.fnGetData();
-                            } else {
-                                uni.showToast({
-                                    title: '密码错误',
-                                    icon: 'none'
-                                });
-                            }
-                        }).catch(err => {
-                        console.log(err);
-                    });
-                    return;
-                case 2:
-                case 3:
-                    if (this.visitPwd === this.validVisitModal.value) {
-                        uni.setStorageSync('visit_' + this.result?.metadata?.name, true)
-                        this.closeValidVisitPop();
-                        this.fnGetData();
-                    } else {
-                        uni.showToast({
-                            title: '密码错误',
-                            icon: 'none'
-                        });
-                    }
-                    return;
-                case 4:
-                    this.$httpApi.v2.checkPostPasswordAccess(this.validVisitModal.value, this.result?.metadata?.name)
-                        .then(res => {
-                            if (res.code === 200) {
-                                uni.setStorageSync('visit_' + this.result?.metadata?.name, true)
-                                this.closeAllPop();
-                                this.fnGetData();
-                            } else {
-                                uni.showToast({
-                                    title: '密码错误',
-                                    icon: 'none'
-                                });
-                            }
-                        }).catch(err => {
-                        console.log(err);
-                    });
-                    return;
-                default:
-                    return;
-            }
+        restrictReadCheck() {
+          if (!this.restrictReadInputCode) {
+            uni.showToast({
+              title: '请输入内容',
+              icon: 'none'
+            });
+            return;
+          }
+          this.$httpApi.v2.requestRestrictReadCheck(this.result?.metadata?.annotations?.restrictReadEnable, this.restrictReadInputCode, this.result?.metadata?.name)
+              .then(res => {
+                if (res.code === 200) {
+                  this.passwordModal.show = false;
+                  this.verificationCodeModal.show = false;
+                  this.fnGetData();
+                } else {
+                  uni.showToast({
+                    title: '密码错误',
+                    icon: 'none'
+                  });
+                }
+              })
+              .catch(err => {
+                console.error(err);
+              });
+        },
+        adLoad() {
+          if (wx.createRewardedVideoAd) {
+            videoAd = wx.createRewardedVideoAd({
+              adUnitId: this.verificationCodeModal.adId
+            })
+            videoAd.onError(err => {
+            })
+            videoAd.onClose((status) => {
+              if (status && status.isEnded || status === undefined) {
+                //这里写广告播放完成后的事件
+                this.getVerificationCode();
+              } else {
+                // 广告播放未完成
+              }
+            })
+          }
+        },
+        openVideoAd: function () {
+          if (videoAd && this.verificationCodeModal.adId !== '') {
+            videoAd.show().catch(err => {
+              // 失败重试
+              console.log("广告拉取失败")
+              videoAd.load().then(() => videoAd.show())
+            })
+          } else {
+            this.getVerificationCode();
+          }
+        },
+        getVerificationCode() {
+          uni.showLoading({
+            title: '正在获取...'
+          });
+          this.$httpApi.v2.createVerificationCode()
+              .then(res => {
+                if (res.code === 200) {
+                  this.verificationCodeModal.show = false;
+                  this.restrictReadInputCode = res.data;
+                  this.restrictReadCheck();
+                } else {
+                  uni.$tm.toast('操作失败，请重试！');
+                }
+              })
+              .catch(err => {
+                uni.$tm.toast(err.message);
+              });
         },
         async qrCodeImageUrl() {
             const useDynamicQRCode = this.haloConfigs?.appConfig?.appInfo?.useDynamicQRCode;

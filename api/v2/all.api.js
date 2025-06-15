@@ -194,6 +194,7 @@ export default {
         return HttpHandler.Get(`/apis/tools.muyin.site/v1alpha1/restrict-read/create`, null, {
             header: {
                 'Authorization': getAppConfigs().pluginConfig.toolsPlugin?.Authorization,
+                'Wechat-Session-Id': uni.getStorageSync('openid'),
             }
         })
     },

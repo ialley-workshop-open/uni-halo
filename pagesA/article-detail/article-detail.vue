@@ -483,7 +483,11 @@ export default {
                     const restrictRead = checkPostRestrictRead(this.result);
 
                     if (restrictRead && toolsPluginEnabled) {
-                      const verifyCodeType = getAppConfigs().pluginConfig.toolsPlugin?.verifyCodeType;
+                      let verifyCodeType = getAppConfigs().pluginConfig.toolsPlugin?.verifyCodeType;
+                      const postVerifyCodeType = this.result?.metadata?.annotations?.verifyCodeType;
+                      if (postVerifyCodeType) {
+                        verifyCodeType = postVerifyCodeType;
+                      }
                       if (verifyCodeType === 'scan') {
                         const scanCodeUrl = getAppConfigs().pluginConfig.toolsPlugin?.scanCodeUrl;
                         this.verificationCodeModal.type = 'scan';

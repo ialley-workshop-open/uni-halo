@@ -53,7 +53,7 @@
                 <view class="poup pa-36" scroll-y="auto">
                     <view class="info flex">
                         <view class="poup-logo pa-4 shadow-24">
-                            <image :src="blogDetail.blogLogo" class="poup-logo_img" mode="aspectFill"></image>
+                            <image :src="$utils.checkAvatarUrl(blogDetail.blogLogo)" class="poup-logo_img" mode="aspectFill"></image>
                         </view>
                         <view class="pl-24 info-detail">
                             <view class="poup-name text-size-lg text-weight-b">{{ blogDetail.blogName }}</view>
@@ -97,6 +97,7 @@ import tmPoup from '@/tm-vuetify/components/tm-poup/tm-poup.vue'
 import tmImages from '@/tm-vuetify/components/tm-images/tm-images.vue'
 import tmTags from '@/tm-vuetify/components/tm-tags/tm-tags.vue'
 import tmCoupon from '@/tm-vuetify/components/tm-coupon/tm-coupon.vue'
+import $utils from "@/utils";
 
 export default {
     components: {
@@ -128,11 +129,14 @@ export default {
         };
     },
     computed: {
+      $utils() {
+        return $utils
+      },
         haloPluginConfigs(){
             return this.$tm.vx.getters().getConfigs.pluginConfig;
         },
         blogDetail() {
-            return this.haloPluginConfigs.submitLink;
+            return this.haloPluginConfigs.linksSubmitPlugin;
         },
         calcSiteThumbnail(val) {
             return val => {
@@ -147,13 +151,13 @@ export default {
             return `
 				   博客名称：${this.blogDetail.blogName}
 				   博客地址：${this.blogDetail.blogUrl}
-				   博客logo：${this.blogDetail.blogLogo}
+				   博客logo：${$utils.checkAvatarUrl(this.blogDetail.blogLogo)}
 				   博客简介：${this.blogDetail.blogDesc}
 				`
         },
         calcBlogCoupon() {
             return {
-                img: this.blogDetail.blogLogo,
+                img: $utils.checkAvatarUrl(this.blogDetail.blogLogo),
                 title: this.blogDetail.blogName,
                 time: this.blogDetail.blogDesc,
                 btnText: '友链详情'

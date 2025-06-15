@@ -65,7 +65,7 @@
 
             <!-- 返回顶部 -->
             <tm-flotbutton color="light-blue" @click="fnToTopPage" size="m" icon="icon-angle-up"></tm-flotbutton>
-            <tm-flotbutton v-if="haloPluginConfigs.submitLink.enabled" :offset="[16,80]" label="申请"
+            <tm-flotbutton v-if="haloPluginConfigs.linksSubmitPlugin.enabled" :offset="[16,80]" label="申请"
                            actions-pos="left" :show-text="true" color="bg-gradient-orange-accent"
                            @click="toSubmitLinkPage"></tm-flotbutton>
             <!-- 详情弹窗 -->

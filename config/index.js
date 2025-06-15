@@ -8,7 +8,10 @@ export const DefaultAppConfigs = {
     imagesConfig: {},
     authorConfig: {},
     appConfig: {},
-    pluginConfig: {},
+    pluginConfig: {
+        toolsPlugin: {},
+        linksSubmitPlugin: {},
+    },
     pageConfig: {}
 }
 

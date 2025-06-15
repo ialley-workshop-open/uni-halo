@@ -60,7 +60,8 @@ export default {
             loading: 'loading',
             queryParams: {
                 size: 20,
-                page: 1
+                page: 1,
+                fieldSelector: ['spec.hideFromList=false']
             },
             hasNext: false,
             dataList: [],

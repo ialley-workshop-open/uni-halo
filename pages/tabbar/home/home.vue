@@ -23,14 +23,14 @@
         <block v-else>
             <view class="bg-white pb-24">
                 <view class="banner bg-white ml-24 mr-24 mt-12 round-3" v-if="bannerList.length !== 0">
-                    <e-swiper 
+                    <e-swiper
 						height="400rpx"
-						dotPosition="right" 
+						dotPosition="right"
 						:autoplay="true"
-                        :useDot="false" 
+                        :useDot="false"
 						:list="bannerList"
-                        @on-click="fnOnBannerClick" 
-					/>  
+                        @on-click="fnOnBannerClick"
+					/>
                 </view>
             </view>
             <!-- 精品分类 -->
@@ -215,7 +215,7 @@ export default {
 
             this.$httpApi.v2
                 .getCategoryList({
-					fieldSelector:['spec.hideFromList==false']
+					fieldSelector:['spec.hideFromList=false']
 				})
                 .then(res => {
                     this.categoryList = res.items.sort((a, b) => {

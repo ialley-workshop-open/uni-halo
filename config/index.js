@@ -4,6 +4,7 @@ export const _AppMockJsonKey = 'APP_GLOBAL_MOCK_JSON';
 
 // 默认的应用设置
 export const DefaultAppConfigs = {
+    basicConfig: {},
     loveConfig: {},
     imagesConfig: {},
     authorConfig: {},
@@ -12,7 +13,28 @@ export const DefaultAppConfigs = {
         toolsPlugin: {},
         linksSubmitPlugin: {},
     },
-    pageConfig: {}
+    pageConfig: {
+        homeConfig: {
+            pageTitle: "首页",
+            useCategory: true,
+            bannerConfig: {
+                enabled: true,
+                showTitle: true,
+                showIndicator: true,
+                height: "400rpx",
+                dotPosition: "right",
+                type: "post",
+                list: []
+            }
+        }
+    },
+    auditConfig: {
+        auditModeEnabled: false,
+        auditModeData: {
+            jsonUrl: "",
+            jsonData: ""
+        }
+    }
 }
 
 /**

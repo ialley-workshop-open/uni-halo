@@ -19,7 +19,7 @@
                     <view class="catgory-card" :style="{backgroundImage:`url(${item.spec.cover})`}">
                         <view class="content" @click="handleToCategory(item)">
                             <view style="font-size: 32rpx;color: #ffffff;">{{ item.spec.displayName }}</view>
-                            <view v-if="!haloConfigs.basicConfig.auditModeEnabled" style="font-size: 24rpx;color: #ffffff;margin-top: 6rpx;">
+                            <view v-if="!calcAuditModeEnabled" style="font-size: 24rpx;color: #ffffff;margin-top: 6rpx;">
                                 共 {{ item.postCount }} 篇文章
                             </view>
                             <view v-else style="font-size: 24rpx;color: #ffffff;margin-top: 6rpx;">
@@ -73,6 +73,9 @@ export default {
         haloConfigs() {
             return this.$tm.vx.getters().getConfigs;
         },
+        calcAuditModeEnabled(){
+            return this.haloConfigs.auditConfig.auditModeEnabled
+        },
         mockJson() {
             return this.$tm.vx.getters().getMockJson;
         }
@@ -87,7 +90,7 @@ export default {
     },
 
     onReachBottom(e) {
-        if (this.haloConfigs.basicConfig.auditModeEnabled) {
+        if (this.calcAuditModeEnabled) {
             uni.showToast({
                 icon: 'none',
                 title: '没有更多数据了'
@@ -107,7 +110,7 @@ export default {
     },
     methods: {
         fnGetData() {
-            if (this.haloConfigs.basicConfig.auditModeEnabled) {
+            if (this.calcAuditModeEnabled) {
                 this.dataList = this.mockJson.category.list.map((item) => {
                     return {
                         metadata: {
@@ -176,7 +179,7 @@ export default {
             })
         },
         handleToCategory(data) {
-            if (this.haloConfigs.basicConfig.auditModeEnabled) {
+            if (this.calcAuditModeEnabled) {
                 return;
             }
             uni.navigateTo({

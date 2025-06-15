@@ -14,8 +14,10 @@ export default {
     },
     onLoad(e) {
         const {title, url} = JSON.parse(e.query.data);
-        this.webUrl = url;
-        this.fnSetPageTitle(title);
+        this.webUrl = decodeURIComponent(url);
+        if (title) {
+            this.fnSetPageTitle(title);
+        }
     }
 };
 </script>

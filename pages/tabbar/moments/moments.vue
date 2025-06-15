@@ -107,7 +107,10 @@ export default {
         },
         mockJson() {
             return this.$tm.vx.getters().getMockJson;
-        }
+        },
+        calcAuditModeEnabled() {
+            return this.haloConfigs.auditConfig.auditModeEnabled
+        },
     },
 
     onLoad() {
@@ -120,7 +123,7 @@ export default {
     },
 
     onReachBottom(e) {
-        if (this.haloConfigs.basicConfig.auditModeEnabled) {
+        if (this.calcAuditModeEnabled) {
             uni.showToast({
                 icon: 'none',
                 title: '没有更多数据了'
@@ -140,7 +143,7 @@ export default {
     },
     methods: {
         fnGetData() {
-            if (this.haloConfigs.basicConfig.auditModeEnabled) {
+            if (this.calcAuditModeEnabled) {
                 this.dataList = this.mockJson.moments.list.map((item) => {
                     return {
                         metadata: {

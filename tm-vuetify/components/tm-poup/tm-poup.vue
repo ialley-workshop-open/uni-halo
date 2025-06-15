@@ -15,13 +15,13 @@
 				<!-- <view class="tm-poup-wk bottom">{{ show ? 'on' : 'off'}}</view> -->
 				<scroll-view :animation="aniData" @click.stop.prevent="" class="tm-poup-wk dhshiKa" scroll-y="true" :class="[
 							position_sv == 'top'?'round-b-' + round:'',
-							position_sv == 'bottom'?'round-t-' + round:'', 
-							position_sv, aniOn ? 'on ' : 'off', 
+							position_sv == 'bottom'?'round-t-' + round:'',
+							position_sv, aniOn ? 'on ' : 'off',
 							black_tmeme ? 'grey-darken-5 bk' : bgColor
 						]" :style="{
 							width: (position_sv == 'top' || position_sv == 'bottom') ? '100%' : width_w,
 							height: position_sv == 'right' || position_sv == 'left' ?'100%' : height_h,
-							
+
 						}">
 					<view :class="[clssStyle]" >
 						<slot></slot>
@@ -178,7 +178,7 @@
 				dhshiKa:true,//是否结束动画
 				aniData:null,
 				timdiiid:6369784254,
-				
+
 			};
 		},
 		deactivated() {
@@ -198,7 +198,7 @@
 				this.close();
 			},
 			close() {
-				let t = this;	
+				let t = this;
 				clearTimeout(this.timdiiid)
 				this.dhshiKa=false;
 				t.aniOn=false;
@@ -213,18 +213,18 @@
 			open() {
 				let t = this;
 				clearTimeout(this.timdiiid)
-				
-				
+
+
 				this.dhshiKa=false
 				this.aniOn=true;
-				
+
 				this.createBtT(this.position_sv,'on').then(()=>{
 					t.dhshiKa=true
-					
+
 					t.isclick=false
 					// console.log('on');
 				})
-				
+
 			},
 			//下至上。
 			createBtT(pos,type){
@@ -239,60 +239,60 @@
 					if(type=='on'){
 						aniData.translateY('0%').step();
 						this.aniData = aniData.export()
-						
+
 					}
 					if(type=='off'){
 						aniData.translateY('100%').step();
 						this.aniData = aniData.export()
-						
+
 					}
 				}else if(pos=='top'){
 					if(type=='on'){
 						aniData.translateY('0%').step();
 						this.aniData = aniData.export()
-						
+
 					}
 					if(type=='off'){
 						aniData.translateY('-100%').step();
 						this.aniData = aniData.export()
-						
+
 					}
 				}else if(pos=='left'){
 					if(type=='on'){
 						aniData.translateX('0%').step();
 						this.aniData = aniData.export()
-						
+
 					}
 					if(type=='off'){
 						aniData.translateX('-100%').step();
 						this.aniData = aniData.export()
-						
+
 					}
 				}else if(pos=='right'){
 					if(type=='on'){
 						aniData.translateX('0%').step();
 						this.aniData = aniData.export()
-						
+
 					}
 					if(type=='off'){
 						aniData.translateX('100%').step();
 						this.aniData = aniData.export()
-						
+
 					}
 				}else if(pos=='center'){
-					
+
 					if(type=='on'){
 						aniData.opacity(1).scale(1).step();
 						this.aniData = aniData.export()
-						
+
 					}
 					if(type=='off'){
 						aniData.opacity(0).scale(0.6).step();
 						this.aniData = aniData.export()
-						
+
 					}
 				}
-				
+
 				return new Promise(res=>{
 					t.timdiiid = setTimeout(()=>{
 						t.aniData = null;
@@ -319,7 +319,7 @@
 		overflow: hidden;
 		top: 0;
 		left: 0;
-		
+
 		&.isClickbled {
 			pointer-events: none;
 		}
@@ -346,7 +346,7 @@
 				transform: translateY(100%);
 				width: 100%;
 				bottom: 0;
-				
+
 			}
 
 			&.top {
@@ -382,7 +382,7 @@
 			justify-content: center;
 			align-items: center;
 			align-content: center;
-			
+
 
 			.tm-poup-wk {
 				position: static;

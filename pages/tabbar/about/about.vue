@@ -152,7 +152,9 @@ export default {
         },
         copyrightConfig() {
             return this.haloConfigs.basicConfig.copyrightConfig;
-        }
+        }, calcAuditModeEnabled() {
+            return this.haloConfigs.auditConfig.auditModeEnabled
+        },
     },
     watch: {
         haloConfigs: {
@@ -180,10 +182,10 @@ export default {
             this.navList = [
                 {
                     key: 'archives',
-                    title: this.haloConfigs.basicConfig.auditModeEnabled ? '内容归档' : '文章归档',
+                    title: this.calcAuditModeEnabled ? '内容归档' : '文章归档',
                     leftIcon: 'halocoloricon-classify',
                     leftIconColor: 'red',
-                    rightText: this.haloConfigs.basicConfig.auditModeEnabled ? '已归档的内容' : '已归档的文章',
+                    rightText: this.calcAuditModeEnabled ? '已归档的内容' : '已归档的文章',
                     path: '/pagesA/archives/archives',
                     isAdmin: false,
                     type: 'page',
@@ -396,7 +398,7 @@ export default {
                     url: '/pagesC/website/website?data=' +
                         JSON.stringify({
                             title: item.text || this.$haloConfig.title,
-                            url: item.path
+                            url: encodeURIComponent(item.path)
                         })
                 });
                 return;

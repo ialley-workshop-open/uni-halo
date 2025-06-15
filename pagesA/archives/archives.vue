@@ -18,7 +18,7 @@
         <!-- 加载完成区域 -->
         <block v-else>
             <view v-if="dataList.length === 0" class="list-empty flex flex-center">
-                <tm-empty v-if="haloConfigs.basicConfig.auditModeEnabled" icon="icon-shiliangzhinengduixiang-" label="暂无归档的内容"></tm-empty>
+                <tm-empty v-if="calcAuditModeEnabled" icon="icon-shiliangzhinengduixiang-" label="暂无归档的内容"></tm-empty>
                 <tm-empty v-else icon="icon-shiliangzhinengduixiang-" label="暂无归档的文章"></tm-empty>
             </view>
             <view v-else class="e-timeline tm-timeline mt-24">
@@ -37,7 +37,7 @@
                                 <view class="flex time text-weight-b mb-24">
                                     <text>{{ item.year }}年</text>
                                     <text v-if="tab.activeIndex === 0">{{ item.month }}月</text>
-                                    <view v-if="haloConfigs.basicConfig.auditModeEnabled" class="text-size-s text-grey-darken-1 ml-12">
+                                    <view v-if="calcAuditModeEnabled" class="text-size-s text-grey-darken-1 ml-12">
                                         （共 {{ item.posts.length }} 篇内容）
                                     </view>
                                     <view v-else class="text-size-s text-grey-darken-1 ml-12">
@@ -128,7 +128,10 @@ export default {
         },
         mockJson() {
             return this.$tm.vx.getters().getMockJson;
-        }
+        },
+        calcAuditModeEnabled() {
+            return this.haloConfigs.auditConfig.auditModeEnabled
+        },
     },
     created() {
         this.fnGetData();
@@ -139,7 +142,7 @@ export default {
         this.fnGetData();
     },
     onReachBottom(e) {
-        if (this.haloConfigs.basicConfig.auditModeEnabled) {
+        if (this.calcAuditModeEnabled) {
             uni.showToast({
                 icon: 'none',
                 title: '没有更多数据了'
@@ -165,7 +168,7 @@ export default {
             this.fnToTopPage();
         },
         fnGetData() {
-            if (this.haloConfigs.basicConfig.auditModeEnabled) {
+            if (this.calcAuditModeEnabled) {
                 const dataList = this.mockJson.archives.list.map(item => {
                     const date = new Date(item.time)
                     const year = date.getFullYear()
@@ -353,7 +356,7 @@ export default {
             });
         },
         fnToArticleDetail(article) {
-            if (this.haloConfigs.basicConfig.auditModeEnabled) {
+            if (this.calcAuditModeEnabled) {
                 return;
             }
             uni.navigateTo({

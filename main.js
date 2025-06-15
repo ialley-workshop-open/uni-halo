@@ -4,6 +4,7 @@ import Vue from "vue";
 // 挂载全局工具类
 import utils from "./utils/index.js";
 Vue.prototype.$utils = utils;
+uni.$utils = utils;
 
 // 全局统一样式的对话框
 import Fy from '@/js_sdk/fy-showModal/index.js'

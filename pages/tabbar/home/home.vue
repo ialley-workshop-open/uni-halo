@@ -21,16 +21,18 @@
             <tm-skeleton model="listAvatr"></tm-skeleton>
         </view>
         <block v-else>
-            <view class="bg-white pb-24">
+            <view v-if="bannerConfig.enabled" class="bg-white pb-24">
                 <view class="banner bg-white ml-24 mr-24 mt-12 round-3" v-if="bannerList.length !== 0">
                     <e-swiper
-						height="400rpx"
-						dotPosition="right"
-						:autoplay="true"
-                        :useDot="false"
-						:list="bannerList"
+                        :height="bannerConfig.height"
+                        :dotPosition="bannerConfig.dotPosition"
+                        :autoplay="true"
+                        :useDot="bannerConfig.showIndicator"
+                        :showTitle="bannerConfig.showTitle"
+                        :type="bannerConfig.type"
+                        :list="bannerList"
                         @on-click="fnOnBannerClick"
-					/>
+                    />
                 </view>
             </view>
             <!-- 精品分类 -->
@@ -86,6 +88,11 @@
                                icon="icon-angle-up"></tm-flotbutton>
             </block>
         </block>
+
+
+        <!-- 弹窗 -->
+        <NotifyDialog v-if="notify.show" :show="notify.show" :title="notify.data.title" :content="notify.data.content"
+                      :url="notify.data.url" @on-change="fnOnNotifyChange"></NotifyDialog>
     </view>
 </template>
 
@@ -98,6 +105,7 @@ import tmIcons from '@/tm-vuetify/components/tm-icons/tm-icons.vue';
 import tmEmpty from '@/tm-vuetify/components/tm-empty/tm-empty.vue';
 
 import eSwiper from '@/components/e-swiper/e-swiper.vue';
+import NotifyDialog from "@/components/notify-dialog/notify-dialog.vue";
 import qs from 'qs'
 
 export default {
@@ -108,7 +116,8 @@ export default {
         tmFlotbutton,
         tmIcons,
         tmEmpty,
-        eSwiper
+        eSwiper,
+        NotifyDialog
     },
     data() {
         return {
@@ -126,6 +135,10 @@ export default {
             noticeList: [],
             articleList: [],
             categoryList: [],
+            notify: {
+                show: false,
+                data: {}
+            }
         };
     },
     computed: {
@@ -145,14 +158,20 @@ export default {
         mockJson() {
             return this.$tm.vx.getters().getMockJson;
         },
+        calcAuditModeEnabled() {
+            return this.haloConfigs.auditConfig.auditModeEnabled
+        },
         calcIsShowCategory() {
-            if (this.haloConfigs.basicConfig.auditModeEnabled && this.categoryList.length !== 0) {
+            if (this.calcAuditModeEnabled && this.categoryList.length !== 0) {
                 return false
             }
-            if (this.haloConfigs.basicConfig.auditModeEnabled) {
+            if (this.calcAuditModeEnabled) {
                 return false
             }
             return this.haloConfigs.pageConfig.homeConfig.useCategory
+        },
+        bannerConfig() {
+            return this.haloConfigs.pageConfig.homeConfig.bannerConfig
         }
     },
     onLoad() {
@@ -167,7 +186,7 @@ export default {
         this.fnQuery();
     },
     onReachBottom(e) {
-        if (this.haloConfigs.basicConfig.auditModeEnabled) {
+        if (this.calcAuditModeEnabled) {
             uni.showToast({
                 icon: 'none',
                 title: '没有更多数据了'
@@ -187,13 +206,12 @@ export default {
     },
     methods: {
         fnQuery() {
-            console.log('this.mockJson', this.mockJson)
             this.fnGetBanner();
             this.fnGetArticleList();
             this.fnGetCategoryList();
         },
         fnGetCategoryList() {
-            if (this.haloConfigs.basicConfig.auditModeEnabled) {
+            if (this.calcAuditModeEnabled) {
                 this.categoryList = this.mockJson.home.categoryList.map((item) => {
                     return {
                         metadata: {
@@ -215,8 +233,8 @@ export default {
 
             this.$httpApi.v2
                 .getCategoryList({
-					fieldSelector:['spec.hideFromList=false']
-				})
+                    fieldSelector: ['spec.hideFromList=false']
+                })
                 .then(res => {
                     this.categoryList = res.items.sort((a, b) => {
                         return b.postCount - a.postCount;
@@ -239,7 +257,7 @@ export default {
         },
         // 获取轮播图
         fnGetBanner() {
-            if (this.haloConfigs.basicConfig.auditModeEnabled) {
+            if (this.calcAuditModeEnabled) {
                 this.bannerList = this.mockJson.home.bannerList.map((item) => {
                     return {
                         mp4: '',
@@ -250,27 +268,37 @@ export default {
                         createTime: item.time,
                         title: item.title,
                         src: this.$utils.checkThumbnailUrl(item.cover),
-                        image: this.$utils.checkThumbnailUrl(item.cover)
+                        image: this.$utils.checkThumbnailUrl(item.cover),
+                        type: "custom",
+                        content: "",
+                        url: ""
                     }
                 });
                 return;
             }
-            const _this = this;
-            const _format = function (list) {
-                return list.map((item, index) => {
+
+
+            if (!this.bannerConfig.enabled) return;
+
+            if (this.bannerConfig.type === 'custom') {
+                this.bannerList = this.bannerConfig.list.map((item) => {
                     return {
                         mp4: '',
-                        id: item.metadata.name,
-                        nickname: item.owner.displayName,
-                        avatar: _this.$utils.checkAvatarUrl(item.owner.avatar),
+                        id: Date.now() * Math.random(),
+                        nickname: this.haloConfigs.authorConfig.blogger.nickname,
+                        avatar: this.$utils.checkAvatarUrl(this.haloConfigs.authorConfig.blogger.avatar),
                         address: '',
-                        createTime: uni.$tm.dayjs(item.spec.publishTime).fromNow(),
-                        title: item.spec.title,
-                        src: _this.$utils.checkThumbnailUrl(item.spec.cover),
-                        image: _this.$utils.checkThumbnailUrl(item.spec.cover)
-                    };
-                });
-            };
+                        createTime: "",
+                        title: item.title,
+                        src: this.$utils.checkThumbnailUrl(item.cover),
+                        image: this.$utils.checkThumbnailUrl(item.cover),
+                        type: "custom",
+                        content: item.content,
+                        url: item.url
+                    }
+                })
+                return;
+            }
 
             const paramsStr = qs.stringify(this.queryParams, {
                 allowDots: true,
@@ -283,20 +311,53 @@ export default {
                 url: this.$baseApiUrl + '/apis/api.content.halo.run/v1alpha1/posts?' + paramsStr,
                 method: 'GET',
                 success: (res) => {
-                    this.bannerList = _format(res.data.items);
+                    this.bannerList = res.data.items.map((item, index) => {
+                        return {
+                            mp4: '',
+                            id: item.metadata.name,
+                            nickname: item.owner.displayName,
+                            avatar: this.$utils.checkAvatarUrl(item.owner.avatar),
+                            address: '',
+                            createTime: uni.$tm.dayjs(item.spec.publishTime).fromNow(),
+                            title: item.spec.title,
+                            src: this.$utils.checkThumbnailUrl(item.spec.cover),
+                            image: this.$utils.checkThumbnailUrl(item.spec.cover),
+                            type: "post",
+                            content: item.status.excerpt,
+                            url: ""
+                        };
+                    });
                 },
                 fail: (err) => {
                 }
             })
 
         },
-        fnOnBannerChange(e) {
-            this.bannerCurrent = e.current;
+        fnOnNotifyChange(e) {
+            this.notify.show = e;
         },
         fnOnBannerClick(item) {
-            if (this.haloConfigs.basicConfig.auditModeEnabled) {
+            if (this.calcAuditModeEnabled) {
                 return;
             }
+            if (item.type === 'custom') {
+                if (item.content) {
+                    this.notify.data = item
+                    this.notify.show = true
+                    return;
+                }
+                if (uni.$utils.checkIsUrl(item.url)) {
+                    uni.navigateTo({
+                        url: '/pagesC/website/website?data=' +
+                            JSON.stringify({
+                                title: item.title || "加载中...",
+                                url: encodeURIComponent(item.url)
+                            })
+                    });
+                }
+                return;
+            }
+
             if (item.id === '') return;
             this.fnToArticleDetail({
                 metadata: {
@@ -306,7 +367,7 @@ export default {
         },
         // 文章列表
         fnGetArticleList() {
-            if (this.haloConfigs.basicConfig.auditModeEnabled) {
+            if (this.calcAuditModeEnabled) {
                 this.articleList = this.mockJson.home.postList.map((item) => {
                     return {
                         metadata: {
@@ -371,7 +432,7 @@ export default {
         },
         //跳转文章详情
         fnToArticleDetail(article) {
-            if (this.haloConfigs.basicConfig.auditModeEnabled) {
+            if (this.calcAuditModeEnabled) {
                 return;
             }
             uni.navigateTo({
@@ -409,7 +470,7 @@ export default {
 
         // 根据slug查询分类下的文章
         fnToCategoryBy(category) {
-            if (this.haloConfigs.basicConfig.auditModeEnabled) {
+            if (this.calcAuditModeEnabled) {
                 return;
             }
             uni.navigateTo({

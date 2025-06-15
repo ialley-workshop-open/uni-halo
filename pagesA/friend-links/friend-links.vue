@@ -166,7 +166,10 @@ export default {
                 }
                 return 'https://image.thum.io/get/width/1000/crop/800/' + val;
             };
-        }
+        },
+        calcAuditModeEnabled() {
+            return this.haloConfigs.auditConfig.auditModeEnabled
+        },
     },
     onLoad() {
         this.fnSetPageTitle('友情链接');
@@ -210,8 +213,8 @@ export default {
             return this.linkGroupList.find(item => item.metadata.name === groupName)?.spec?.displayName || groupName || "未分组"
         },
         fnGetData() {
-            if (this.haloConfigs.basicConfig.auditModeEnabled) {
-              return;
+            if (this.calcAuditModeEnabled) {
+                return;
             }
             if (!this.isLoadMore) {
                 this.loading = 'loading';

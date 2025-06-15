@@ -100,7 +100,10 @@ export default {
         },
         mockJson() {
             return this.$tm.vx.getters().getMockJson;
-        }
+        },
+        calcAuditModeEnabled(){
+            return this.haloConfigs.auditConfig.auditModeEnabled
+        },
     },
     watch: {
         galleryConfig: {
@@ -120,7 +123,7 @@ export default {
         this.fnGetData(true);
     },
     onReachBottom(e) {
-        if (this.haloConfigs.basicConfig.auditModeEnabled) {
+        if (this.calcAuditModeEnabled) {
             uni.showToast({
                 icon: 'none',
                 title: '没有更多数据了'
@@ -148,7 +151,7 @@ export default {
             this.fnGetData(true);
         },
         fnGetCategory() {
-            if (this.haloConfigs.basicConfig.auditModeEnabled) {
+            if (this.calcAuditModeEnabled) {
                 this.fnGetData(true);
                 return
             }
@@ -169,7 +172,7 @@ export default {
             });
         },
         fnGetData(isClearWaterfall = false) {
-            if (this.haloConfigs.basicConfig.auditModeEnabled) {
+            if (this.calcAuditModeEnabled) {
                 this.dataList = this.mockJson.gallery.list.map(item => {
                     return {
                         metadata: {

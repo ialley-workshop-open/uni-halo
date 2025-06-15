@@ -43,7 +43,7 @@
 						</view>
 					</view>
 					<view class="right-hot-ttf">
-						<text class="text hot-text">{{ title }}</text>
+						<text class="text hot-text text-overflow-2">{{ title }}</text>
 					</view>
 				</view>
 			</view>
@@ -63,7 +63,7 @@
 						</view>
 						<!-- 标题 -->
 						<view class="Top-Title">
-							<text class="text title-text">{{ item.title }}</text>
+							<text class="text title-text text-overflow-2">{{ item.title }}</text>
 						</view>
 						<!-- 用户信息 -->
 						<view v-if="false" class="Bottom-UserInfo">

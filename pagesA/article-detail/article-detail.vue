@@ -1067,7 +1067,7 @@ export default {
                 url: '/pagesC/website/website?data=' +
                     JSON.stringify({
                         title: data.title,
-                        url: data.url
+                        url: encodeURIComponent(data.url)
                     })
             });
         },

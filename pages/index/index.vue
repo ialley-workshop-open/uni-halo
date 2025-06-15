@@ -31,8 +31,15 @@ export default {
             // #endif
 
             // 获取mockjson
-            if (res.basicConfig.auditModeEnabled) {
-                await uni.$tm.vx.actions('config/fetchMockJson')
+            if (res.auditConfig.auditModeEnabled) {
+                if (res.auditConfig.auditModeData.jsonUrl) {
+                    await uni.$tm.vx.actions('config/fetchMockJson')
+                } else {
+                    const mockJson = uni.$utils.checkJsonAndParse(res.auditConfig.auditModeData.jsonData)
+                    if (mockJson.ok) {
+                        uni.$tm.vx.commit('config/setMockJson', mockJson.jsonData)
+                    }
+                }
             }
 
             // 进入检查

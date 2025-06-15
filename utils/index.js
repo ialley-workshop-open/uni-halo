@@ -160,6 +160,24 @@ const utils = {
             urls: list,
             loop: true
         })
+    },
+    /**
+     * 检查是否为json字符串
+     * @param {Object} jsonStr 数据源
+     */
+    checkJsonAndParse(jsonStr) {
+        try {
+            const jsonResult = JSON.parse(jsonStr);
+            return {
+                ok: true,
+                jsonData: jsonResult,
+            }
+        } catch (e) {
+            return {
+                ok: false,
+                jsonData: {},
+            }
+        }
     }
 };
 

@@ -26,6 +26,9 @@ export const DefaultAppConfigs = {
                 type: "post",
                 list: []
             }
+        },
+        categoryConfig: {
+            type: "list"
         }
     },
     auditConfig: {

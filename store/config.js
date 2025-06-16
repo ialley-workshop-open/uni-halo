@@ -5,7 +5,7 @@
  *  时间：2024年06月22日 12:00:44
  *  版本：v0.1.0
  */
-import {DefaultAppConfigs, getAppConfigs, setAppConfigs,setAppMockJson,getAppMockJson} from '@/config/index.js'
+import {DefaultAppConfigs, getAppConfigs, getAppMockJson, setAppConfigs, setAppMockJson} from '@/config/index.js'
 import v2Config from '@/api/v2/all.config.js'
 import utils from '@/utils/index.js'
 
@@ -21,7 +21,7 @@ export default {
             return getAppConfigs()
         },
         getMockJson(state) {
-            if(state.mockJson) return state.mockJson;
+            if (state.mockJson) return state.mockJson;
             return getAppMockJson()
         }
     },
@@ -36,12 +36,12 @@ export default {
         }
     },
     actions: {
-        fetchConfigs({commit, dispatch}) {
+        fetchConfigs({state, commit, dispatch}) {
             return new Promise(async (resolve, reject) => {
                 try {
                     const res = await v2Config.getAppConfigs()
                     if (res) {
-                        commit('setConfigs', res)
+                        commit('setConfigs', utils.deepMerge(DefaultAppConfigs, res))
                         resolve(res)
                     } else {
                         dispatch("setDefaultAppSettings");
@@ -65,7 +65,6 @@ export default {
                     url: mockJsonUrl,
                     method: "GET",
                     success: (res) => {
-                        console.log("mockJson", res.data)
                         commit('setMockJson', res.data)
                         resolve({
                             ok: true,

@@ -178,7 +178,30 @@ const utils = {
                 jsonData: {},
             }
         }
+    },
+    isObject(obj) {
+        return obj && typeof obj === 'object' && !Array.isArray(obj);
+    },
+    deepMerge(target, source) {
+        let output = Object.assign({}, target);
+
+        if (this.isObject(target) && this.isObject(source)) {
+            Object.keys(source).forEach(key => {
+                const targetValue = target[key];
+                const sourceValue = source[key];
+
+                if (Array.isArray(targetValue) && Array.isArray(sourceValue)) {
+                    output[key] = targetValue.concat(sourceValue);
+                } else if (this.isObject(targetValue) && this.isObject(sourceValue)) {
+                    output[key] = this.deepMerge(targetValue, sourceValue);
+                } else {
+                    output[key] = sourceValue;
+                }
+            });
+        }
+        return output;
     }
+
 };
 
 

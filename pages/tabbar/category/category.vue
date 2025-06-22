@@ -25,9 +25,6 @@
                                       style="font-size: 24rpx;color: #ffffff;margin-top: 6rpx;">
                                     共 {{ item.postCount }} 篇文章
                                 </view>
-                                <view v-else style="font-size: 24rpx;color: #ffffff;margin-top: 6rpx;">
-                                    共 {{ item.postCount }} 篇内容
-                                </view>
                             </view>
                         </view>
                     </tm-translate>
@@ -442,6 +439,7 @@ export default {
         right: 0;
         bottom: 0;
         background-color: rgba(0, 0, 0, 0.15);
+		backdrop-filter: blur(3rpx);
         z-index: 1;
     }
 }

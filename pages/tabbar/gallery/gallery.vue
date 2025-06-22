@@ -2,7 +2,7 @@
     <view class="app-page">
         <!-- 顶部切换 -->
         <view class="e-fixed" v-if="category.list.length > 0">
-            <tm-tabs color="light-blue" v-model="category.activeIndex" range-key="displayName" :list="category.list"
+            <tm-tabs color="light-blue" :shadow="0" v-model="category.activeIndex" range-key="displayName" :list="category.list"
                      align="left" @change="fnOnCategoryChange"></tm-tabs>
         </view>
         <!-- 占位区域 -->

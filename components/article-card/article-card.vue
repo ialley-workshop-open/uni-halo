@@ -66,7 +66,7 @@
 		display: flex;
 		box-sizing: border-box;
 		margin: 0 24rpx;
-		padding: 24rpx;
+		padding:22rpx 24rpx;
 		border-radius: 12rpx;
 		background-color: #ffff;
 		box-shadow: 0rpx 2rpx 24rpx rgba(0, 0, 0, 0.03);

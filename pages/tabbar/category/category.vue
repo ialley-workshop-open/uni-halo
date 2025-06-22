@@ -14,7 +14,7 @@
                 <tm-empty icon="icon-shiliangzhinengduixiang-" label="暂无数据"></tm-empty>
             </view>
             <block v-else>
-                <block v-if="calcShowType==='list'">
+                <block v-if="calcAuditModeEnabled || calcShowType==='list'">
                     <tm-translate v-for="(item, index) in dataList" :key="index"
                                   style="box-sizing: border-box;width: 50%;padding: 0 8rpx;" animation-name="fadeUp"
                                   :wait="calcAniWait(index)">
@@ -58,7 +58,7 @@
                 <view class="flot-buttons">
                     <tm-button @click="fnScrollTop" size="m" :fab="true" theme="light-blue"
                                icon="icon-angle-up"></tm-button>
-                    <tm-button @click="fnChangeShowType" size="m" :fab="true" theme="light-blue"
+                    <tm-button v-if="!calcAuditModeEnabled" @click="fnChangeShowType" size="m" :fab="true" theme="light-blue"
                                :icon="calcShowType==='list'?'icon-align-left':'icon-all'"></tm-button>
                 </view>
             </block>

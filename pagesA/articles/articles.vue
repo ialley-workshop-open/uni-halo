@@ -1,7 +1,7 @@
 <template>
     <view class="app-page" :class="{ 'is-balck grey-darken-6': isBlackTheme }">
         <!-- 顶部切换 -->
-        <view class="e-fixed shadow-2">
+        <view class="e-fixed shadow-1">
             <tm-search v-model="queryParams.keyword" :round="24" :shadow="0" color="light-blue"
                        insert-color="light-blue" :clear="true" @input="fnOnSearch" @confirm="fnOnSearch"></tm-search>
             <tm-tabs v-if="false" color="light-blue" :shadow="0" v-model="tab.activeIndex" :list="tab.list"
@@ -10,12 +10,15 @@
         <!-- 占位区域 -->
         <view style="width: 100vw;height: 100rpx;"></view>
         <!-- 加载区域 -->
-        <view v-if="loading != 'success'" class="loading-wrap pa-24">
+        <view v-if="loading == 'loading'" class="loading-wrap pa-24">
             <tm-skeleton model="listAvatr"></tm-skeleton>
             <tm-skeleton model="listAvatr"></tm-skeleton>
             <tm-skeleton model="listAvatr"></tm-skeleton>
             <tm-skeleton model="listAvatr"></tm-skeleton>
         </view>
+		<view v-else-if="loading == 'error'" class="content-empty flex flex-center">
+			<tm-empty icon="icon-wind-cry" label="搜索异常"></tm-empty>
+		</view>
         <!-- 内容区域 -->
         <view v-else class="content">
             <view v-if="dataList.length == 0" class="content-empty flex flex-center">
@@ -32,7 +35,7 @@
                         <rich-text style="font-size: 32rpx;font-weight: bold;color: #333;"
                                    :nodes="article.title"></rich-text>
                         <rich-text style="font-size: 28rpx;margin-top: 16rpx;color: #555;"
-                                   :nodes="article.content"></rich-text>
+                                   :nodes="article.description"></rich-text>
                         <text style="font-size: 24rpx;margin-top: 24rpx;color:#888">
                             最近更新：{{ {d: article.updateTimestamp, f: 'yyyy年MM月dd日 HH点mm分ss秒'} | formatTime }}
                         </text>
@@ -111,15 +114,6 @@ export default {
         fnOnTabChange(index) {
             this.fnResetSetAniWaitIndex();
             this.dataList = [];
-            const _sorts = {
-                0: '',
-                1: 'topPriority,createTime,desc',
-                2: 'topPriority,visits,desc',
-                3: 'topPriority,updateTime,desc',
-                4: 'topPriority,likes,desc'
-            };
-            this.queryParams.sort = _sorts[index];
-            this.dataList = [];
             this.fnToTopPage();
             this.fnGetData();
         },
@@ -182,13 +176,13 @@ export default {
 }
 
 .content {
-    padding-top: 24rpx;
-
-    .content-empty {
-        height: 60vh;
-    }
+    padding-top: 24rpx; 
 }
 
+.content-empty {
+    height: 60vh;
+}
+	
 .article-card {
     display: flex;
     flex-direction: column;

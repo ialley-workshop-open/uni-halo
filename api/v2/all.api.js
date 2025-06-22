@@ -35,7 +35,8 @@ export default {
      * @param {Object} params 数据
      */
     getPostListByKeyword: (params) => {
-        return HttpHandler.Get(`/apis/api.halo.run/v1alpha1/indices/post`, params)
+        // return HttpHandler.Get(`/apis/api.halo.run/v1alpha1/indices/post`, params)
+        return HttpHandler.Post(`/apis/api.halo.run/v1alpha1/indices/-/search`, params)
     },
 
     /**

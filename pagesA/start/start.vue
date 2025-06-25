@@ -40,7 +40,7 @@
 			</view>
 		</view>
 
-		<video v-else class="video-bg" :object-fit="startConfig.bgVideoFit" :src="startConfig.bgVideo" :loop="true"
+		<video v-else class="video-bg" :object-fit="startConfig.bgVideoFit" :src="$utils.checkUrl(startConfig.bgVideo)" :loop="true"
 			:autoplay="true" :muted="true" :controls="false" :show-fullscreen-btn="false" :show-play-btn="false"
 			:show-center-play-btn="false" :show-loading="false" :enable-progress-gesture="false"
 			:show-progress="false"></video>

@@ -12,11 +12,11 @@
 
 /**
  * 指定范围生成随机数
- * @param {Number} m
- * @param {Number} n
- * @return {Number}
+ * @param {Number} m 最小值（包含）
+ * @param {Number} n 最大（不包含）
+ * @return {Number} 随机值
  */
-export function GetRandomNumberByRange(m, n) {
+export function getRandomNumberByRange(m, n) {
 	return Math.floor(Math.random() * (m - n) + n);
 }
 
@@ -26,10 +26,10 @@ export function GetRandomNumberByRange(m, n) {
  * @param {*} min 最小值
  * @param {*} max 最大值
  */
-export function GetRandomNumberArray(len, min, max) {
+export function getRandomNumberArray(len, min, max) {
 	let arr = [];
 	for (let index = 0; index < len; index++) {
-		arr.push(GetRandomNumberByRange(min, max));
+		arr.push(getRandomNumberByRange(min, max));
 	}
 	return arr;
 }

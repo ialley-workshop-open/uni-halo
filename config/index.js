@@ -29,6 +29,9 @@ export const DefaultAppConfigs = {
         },
         categoryConfig: {
             type: "list"
+        },
+        momentConfig: {
+            useTagRandomColor: true
         }
     },
     auditConfig: {

@@ -34,7 +34,7 @@
                                 <mp-html class="evan-markdown" lazy-load :domain="markdownConfig.domain"
                                          :loading-img="markdownConfig.loadingGif" :scroll-table="true" :selectable="true"
                                          :tag-style="markdownConfig.tagStyle" :container-style="markdownConfig.containStyle"
-                                         :content="moment.spec.content.html" :markdown="true" :showLineNumber="true"
+                                         :content="moment.spec.newHtml" :markdown="true" :showLineNumber="true"
                                          :showLanguageName="true" :copyByLongPress="true"/>
                             </view>
                             <view class="mb-12 mt--12" v-if="moment.videos.length!==0"
@@ -54,6 +54,13 @@
                                            @click="handlePreview(mediumIndex,moment.images)"/>
                                 </view>
                             </view>
+                            <view v-if="moment.spec.tags && moment.spec.tags.length!==0" class="px-20 pb-24 flex flex-wrap">
+                                <tm-tags
+                                    v-for="(tag,tagIndex) in moment.spec.tags" :key="tagIndex"
+                                    :color="randomTagColor()" size="m" model="text">
+                                    {{ tag }}
+                                </tm-tags>
+                            </view>
                         </view>
                     </tm-translate>
                 </block>
@@ -69,9 +76,11 @@ import tmSkeleton from '@/tm-vuetify/components/tm-skeleton/tm-skeleton.vue';
 import tmFlotbutton from '@/tm-vuetify/components/tm-flotbutton/tm-flotbutton.vue';
 import tmTranslate from '@/tm-vuetify/components/tm-translate/tm-translate.vue';
 import tmEmpty from '@/tm-vuetify/components/tm-empty/tm-empty.vue';
+import tmTags from '@/tm-vuetify/components/tm-tags/tm-tags.vue';
 
 import MarkdownConfig from '@/common/markdown/markdown.config.js';
 import mpHtml from '@/components/mp-html/components/mp-html/mp-html.vue';
+import {getRandomNumberByRange} from "@/utils/random.js"
 
 export default {
     components: {
@@ -79,6 +88,7 @@ export default {
         tmFlotbutton,
         tmTranslate,
         tmEmpty,
+        tmTags,
         mpHtml
     },
     data() {
@@ -92,7 +102,8 @@ export default {
             hasNext: false,
             dataList: [],
             isLoadMore: false,
-            loadMoreText: '加载中...'
+            loadMoreText: '加载中...',
+            tagColors: ['orange', 'green', 'red', 'blue']
         };
     },
 
@@ -111,6 +122,9 @@ export default {
         calcAuditModeEnabled() {
             return this.haloConfigs.auditConfig.auditModeEnabled
         },
+        calcUseTagRandomColor() {
+            return this.haloConfigs.pageConfig.momentConfig.useTagRandomColor
+        }
     },
 
     onLoad() {
@@ -200,6 +214,7 @@ export default {
                             medium.url = this.$utils.checkThumbnailUrl(medium.url, true)
                         })
 
+                        item.spec.newHtml = this.removeTagLinksCompletely(item.spec.content.html, '')
                         item['images'] = item.spec.content.medium
                             .filter(x => x.type === 'PHOTO')
 
@@ -231,6 +246,19 @@ export default {
                 current: index,
                 urls: list.map(item => item.url)
             })
+        },
+        removeTagLinksCompletely(htmlString) {
+            const regex = /<a\s+(?:[^>]*?\s+)?class=(['"])[^'"]*?\btag\b[^'"]*?\1[^>]*?>.*?<\/a>/gi;
+            const newHtml = htmlString.replace(regex, '');
+            return newHtml
+                .replace(/<[^>]+>\s*<\/[^>]+>/g, '')
+                .replace(/\s+/g, ' ')
+                .trim();
+        },
+        randomTagColor() {
+            if (!this.calcUseTagRandomColor) return "blue";
+            const randomIndex = getRandomNumberByRange(0, this.tagColors.length);
+            return this.tagColors[randomIndex];
         }
     }
 };

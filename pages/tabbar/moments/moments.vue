@@ -251,9 +251,9 @@ export default {
             const regex = /<a\s+(?:[^>]*?\s+)?class=(['"])[^'"]*?\btag\b[^'"]*?\1[^>]*?>.*?<\/a>/gi;
             const newHtml = htmlString.replace(regex, '');
             return newHtml
-                .replace(/<[^>]+>\s*<\/[^>]+>/g, '')
-                .replace(/\s+/g, ' ')
-                .trim();
+                // .replace(/<[^>]+>\s*<\/[^>]+>/g, '')
+                // .replace(/\s+/g, ' ')
+                // .trim();
         },
         randomTagColor() {
             if (!this.calcUseTagRandomColor) return "blue";

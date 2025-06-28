@@ -47,7 +47,7 @@
                          @click="handlePreview(mediumIndex,moment.images)"/>
                 </view>
               </view>
-              <view v-if="moment.audios.length!==0" class="mb-12 mt--12"
+              <view v-if="moment.audios.length!==0" class="mb-12"
                     style="display: flex; flex-direction: column; gap: 12rpx 0;padding: 0 24rpx;padding-right:28rpx;">
                 <audio
                     v-for="(audio,index) in moment.audios"
@@ -59,7 +59,7 @@
                     :author="bloggerInfo.nickname"
                     :src="audio.url"></audio>
               </view>
-              <view v-if="moment.videos.length!==0" class="mb-12 mt--12"
+              <view v-if="moment.videos.length!==0" class="mb-12"
                     style="display: flex; flex-direction: column; gap: 12rpx 0;padding: 0 24rpx; ">
                 <video
                     style="width:100%;height: 400rpx;border-radius: 12rpx;"

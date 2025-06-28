@@ -13,8 +13,9 @@ export default {
         };
     },
     onLoad(e) {
-        const {title, url} = JSON.parse(e.query.data);
+        const {title, url} = JSON.parse(e.data);
         this.webUrl = decodeURIComponent(url);
+		console.log("webUrl" + this.webUrl)
         if (title) {
             this.fnSetPageTitle(title);
         }

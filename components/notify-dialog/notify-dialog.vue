@@ -1,10 +1,10 @@
 <template>
-    <tm-poup v-model="isShow" width="80vw" height="70vh" position="center" :round="6" @change="fnOnChange">
+    <tm-poup v-model="isShow" width="80vw" height="800rpx" position="center" :round="6" @change="fnOnChange">
         <view class="fulled pa-4">
-            <view  class="mt-24 fulled text-weight-b text-size-sm text-align-center text-overflow-2 pb-12">{{ title }}</view>
+            <view class="mt-24 fulled text-weight-b text-size-sm text-align-center text-overflow-2 pb-24">{{ title }}</view>
             <view class="fulled mt-2">
                 <scroll-view class="fulled" scroll-y :style="{
-                    height: url? '52vh': '59vh'
+                    height: url? '600rpx': '680rpx'
                 }">
                     <mp-html class="evan-markdown" lazy-load :domain="markdownConfig.domain"
                              :loading-img="markdownConfig.loadingGif" :scroll-table="true" :selectable="true"

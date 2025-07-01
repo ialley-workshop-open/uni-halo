@@ -1,5 +1,5 @@
 <script>
-import HaloTokenConfig from '@/config/token.config.js';
+import HaloTokenConfig from '@/config/uhalo.config.js';
 
 // app升级检测（搭配：https://ext.dcloud.net.cn/plugin?id=4470 升级中心）
 import CheckAppUpdate from '@/uni_modules/uni-upgrade-center-app/utils/check-update';

@@ -316,7 +316,7 @@ import {
   getRestrictReadTypeName,
   getShowableContent
 } from "@/utils/restrictRead";
-import HaloTokenConfig from "@/config/token.config";
+import HaloTokenConfig from "@/config/uhalo.config";
 import RestrictReadSkeleton from "@/components/restrict-read-skeleton/restrict-read-skeleton.vue";
 import TmImages from "@/tm-vuetify/components/tm-images/tm-images.vue";
 import TmInput from "@/tm-vuetify/components/tm-input/tm-input.vue";

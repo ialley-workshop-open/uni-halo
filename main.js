@@ -58,7 +58,7 @@ Vue.prototype.$http = http;
 import ApiManager from '@/api/index.js'
 Vue.use(ApiManager);
 
-import HaloTokenConfig from '@/config/token.config.js'
+import HaloTokenConfig from '@/config/uhalo.config.js'
 Vue.prototype.$baseApiUrl = HaloTokenConfig.BASE_API
 
 // 由于微信小程序的运行机制问题，需声明如下一行，H5和APP非必填

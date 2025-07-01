@@ -8,6 +8,7 @@
 import {DefaultAppConfigs, getAppConfigs, getAppMockJson, setAppConfigs, setAppMockJson} from '@/config/index.js'
 import v2Config from '@/api/v2/all.config.js'
 import utils from '@/utils/index.js'
+import {setTokens} from "@/utils/token";
 
 export default {
     namespaced: true,
@@ -42,6 +43,11 @@ export default {
                     const res = await v2Config.getAppConfigs()
                     if (res) {
                         commit('setConfigs', utils.deepMerge(DefaultAppConfigs, res))
+
+                        // 存储token
+                        if (res?.basicConfig?.tokenConfig) {
+                            setTokens(res.basicConfig.tokenConfig)
+                        }
                         resolve(res)
                     } else {
                         dispatch("setDefaultAppSettings");

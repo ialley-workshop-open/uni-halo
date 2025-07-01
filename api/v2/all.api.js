@@ -1,13 +1,11 @@
 /**
  * 所有的接口
  */
-import HaloTokenConfig from '@/config/token.config.js'
+import {getPersonalToken} from '@/utils/token.js'
 import HttpHandler from '@/common/http/request.js'
 import qs from 'qs'
 
-import {
-    getAppConfigs
-} from '@/config/index.js'
+import {getAppConfigs} from '@/config/index.js'
 
 export default {
     /**
@@ -44,14 +42,14 @@ export default {
      * @param {Object} params  查询参数
      */
     getCategoryList: (params) => {
-		const param = qs.stringify(params, {
-		    allowDots: true,
-		    encodeValuesOnly: true,
-		    skipNulls: true,
-		    encode: false,
-		    arrayFormat: 'repeat'
-		})
-        return HttpHandler.Get(`/apis/api.content.halo.run/v1alpha1/categories?${param}`,{})
+        const param = qs.stringify(params, {
+            allowDots: true,
+            encodeValuesOnly: true,
+            skipNulls: true,
+            encode: false,
+            arrayFormat: 'repeat'
+        })
+        return HttpHandler.Get(`/apis/api.content.halo.run/v1alpha1/categories?${param}`, {})
     },
     /**
      * 查询分类下的文章
@@ -112,7 +110,7 @@ export default {
     getMomentList: (params) => {
         return HttpHandler.Get(`/apis/moment.halo.run/v1alpha1/moments`, params, {
             custom: {
-                systemToken: HaloTokenConfig.systemToken
+                personalToken: getPersonalToken()
             }
         })
     },
@@ -131,7 +129,7 @@ export default {
     getPhotoGroupList: (params) => {
         return HttpHandler.Get(`/apis/core.halo.run/v1alpha1/photogroups`, params, {
             custom: {
-                systemToken: HaloTokenConfig.systemToken
+                personalToken: getPersonalToken()
             }
         })
     },
@@ -143,7 +141,7 @@ export default {
     getPhotoListByGroupName: (params) => {
         return HttpHandler.Get(`/apis/console.api.photo.halo.run/v1alpha1/photos`, params, {
             custom: {
-                systemToken: HaloTokenConfig.systemToken
+                personalToken: getPersonalToken()
             }
         })
     },
@@ -154,7 +152,7 @@ export default {
     getFriendLinkGroupList: (params) => {
         return HttpHandler.Get(`/apis/core.halo.run/v1alpha1/linkgroups`, params, {
             custom: {
-                systemToken: HaloTokenConfig.systemToken
+                personalToken: getPersonalToken()
             }
         })
     },

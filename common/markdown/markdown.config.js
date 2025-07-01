@@ -3,7 +3,7 @@
  */
 
 import {getAppConfigs} from '@/config/index.js'
-import HaloTokenConfig from '@/config/token.config.js'
+import HaloTokenConfig from '@/config/uhalo.config.js'
 import utils from '@/utils/index.js'
 
 export default {

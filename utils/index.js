@@ -10,7 +10,7 @@
  *  修改时间：
  */
 
-import HaloTokenConfig from '@/config/token.config.js'
+import HaloTokenConfig from '@/config/uhalo.config.js'
 import {getAppConfigs} from '@/config/index.js'
 
 const utils = {

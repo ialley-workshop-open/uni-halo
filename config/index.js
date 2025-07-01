@@ -4,7 +4,11 @@ export const _AppMockJsonKey = 'APP_GLOBAL_MOCK_JSON';
 
 // 默认的应用设置
 export const DefaultAppConfigs = {
-    basicConfig: {},
+    basicConfig: {
+        tokenConfig: {
+            personalToken: "",
+        }
+    },
     loveConfig: {},
     imagesConfig: {},
     authorConfig: {},

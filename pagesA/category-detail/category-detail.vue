@@ -68,6 +68,18 @@ export default {
         this.queryParams.page = 0;
         this.fnGetData();
     },
+    onShareAppMessage() {
+        return {
+            title: this.pageTitle,
+            path: `/pagesA/category-detail/category-detail?name=${this.name}&title=${this.pageTitle}`
+        }
+    },
+    onShareTimeline() {
+        return {
+            title: this.pageTitle,
+            path: `/pagesA/category-detail/category-detail?name=${this.name}&title=${this.pageTitle}`
+        }
+    },
     onReachBottom(e) {
         if (this.hasNext) {
             this.queryParams.page += 1;

@@ -3,44 +3,50 @@
         <!-- 顶部切换 -->
         <view class="e-fixed" v-if="category.list.length > 0">
             <tm-tabs color="light-blue" :shadow="0" v-model="category.activeIndex" range-key="displayName" :list="category.list"
-                     align="left" @change="fnOnCategoryChange"></tm-tabs>
+                     align="left" @change="fnOnCategoryChange($event, false)"></tm-tabs>
         </view>
         <!-- 占位区域 -->
         <view v-if="category.list.length > 0" style="width: 100vw;height: 90rpx;"></view>
         <!-- 加载区域 -->
-        <view v-if="loading !== 'success'" class="loading-wrap">
+        <view v-if="loading == 'loading'" class="loading-wrap">
             <tm-skeleton model="card"></tm-skeleton>
             <tm-skeleton model="card"></tm-skeleton>
             <tm-skeleton model="card"></tm-skeleton>
             <tm-skeleton model="card"></tm-skeleton>
         </view>
+		<view v-else-if="loading == 'error'" class="flex flex-col flex-center" style="width:100%;height:60vh;">
+			<tm-empty icon="icon-wind-cry" label="阿偶，似乎获取数据失败了~">
+				<tm-button theme="light-blue" size="m" :shadow="0" @click="fnGetData(true)">刷新试试</tm-button>
+			</tm-empty>
+		</view>	
         <!-- 内容区域 -->
-        <view class="content" v-else>
-            <view v-if="dataList.length === 0" class="content-empty">
-                <!-- 空布局 -->
-                <tm-empty icon="icon-shiliangzhinengduixiang-" label="博主还没有分享图片~"></tm-empty>
-            </view>
-            <block v-else>
-                <block v-if="galleryConfig.useWaterfall">
-                    <!--瀑布流-->
-                    <tm-flowLayout-custom ref="wafll" style="width: 100%;" @click="fnOnFlowClick"></tm-flowLayout-custom>
-                </block>
-                <!--   列表   -->
-                <block v-else>
-                    <tm-translate v-for="(item, index) in dataList" :key="index"
-                                  style="box-sizing: border-box;padding: 6rpx;width: 50%;height: 250rpx;"
-                                  animation-name="fadeUp" :wait="calcAniWait(index)">
-                        <view style="border-radius: 12rpx;overflow: hidden;width: 100%;height: 250rpx;">
-                            <image style="width: 100%;height: 100%;" mode="aspectFill" :src="item.spec.url"
-                                   @click="fnPreview(item)"/>
-                        </view>
-                    </tm-translate>
-                </block>
+        <view v-else class="content">
+			<k-touch-listen @touchLeft="touchLeft" @touchRight="touchRight">
+				<view v-if="dataList.length === 0" class="content-empty">
+					<!-- 空布局 -->
+					<tm-empty icon="icon-shiliangzhinengduixiang-" label="博主还没有分享图片~"></tm-empty>
+				</view>
+				<block v-else>
+					<block v-if="galleryConfig.useWaterfall">
+						<!--瀑布流-->
+						<tm-flowLayout-custom ref="wafll" style="width: 100%;" @click="fnOnFlowClick"></tm-flowLayout-custom>
+					</block>
+					<!--   列表   -->
+					<block v-else>
+						<tm-translate v-for="(item, index) in dataList" :key="index"
+									  style="box-sizing: border-box;padding: 6rpx;width: 50%;height: 250rpx;"
+									  animation-name="fadeUp" :wait="calcAniWait(index)">
+							<view style="border-radius: 12rpx;overflow: hidden;width: 100%;height: 250rpx;">
+								<image style="width: 100%;height: 100%;" mode="aspectFill" :src="item.spec.url"
+									   @click="fnPreview(item)"/>
+							</view>
+						</tm-translate>
+					</block>
 
-                <tm-flotbutton @click="fnToTopPage" color="light-blue" size="m" icon="icon-angle-up"></tm-flotbutton>
-                <view class="load-text">{{ loadMoreText }}</view>
-            </block>
-
+					<tm-flotbutton @click="fnToTopPage" color="light-blue" size="m" icon="icon-angle-up"></tm-flotbutton>
+					<view class="load-text">{{ loadMoreText }}</view>
+				</block>
+			</k-touch-listen>
         </view>
     </view>
 </template>
@@ -55,6 +61,7 @@ import tmIcons from '@/tm-vuetify/components/tm-icons/tm-icons.vue';
 import tmImages from '@/tm-vuetify/components/tm-images/tm-images.vue';
 import tmFlowLayoutCustom from '@/tm-vuetify/components/tm-flowLayout-custom/tm-flowLayout-custom.vue';
 import tmTabs from '@/tm-vuetify/components/tm-tabs/tm-tabs.vue';
+import tmButton from '@/tm-vuetify/components/tm-button/tm-button.vue';
 
 export default {
     options: {
@@ -69,7 +76,8 @@ export default {
         tmIcons,
         tmImages,
         tmFlowLayoutCustom,
-        tmTabs
+        tmTabs,
+		tmButton
     },
     data() {
         return {
@@ -88,7 +96,8 @@ export default {
             isLoadMore: false,
             loadMoreText: '',
             hasNext: false,
-            dataList: []
+            dataList: [],
+			lock:false
         };
     },
     computed: {
@@ -142,13 +151,23 @@ export default {
         }
     },
     methods: {
+		fnGetDataByCategory(index){
+			this.fnResetSetAniWaitIndex();
+			this.queryParams.group = this.category.list[index].name;
+			this.queryParams.page = 1;
+			this.fnToTopPage();
+			this.dataList = [];
+			this.fnGetData(true);
+		},
         fnOnCategoryChange(index) {
-            this.fnResetSetAniWaitIndex();
-            this.queryParams.group = this.category.list[index].name;
-            this.queryParams.page = 1;
-            this.fnToTopPage();
-            this.dataList = [];
-            this.fnGetData(true);
+			if(this.lock) {
+				// uni.showToast({
+				// 	title: "上一个请求进行中...",
+				// 	icon: "none"
+				// })
+				return;
+			}
+			this.fnGetDataByCategory(index)
         },
         fnGetCategory() {
             if (this.calcAuditModeEnabled) {
@@ -171,7 +190,12 @@ export default {
                     this.queryParams.group = this.category.list[0].name;
                     this.fnGetData(true);
                 }
-            });
+            }).catch(e=>{
+				this.loading = 'error'
+				this.category.list = []
+				this.category.activeIndex = 0
+				this.category.activeValue = ""
+			});
         },
         fnGetData(isClearWaterfall = false) {
             if (this.calcAuditModeEnabled) {
@@ -201,6 +225,7 @@ export default {
                 this.loadMoreText = '呜呜，没有更多数据啦~';
                 uni.hideLoading();
                 uni.stopPullDownRefresh();
+				this.lock = false;
                 return;
             }
 
@@ -244,6 +269,7 @@ export default {
                     setTimeout(() => {
                         uni.hideLoading();
                         uni.stopPullDownRefresh();
+						this.lock = false;
                     }, 500);
                 });
         },
@@ -258,7 +284,25 @@ export default {
                 indicator: 'number',
                 loop: true
             });
-        }
+        },
+		touchLeft(){
+			if(this.loading != "success") return; 
+			this.category.activeIndex += 1
+			if(this.category.activeIndex >= this.category.list.length){
+				this.category.activeIndex = 0
+			}
+			this.lock = true
+			this.fnGetDataByCategory(this.category.activeIndex)
+		},
+		touchRight(){
+			if(this.loading != "success") return;
+			this.category.activeIndex -= 1
+			if(this.category.activeIndex < 0){
+				this.category.activeIndex = 0
+			}
+			this.lock = true
+			this.fnGetDataByCategory(this.category.activeIndex)
+		} 
     }
 };
 </script>

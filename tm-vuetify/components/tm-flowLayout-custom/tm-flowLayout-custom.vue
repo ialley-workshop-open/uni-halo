@@ -100,8 +100,6 @@ export default {
         },
         //向列表添加数据
         pushData(list) {
-            console.log('添加图片数据----------',list)
-
             let prIdx_i = this.list2.length;
             if (!Array.isArray(list) || typeof list == 'undefined') {
                 return false;
@@ -122,8 +120,6 @@ export default {
             return this.dataList;
         },
         async loadimg(event, isLoad, index) {
-            console.log('图片加载事件----------',event)
-
             this.isLoading = true;
             let ps = this.list2[index];
             ps.isLoad = true;

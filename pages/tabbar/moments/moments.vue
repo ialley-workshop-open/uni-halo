@@ -76,7 +76,7 @@
             </view>
           </tm-translate>
         </block>
-        <tm-flotbutton @click="fnToTopPage" size="m" color="light-blue" icon="icon-angle-up"></tm-flotbutton>
+        <tm-flotbutton @click="fnToTopPage" :width="90" size="xs" color="light-blue" :icon-size="24" icon="icon-angle-up"></tm-flotbutton>
         <view class="load-text">{{ loadMoreText }}</view>
       </block>
     </view>

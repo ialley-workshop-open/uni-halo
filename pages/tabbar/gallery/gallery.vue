@@ -43,12 +43,18 @@
 						</tm-translate>
 					</block>
 
-					<tm-flotbutton @click="fnToTopPage" color="light-blue" size="m" icon="icon-angle-up"></tm-flotbutton>
 					<view class="load-text">{{ loadMoreText }}</view>
 				</block>
 			</k-touch-listen>
         </view>
-    </view>
+    
+		<view v-if="!calcAuditModeEnabled" class="flot-buttons">
+			<tm-button v-if="loading == 'error'" @click="fnGetCategory" size="m" :fab="true" theme="light-blue"
+			           icon="icon-sync-alt"></tm-button>
+		    <tm-button @click="fnToTopPage" size="m" :fab="true" theme="light-blue"
+		               icon="icon-angle-up"></tm-button>
+		</view>
+	</view>
 </template>
 
 <script>
@@ -238,7 +244,7 @@ export default {
                 .getPhotoListByGroupName(this.queryParams)
                 .then(res => {
                     this.hasNext = res.hasNext;
-                    this.loading = 'success';
+                    this.loading = 'error';
                     if (res.items.length !== 0) {
                         const _list = res.items.map((item, index) => {
                             item.spec.url = this.$utils.checkImageUrl(item.spec.url || item.spec.cover);
@@ -341,5 +347,15 @@ export default {
 .load-text {
     width: 100%;
     text-align: center;
+}
+
+.flot-buttons {
+    position: fixed;
+    bottom: 100rpx;
+    right: 32rpx;
+    flex-direction: column;
+    display: flex;
+    gap: 6rpx;
+    z-index: 999;
 }
 </style>

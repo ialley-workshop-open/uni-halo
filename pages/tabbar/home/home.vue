@@ -84,7 +84,7 @@
                     </tm-translate>
                 </view>
                 <view class="load-text mt-12">{{ loadMoreText }}</view>
-                <tm-flotbutton v-if="articleList.length > 10" color="light-blue" @click="fnToTopPage" size="m"
+                <tm-flotbutton v-if="articleList.length > 10" :width="90" color="light-blue" @click="fnToTopPage" size="s"
                                icon="icon-angle-up"></tm-flotbutton>
             </block>
         </block>

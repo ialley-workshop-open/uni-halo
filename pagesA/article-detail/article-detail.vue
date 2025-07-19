@@ -152,9 +152,9 @@
             <!-- 弹幕效果 -->
             <barrage ref="barrage" :maxTop="240" :type="globalAppSettings.barrage.type"></barrage>
             <!-- 返回顶部 -->
-            <tm-flotbutton :offset="[16, 80]" icon="icon-angle-up" color="bg-gradient-light-blue-accent"
+            <tm-flotbutton :width="90" :offset="[16, 80]"  icon="icon-angle-up" color="bg-gradient-light-blue-accent"
                            @click="fnToTopPage()"></tm-flotbutton>
-            <tm-flotbutton :actions="flotButtonActions" :click-actions-hiden="false" actions-pos="left"
+            <tm-flotbutton :width="90" :actions="flotButtonActions" :click-actions-hiden="false" actions-pos="left"
                            :show-text="true" color="bg-gradient-orange-accent" @change="fnOnFlotButtonChange"></tm-flotbutton>
         </block>
 

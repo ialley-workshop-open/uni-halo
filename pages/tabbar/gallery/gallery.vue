@@ -244,7 +244,7 @@ export default {
                 .getPhotoListByGroupName(this.queryParams)
                 .then(res => {
                     this.hasNext = res.hasNext;
-                    this.loading = 'error';
+                    this.loading = 'success';
                     if (res.items.length !== 0) {
                         const _list = res.items.map((item, index) => {
                             item.spec.url = this.$utils.checkImageUrl(item.spec.url || item.spec.cover);

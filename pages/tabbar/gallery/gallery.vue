@@ -162,9 +162,11 @@ export default {
                 this.category.list = res.items.map(item => {
                     return {
                         name: item.metadata.name,
-                        displayName: item.spec.displayName
+                        displayName: item.spec.displayName,
+						priority: item.spec.priority
                     }
-                });
+                }).sort((a,b) => a.priority - b.priority);
+				
                 if (this.category.list.length !== 0) {
                     this.queryParams.group = this.category.list[0].name;
                     this.fnGetData(true);

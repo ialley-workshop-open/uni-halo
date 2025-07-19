@@ -21,7 +21,7 @@
 		</view>	
         <!-- 内容区域 -->
         <view v-else class="content">
-			<k-touch-listen @touchLeft="touchLeft" @touchRight="touchRight">
+			<k-touch-listen class="touch-listen-content" @touchLeft="touchLeft" @touchRight="touchRight">
 				<view v-if="dataList.length === 0" class="content-empty">
 					<!-- 空布局 -->
 					<tm-empty icon="icon-shiliangzhinengduixiang-" label="博主还没有分享图片~"></tm-empty>
@@ -322,13 +322,11 @@ export default {
     padding-bottom: 24rpx;
     background-color: #fafafa;
 }
-
 .content {
+	width:100%;
     display: flex;
     flex-wrap: wrap;
     box-sizing: border-box;
-    padding: 24rpx 24rpx 0;
-    gap: 12rpx 0;
 
     .content-empty {
         width: 100%;
@@ -338,7 +336,14 @@ export default {
         justify-content: center;
     }
 }
-
+.touch-listen-content {
+	width:100%;
+	display: flex;
+	flex-wrap: wrap;
+	box-sizing: border-box;
+	padding: 24rpx 24rpx 0;
+	gap: 12rpx 0;
+}
 .loading-wrap {
     box-sizing: border-box;
     padding: 24rpx;

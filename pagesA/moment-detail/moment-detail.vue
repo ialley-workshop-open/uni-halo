@@ -121,6 +121,7 @@
 					name: null
 				},
 				moment: null,
+				tagColors: ['orange', 'green', 'red', 'blue'],
 				videoContexts: {},
 				currentVideoId: null
 			};
@@ -139,7 +140,7 @@
 			},
 			// 获取博主信息
 			bloggerInfo() {
-				const blogger = this.$tm.vx.getters().getConfigs.authorConfig.blogger;
+				const blogger = this.haloConfigs.authorConfig.blogger;
 				blogger.avatar = this.$utils.checkAvatarUrl(blogger.avatar, true);
 				return blogger;
 			},

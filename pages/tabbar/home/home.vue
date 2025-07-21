@@ -38,7 +38,7 @@
             <!-- 精品分类 -->
             <block v-if="calcIsShowCategory">
                 <view class="flex flex-between mt-16 mb-24 pl-24 pr-24">
-                    <view class="page-item_title text-weight-b ">精品分类</view>
+                    <view class="page-item_title text-weight-b ">精选分类</view>
                     <view class="show-more flex flex-center bg-white round-3" @click="fnToCategoryPage">
                         <text class="iconfont icon-angle-right text-size-s text-grey-darken-1"></text>
                     </view>

@@ -114,6 +114,18 @@ export default {
             }
         })
     },
+	
+	/**
+	 * 获取瞬间详情
+     * @param {String} name 瞬间id
+	 */
+	getMomentByName: (name) => {
+	    return HttpHandler.Get(`/apis/moment.halo.run/v1alpha1/moments/${name}`, {}, {
+	        custom: {
+	            personalToken: getPersonalToken()
+	        }
+	    })
+	},
 
     /**
      * 查询站点统计信息

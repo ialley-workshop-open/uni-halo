@@ -30,14 +30,15 @@
 								</view>
 							</view>
 						</view>
-						<view class="content">
+						<view class="content" @click.stop="handleToMomentDetail(moment)">
 							<mp-html class="evan-markdown" lazy-load :domain="markdownConfig.domain"
 								:loading-img="markdownConfig.loadingGif" :scroll-table="true" :selectable="true"
 								:tag-style="markdownConfig.tagStyle" :container-style="markdownConfig.containStyle"
 								:content="moment.spec.newHtml" :markdown="true" :showLineNumber="true"
 								:showLanguageName="true" :copyByLongPress="true" />
 						</view>
-						<view v-if="moment.images && moment.images.length!==0" class="images" :class="['images-'+moment.images.length]">
+						<view v-if="moment.images && moment.images.length!==0" class="images"
+							:class="['images-'+moment.images.length]">
 							<view class="image-item" v-for="(image,mediumIndex) in moment.images" :key="mediumIndex">
 								<image mode="aspectFill" style="width: 100%;height: 100%;border-radius: 6rpx;"
 									:src="image.url" @click="handlePreview(mediumIndex,moment.images)" />
@@ -250,7 +251,7 @@
 						}
 
 						this.$nextTick(() => {
-							this.createVideoContexts(tempItems); 
+							this.createVideoContexts(tempItems);
 						})
 
 					})
@@ -262,7 +263,7 @@
 					.finally(() => {
 						setTimeout(() => {
 							uni.hideLoading();
-							uni.stopPullDownRefresh(); 
+							uni.stopPullDownRefresh();
 						}, 500);
 					});
 			},
@@ -306,6 +307,13 @@
 						const videoContext = this.videoContexts[videoId]
 						videoContext?.pause();
 					}
+				});
+			},
+			handleToMomentDetail(moment) {
+				if (this.calcAuditModeEnabled) return;
+				uni.navigateTo({
+					url: '/pagesA/moment-detail/moment-detail?name=' + moment.metadata.name,
+					animationType: 'slide-in-right'
 				});
 			}
 		}

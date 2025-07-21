@@ -266,7 +266,20 @@
             "navigationBarTitleText": "友链提交",
             "enablePullDownRefresh": false
           }
-        }
+        },
+		{
+		  "path": "moment-detail/moment-detail",
+		  "style": {
+		    "navigationBarTitleText": "瞬间详情",
+		    "enablePullDownRefresh": true,
+		    "app-plus": {
+		      "pullToRefresh": {
+		        "color": "#03a9f4",
+		        "style": "circle"
+		      }
+		    }
+		  }
+		}
       ]
     },
     {

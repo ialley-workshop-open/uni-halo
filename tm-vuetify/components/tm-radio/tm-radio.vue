@@ -2,7 +2,7 @@
 	<view @click="onclick" class=" tm-checkbox " :class="[dense?'':'pa-20',inline?'d-inline-block ':'fulled']">
 		<view class="flex-start fulled">
 			
-			<slot name="default" :checkData="{label:label,checked:changValue}" :on="onclick">
+			<slot name="default" :checkData="{label:label,checked:changValue,extendData}" :on="onclick">
 				<view :style="{width: sizes.wk,height: sizes.wk}" class="tm-checkbox-boey  relative d-inline-block"
 				:class="[black?'bk':'','flex-shrink mr-10 ',
 				changValue?'ani':'',
@@ -119,8 +119,11 @@
 			fllowTheme:{
 				type:Boolean|String,
 				default:true
-			}
-			
+			},
+			extendData:{
+				type:Object,
+				default:()=>({})
+			},
 		},
 		data() {
 			return {

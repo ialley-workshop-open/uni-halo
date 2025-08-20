@@ -17,6 +17,10 @@
 	 * 
 	 */
 	export default {
+		options: {
+			virtualHost: true,
+			styleIsolation: 'shared'
+		},
 		name:'tm-groupcheckbox',
 		props:{
 			// 最大选择数量

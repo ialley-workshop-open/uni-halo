@@ -279,6 +279,32 @@
 		      }
 		    }
 		  }
+		},
+		{
+			"path": "votes/votes",
+			"style": {
+			  "navigationBarTitleText": "投票列表",
+			  "enablePullDownRefresh": true,
+			  "app-plus": {
+			    "pullToRefresh": {
+			      "color": "#03a9f4",
+			      "style": "circle"
+			    }
+			  }
+			}
+		},
+		{
+			"path": "vote-detail/vote-detail",
+			"style": {
+			  "navigationBarTitleText": "投票详情",
+			  "enablePullDownRefresh": true,
+			  "app-plus": {
+			    "pullToRefresh": {
+			      "color": "#03a9f4",
+			      "style": "circle"
+			    }
+			  }
+			}
 		}
       ]
     },

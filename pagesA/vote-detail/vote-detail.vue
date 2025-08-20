@@ -72,7 +72,7 @@
 									</template>
 								</tm-radio>
 							</tm-groupradio> -->
-							<view class="w-full flex flex-col gap-8">
+							<view class="w-full flex flex-col uh-gap-8">
 								<tm-button v-for="(option,optionIndex) in vote.spec.options" :key="optionIndex"
 									:shadow="0" :theme="option.checked?'light-blue':'grey-lighten-3'" :plan="false"
 									size="m" :height="72" :block="true" class="flex-1 w-full"
@@ -109,7 +109,7 @@
 								</tm-checkbox>
 							</tm-groupcheckbox> -->
 
-							<view class="w-full flex flex-col gap-8">
+							<view class="w-full flex flex-col uh-gap-8">
 								<tm-button v-for="(option,optionIndex) in vote.spec.options" :key="optionIndex"
 									:shadow="0" :theme="option.checked?'light-blue':'grey-lighten-3'" :plan="false"
 									size="m" :height="72" :block="true" class="flex-1 full"
@@ -157,7 +157,7 @@
 								</tm-groupradio> -->
 
 
-								<view class="w-full flex flex-between gap-8">
+								<view class="w-full flex flex-between uh-gap-8">
 									<tm-button v-for="(option,optionIndex) in vote.spec.options" :key="optionIndex"
 										:shadow="0" :theme="option.checked?'light-blue':'grey-lighten-3'" :plan="false"
 										size="m" :height="72" :block="true" class="flex-1"

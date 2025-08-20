@@ -12,7 +12,7 @@
 					@confirm="fnOnFilterConfirm"></tm-dropDownMenu>
 			</view>
 			<!-- 占位区域 -->
-			<view style="width: 100vw;height: 210rpx;"></view>
+			<view style="width: 100vw;height: 180rpx;"></view>
 			<!-- 加载区域 -->
 			<view v-if="loading == 'loading'" class="loading-wrap pa-24">
 				<tm-skeleton model="listAvatr"></tm-skeleton>

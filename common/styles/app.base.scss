@@ -188,39 +188,39 @@ $spacing-sizes: (
 // 内边距类
 @each $name, $size in $spacing-sizes {
   // 全方向内边距：p-{size}
-  .p-#{$name} {
+  .uh-p-#{$name} {
     padding: $size !important;
   }
 
   // 水平方向内边距：px-{size}
-  .px-#{$name} {
+  .uh-px-#{$name} {
     padding-left: $size !important;
     padding-right: $size !important;
   }
 
   // 垂直方向内边距：py-{size}
-  .py-#{$name} {
+  .uh-py-#{$name} {
     padding-top: $size !important;
     padding-bottom: $size !important;
   }
 
   // 上内边距：pt-{size}
-  .pt-#{$name} {
+  .uh-pt-#{$name} {
     padding-top: $size !important;
   }
 
   // 右内边距：pr-{size}
-  .pr-#{$name} {
+  .uh-pr-#{$name} {
     padding-right: $size !important;
   }
 
   // 下内边距：pb-{size}
-  .pb-#{$name} {
+  .uh-pb-#{$name} {
     padding-bottom: $size !important;
   }
 
   // 左内边距：pl-{size}
-  .pl-#{$name} {
+  .uh-pl-#{$name} {
     padding-left: $size !important;
   }
 }
@@ -228,39 +228,39 @@ $spacing-sizes: (
 //外边距工具类
 @each $name, $size in $spacing-sizes {
   // 全方向外边距：m-{size}
-  .m-#{$name} {
+  .uh-m-#{$name} {
     margin: $size !important;
   }
 
   // 水平方向外边距：mx-{size}
-  .mx-#{$name} {
+  .uh-mx-#{$name} {
     margin-left: $size !important;
     margin-right: $size !important;
   }
 
   // 垂直方向外边距：my-{size}
-  .my-#{$name} {
+  .uh-my-#{$name} {
     margin-top: $size !important;
     margin-bottom: $size !important;
   }
 
   // 上外边距：mt-{size}
-  .mt-#{$name} {
+  .uh-mt-#{$name} {
     margin-top: $size !important;
   }
 
   // 右外边距：mr-{size}
-  .mr-#{$name} {
+  .uh-mr-#{$name} {
     margin-right: $size !important;
   }
 
   // 下外边距：mb-{size}
-  .mb-#{$name} {
+  .uh-mb-#{$name} {
     margin-bottom: $size !important;
   }
 
   // 左外边距：ml-{size}
-  .ml-#{$name} {
+  .uh-ml-#{$name} {
     margin-left: $size !important;
   }
 }
@@ -268,17 +268,17 @@ $spacing-sizes: (
 // gap 类
 @each $name, $size in $spacing-sizes {
   // 全方向gap：gap-{size}
-  .gap-#{$name} {
+  .uh-gap-#{$name} {
     gap: $size !important;
   }
 
   // 水平方向gap：gap-x-{size}
-  .gap-x-#{$name} {
+  .uh-gap-x-#{$name} {
     column-gap: $size !important;
   }
 
   // 垂直方向gap：gap-y-{size}
-  .gap-y-#{$name} {
+  .uh-gap-y-#{$name} {
     row-gap: $size !important;
   }
 }

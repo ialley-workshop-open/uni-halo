@@ -106,7 +106,7 @@
 				</view>
 
 				<!-- 投票 -->
-				<view v-if="result._voteIds.length!==0" class="vote-wrap copyright-wrap bg-white mt-24 pa-24 round-4">
+				<view v-if="!calcAuditModeEnabled && result._voteIds.length!==0" class="vote-wrap copyright-wrap bg-white mt-24 pa-24 round-4">
 					<PluginUnavailable v-if="!uniHaloPluginAvailable" :pluginId="uniHaloPluginId"
 						:error-text="uniHaloPluginAvailableError" />
 					<template v-else>
@@ -434,7 +434,10 @@
 			},
 			calcUpvoted() {
 				return upvote.has("post", this.result?.metadata?.name)
-			}
+			},
+			calcAuditModeEnabled() {
+				return this.haloConfigs.auditConfig.auditModeEnabled
+			},
 		},
 		watch: {
 			haloConfigs: {

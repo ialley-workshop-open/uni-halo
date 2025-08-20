@@ -552,7 +552,7 @@
 					iconColor: '',
 					path: '/pagesA/votes/votes',
 					type: 'page',
-					show: true
+					show: !this.calcAuditModeEnabled
 				}, {
 					key: 'disclaimers',
 					title: '友情链接',

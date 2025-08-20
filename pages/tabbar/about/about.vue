@@ -218,7 +218,7 @@
 						path: '/pagesA/votes/votes',
 						isAdmin: false,
 						type: 'page',
-						show: true
+						show: !this.calcAuditModeEnabled
 					}, {
 						key: 'disclaimers',
 						title: '友情链接',

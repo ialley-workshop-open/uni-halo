@@ -30,15 +30,16 @@
 			</view>
 
 			<!-- 金刚区 :v-if="navList.filter(x=>x.show).length>=4" -->
-			<view :v-if="navList.filter(x=>x.show).length>=4" class="nav-box">
-				<view class="nav-list flex">
-					<template v-for="(item,index) in navList" >
+			<view :v-if="navList.filter(x=>x.show).length>=4" class="nav-box mt-16 mb-24 pl-24 pr-24 uh-py-12">
+				<view class="page-item_title text-weight-b ">快捷导航</view>
+				<view class="nav-list flex uh-mt-12">
+					<template v-for="(item,index) in navList">
 						<view v-if="item.show" class="nav-item" :key="index" @click="fnClickNav(item)">
 							<!-- :class="[item.bgClass]" -->
-							<view class="nav-item-icon" :class="[item.bgClass]" :style="{
+							<view class="nav-item-icon" :style="{
 								'--bgColor':item.bgColor,
-								// boxShadow: '0rpx 0rpx 6rpx ' + item.shadow,
-								// backgroundColor: item.bgColor
+								boxShadow: '0rpx 0rpx 6rpx ' + item.shadow,
+								backgroundColor: item.bgColor
 							}">
 								<tm-icons :size="48" color="white" prefx="halocoloricon" :name="item.icon"></tm-icons>
 							</view>
@@ -551,7 +552,7 @@
 					iconColor: '',
 					path: '/pagesA/votes/votes',
 					type: 'page',
-					show: this.haloConfigs.loveConfig.loveEnabled
+					show: true
 				}, {
 					key: 'disclaimers',
 					title: '友情链接',
@@ -705,13 +706,13 @@
 	}
 
 	.nav-box {
-		padding: 24rpx 8rpx;
 		background-color: #ffff;
 		overflow: hidden;
 		margin-bottom: 24rpx;
 	}
 
 	.nav-list {
+		flex-wrap: wrap;
 		align-items: center;
 		// justify-content: space-between;
 		justify-content: space-around;

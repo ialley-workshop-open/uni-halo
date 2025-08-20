@@ -193,7 +193,6 @@
 						class="w-full">您已参与投票</tm-button>
 					<tm-button v-else theme="light-blue" class="w-full" :block="true"
 						@click="handleSubmit()">提交投票</tm-button>
-
 				</view>
 			</block>
 		</block>

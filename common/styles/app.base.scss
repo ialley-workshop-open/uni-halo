@@ -173,6 +173,9 @@
 
 /* 文本省略样式 结束 */
 
+.box-border{
+	box-sizing: border-box;
+}
 
 // 定义尺寸变量（单位：rpx）
 $spacing-sizes: (

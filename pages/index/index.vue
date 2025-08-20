@@ -14,7 +14,7 @@
 
 	const _DEV_ = false
 	const _DEV_TO_TYPE_ = "page"
-	const _DEV_TO_PATH_ = "/pagesA/votes/votes"
+	const _DEV_TO_PATH_ = ""
 
 	export default {
 		mixins: [pluginAvailable],
@@ -71,7 +71,7 @@
 		methods: {
 			fnCheckShowStarted() {
 				// 本地开发，快速跳转页面，发布请设置 _DEV_ = false
-				if (_DEV_) {
+				if (_DEV_ && _DEV_TO_PATH_) {
 					if (_DEV_TO_TYPE_ == 'tabbar') {
 						uni.switchTab({
 							url: _DEV_TO_PATH_

@@ -1,79 +1,84 @@
 <template>
 	<view class="app-page">
-		<view v-if="loading !== 'success'" class="loading-wrap">
-			<tm-skeleton model="listAvatr"></tm-skeleton>
-			<tm-skeleton model="listAvatr"></tm-skeleton>
-			<tm-skeleton model="listAvatr"></tm-skeleton>
-		</view>
-		<!-- 内容区域 -->
-		<view v-else class="app-page-content">
-			<view v-if="dataList.length === 0" class="content-empty flex flex-center" style="min-height: 70vh;">
-				<!-- 空布局 -->
-				<tm-empty icon="icon-shiliangzhinengduixiang-" label="暂无数据"></tm-empty>
+		<PluginUnavailable v-if="!uniHaloPluginAvailable" :pluginId="uniHaloPluginId"
+			:error-text="uniHaloPluginAvailableError" />
+		<template v-else>
+			<view v-if="loading !== 'success'" class="loading-wrap">
+				<tm-skeleton model="listAvatr"></tm-skeleton>
+				<tm-skeleton model="listAvatr"></tm-skeleton>
+				<tm-skeleton model="listAvatr"></tm-skeleton>
 			</view>
-			<block v-else>
-				<!-- 卡片 -->
-				<tm-translate v-for="(moment, index) in dataList" :key="moment.metadata.name" animation-name="fadeUp"
-					:wait="calcAniWait(index)">
-					<view class="moment-card">
-						<view class="head" style="display: flex;align-items: center;">
-							<view class="avatar" style="flex-shrink: 0;">
-								<image style="width: 66rpx;height: 66rpx;border-radius: 50%;"
-									:src="moment.spec.user.avatar" />
-							</view>
-							<view class="nickname" style="margin-left: 12rpx;">
-								<view style="font-size: 30rpx;font-weight: bold;color: #333333;">
-									{{ moment.spec.user.displayName }}
+			<!-- 内容区域 -->
+			<view v-else class="app-page-content">
+				<view v-if="dataList.length === 0" class="content-empty flex flex-center" style="min-height: 70vh;">
+					<!-- 空布局 -->
+					<tm-empty icon="icon-shiliangzhinengduixiang-" label="暂无数据"></tm-empty>
+				</view>
+				<block v-else>
+					<!-- 卡片 -->
+					<tm-translate v-for="(moment, index) in dataList" :key="moment.metadata.name"
+						animation-name="fadeUp" :wait="calcAniWait(index)">
+						<view class="moment-card">
+							<view class="head" style="display: flex;align-items: center;">
+								<view class="avatar" style="flex-shrink: 0;">
+									<image style="width: 66rpx;height: 66rpx;border-radius: 50%;"
+										:src="moment.spec.user.avatar" />
 								</view>
-								<view style="margin-top: 6rpx;font-size: 24rpx;color: #666;">
-									{{ {d: moment.spec.releaseTime, f: 'yyyy年MM月dd日 星期w'} | formatTime }}
+								<view class="nickname" style="margin-left: 12rpx;">
+									<view style="font-size: 30rpx;font-weight: bold;color: #333333;">
+										{{ moment.spec.user.displayName }}
+									</view>
+									<view style="margin-top: 6rpx;font-size: 24rpx;color: #666;">
+										{{ {d: moment.spec.releaseTime, f: 'yyyy年MM月dd日 星期w'} | formatTime }}
+									</view>
 								</view>
 							</view>
-						</view>
-						<view class="content" @click.stop="handleToMomentDetail(moment)">
-							<mp-html class="evan-markdown" lazy-load :domain="markdownConfig.domain"
-								:loading-img="markdownConfig.loadingGif" :scroll-table="true" :selectable="true"
-								:tag-style="markdownConfig.tagStyle" :container-style="markdownConfig.containStyle"
-								:content="moment.spec.newHtml" :markdown="true" :showLineNumber="true"
-								:showLanguageName="true" :copyByLongPress="true" />
-						</view>
-						<view v-if="moment.images && moment.images.length!==0" class="images"
-							:class="['images-'+moment.images.length]">
-							<view class="image-item" v-for="(image,mediumIndex) in moment.images" :key="mediumIndex">
-								<image mode="aspectFill" style="width: 100%;height: 100%;border-radius: 6rpx;"
-									:src="image.url" @click="handlePreview(mediumIndex,moment.images)" />
+							<view class="content" @click.stop="handleToMomentDetail(moment)">
+								<mp-html class="evan-markdown" lazy-load :domain="markdownConfig.domain"
+									:loading-img="markdownConfig.loadingGif" :scroll-table="true" :selectable="true"
+									:tag-style="markdownConfig.tagStyle" :container-style="markdownConfig.containStyle"
+									:content="moment.spec.newHtml" :markdown="true" :showLineNumber="true"
+									:showLanguageName="true" :copyByLongPress="true" />
+							</view>
+							<view v-if="moment.images && moment.images.length!==0" class="images"
+								:class="['images-'+moment.images.length]">
+								<view class="image-item" v-for="(image,mediumIndex) in moment.images"
+									:key="mediumIndex">
+									<image mode="aspectFill" style="width: 100%;height: 100%;border-radius: 6rpx;"
+										:src="image.url" @click="handlePreview(mediumIndex,moment.images)" />
+								</view>
+							</view>
+							<view v-if="moment.audios && moment.audios.length!==0" class="mb-12"
+								style="display: flex; flex-direction: column; gap: 12rpx 0;padding: 0 24rpx;padding-right:28rpx;">
+								<audio v-for="(audio,index) in moment.audios" :controls="true" :key="index"
+									:id="audio.url" :poster="bloggerInfo.avatar"
+									:name="'来自' + (startConfig.title||bloggerInfo.nickname) + '的声音'"
+									:author="bloggerInfo.nickname" :src="audio.url"></audio>
+							</view>
+							<view v-if="moment.videos && moment.videos.length!==0" class="mb-12"
+								style="display: flex; flex-direction: column; gap: 12rpx 0;padding: 0 24rpx; ">
+								<video style="width:100%;height: 400rpx;border-radius: 12rpx;"
+									v-for="(video,index) in moment.videos" :key="index" :src="video.url"
+									:id="'video_' + video.id" :show-mute-btn="true" :controls="true"
+									:show-center-play-btn="true" :enable-progress-gesture="true"
+									@play="onVideoPlay(video.id)" @pause="onVideoPause(video.id)"
+									@ended="onVideoEnded(video.id)"></video>
+							</view>
+							<view v-if="moment.spec.tags && moment.spec.tags.length!==0"
+								class="mt-12 px-16 pb-24 flex flex-wrap">
+								<tm-tags v-for="(tag,tagIndex) in moment.spec.tags" :key="tagIndex"
+									:color="randomTagColor()" size="m" model="text">
+									{{ tag }}
+								</tm-tags>
 							</view>
 						</view>
-						<view v-if="moment.audios && moment.audios.length!==0" class="mb-12"
-							style="display: flex; flex-direction: column; gap: 12rpx 0;padding: 0 24rpx;padding-right:28rpx;">
-							<audio v-for="(audio,index) in moment.audios" :controls="true" :key="index" :id="audio.url"
-								:poster="bloggerInfo.avatar"
-								:name="'来自' + (startConfig.title||bloggerInfo.nickname) + '的声音'"
-								:author="bloggerInfo.nickname" :src="audio.url"></audio>
-						</view>
-						<view v-if="moment.videos && moment.videos.length!==0" class="mb-12"
-							style="display: flex; flex-direction: column; gap: 12rpx 0;padding: 0 24rpx; ">
-							<video style="width:100%;height: 400rpx;border-radius: 12rpx;"
-								v-for="(video,index) in moment.videos" :key="index" :src="video.url"
-								:id="'video_' + video.id" :show-mute-btn="true" :controls="true"
-								:show-center-play-btn="true" :enable-progress-gesture="true"
-								@play="onVideoPlay(video.id)" @pause="onVideoPause(video.id)"
-								@ended="onVideoEnded(video.id)"></video>
-						</view>
-						<view v-if="moment.spec.tags && moment.spec.tags.length!==0"
-							class="mt-12 px-16 pb-24 flex flex-wrap">
-							<tm-tags v-for="(tag,tagIndex) in moment.spec.tags" :key="tagIndex"
-								:color="randomTagColor()" size="m" model="text">
-								{{ tag }}
-							</tm-tags>
-						</view>
-					</view>
-				</tm-translate>
-				<tm-flotbutton @click="fnToTopPage" :width="90" size="xs" color="light-blue" :icon-size="24"
-					icon="icon-angle-up"></tm-flotbutton>
-				<view class="load-text">{{ loadMoreText }}</view>
-			</block>
-		</view>
+					</tm-translate>
+					<tm-flotbutton @click="fnToTopPage" :width="90" size="xs" color="light-blue" :icon-size="24"
+						icon="icon-angle-up"></tm-flotbutton>
+					<view class="load-text">{{ loadMoreText }}</view>
+				</block>
+			</view>
+		</template>
 	</view>
 </template>
 
@@ -92,7 +97,11 @@
 	import {
 		generateUUID
 	} from '@/utils/uuid.js';
+
+	import pluginAvailable from "@/common/mixins/pluginAvailable.js"
+
 	export default {
+		mixins: [pluginAvailable],
 		components: {
 			tmSkeleton,
 			tmFlotbutton,
@@ -141,10 +150,16 @@
 				return this.haloConfigs.appConfig.startConfig;
 			}
 		},
-		onLoad() {
+		async onLoad() { 
+			// 检查插件
+			this.setPluginId(this.NeedPluginIds.PluginMoments)
+			this.setPluginError("阿偶，检测到当前插件没有安装或者启用，无法使用瞬间功能哦，请联系管理员")
+			if (!await this.checkPluginAvailable()) return
+			
 			this.fnGetData();
 		},
 		onPullDownRefresh() {
+			if (!this.uniHaloPluginAvailable) return;
 			this.isLoadMore = false;
 			this.queryParams.page = 0;
 			this.videoContexts = {};
@@ -152,6 +167,7 @@
 			this.fnGetData();
 		},
 		onReachBottom(e) {
+			if (!this.uniHaloPluginAvailable) return;
 			if (this.calcAuditModeEnabled) {
 				uni.showToast({
 					icon: 'none',
@@ -322,7 +338,9 @@
 
 <style lang="scss" scoped>
 	.app-page {
+		box-sizing: border-box;
 		width: 100vw;
+		min-height: 100vh;
 		display: flex;
 		flex-direction: column;
 		padding: 24rpx 0;

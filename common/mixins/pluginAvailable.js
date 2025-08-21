@@ -6,22 +6,30 @@ import {
 	NeedPlugins,
 	checkNeedPluginAvailable
 } from "@/utils/plugin.js"
-import PluginUnavailable from '@/components/plugin-unavailable/plugin-unavailable.vue'
-
 
 const HaloPluginAvailableMixin = {
-	components: {
-		PluginUnavailable
-	},
 	data() {
 		return {
 			NeedPluginIds,
 			NeedPlugins,
 			uniHaloPluginAvailableError: "",
 			uniHaloPluginAvailable: true,
+			uniHaloPluginPageClass: "",
 			uniHaloPluginId: "", // 当前需要的插件
 			uniHaloPluginInfo: "" // 当前插件信息
 		};
+	},
+	watch: {
+		uniHaloPluginAvailable: {
+			immediate: true,
+			handler(val) {
+				if (val) {
+					this.uniHaloPluginPageClass = ""
+				} else {
+					this.uniHaloPluginPageClass = "box-border items-center justify-center"
+				}
+			}
+		}
 	},
 	methods: {
 		/** 设置插件ID */

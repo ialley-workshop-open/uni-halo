@@ -1,12 +1,13 @@
 <template>
 	<view class="app-page flex flex-center">
 		<PluginUnavailable v-if="!uniHaloPluginAvailable" :pluginId="uniHaloPluginId"
-			:error-text="uniHaloPluginAvailableError" />
+			:error-text="uniHaloPluginAvailableError" :use-border="false" :use-decoration="false" />
 	</view>
 </template>
 
 <script>
-	import pluginAvailable from "@/common/mixins/pluginAvailable.js"
+	import pluginAvailableMixin from "@/common/mixins/pluginAvailable.js"
+	import PluginUnavailable from '@/components/plugin-unavailable/plugin-unavailable.vue'
 
 	const homePagePath = '/pages/tabbar/home/home'
 	const startPagePath = '/pagesA/start/start'
@@ -17,7 +18,10 @@
 	const _DEV_TO_PATH_ = ""
 
 	export default {
-		mixins: [pluginAvailable],
+		mixins: [pluginAvailableMixin],
+		components: {
+			PluginUnavailable
+		},
 		computed: {
 			configs() {
 				return this.$tm.vx.getters().getConfigs;

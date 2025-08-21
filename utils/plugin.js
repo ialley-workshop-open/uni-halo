@@ -16,7 +16,7 @@ export const NeedPlugins = new Map([
 		NeedPluginIds.PluginUniHalo, {
 			id: "plugin-uni-halo",
 			name: "UniHalo配置",
-			desc: "uni-halo 核心插件，未安装和启用的情况下，将无法使用 uni-halo，请检查是否已安装和启用。",
+			desc: "uni-halo 核心插件，未安装和启用的情况下，将无法使用 uni-halo，请检查是否已安装和启用",
 			logo: utils.checkUrl("/plugins/plugin-uni-halo/assets/logo.png"),
 			url: "https://www.halo.run/store/apps/app-ryemX"
 		}
@@ -25,7 +25,7 @@ export const NeedPlugins = new Map([
 		NeedPluginIds.PluginPhotos, {
 			id: "PluginPhotos",
 			name: "图库管理",
-			desc: "图库功能模块所需要的插件，用于展示",
+			desc: "图库功能模块所需要的插件",
 			logo: utils.checkUrl("/plugins/PluginPhotos/assets/logo.svg"),
 			url: "https://www.halo.run/store/apps/app-BmQJW"
 		}
@@ -34,7 +34,7 @@ export const NeedPlugins = new Map([
 		NeedPluginIds.PluginLinks, {
 			id: "PluginLinks",
 			name: "链接管理",
-			desc: "链接管理模块，用于网站友情链接功能模块。",
+			desc: "链接管理模块，用于网站友情链接功能模块",
 			logo: utils.checkUrl("/plugins/PluginLinks/assets/logo.svg"),
 			url: "https://www.halo.run/store/apps/app-hfbQg"
 		}
@@ -43,7 +43,7 @@ export const NeedPlugins = new Map([
 		NeedPluginIds.PluginMoments, {
 			id: "PluginMoments",
 			name: "瞬间",
-			desc: "提供一个轻量级的内容图文、视频、音频等内容展示。",
+			desc: "提供一个轻量级的内容图文、视频、音频等内容展示",
 			logo: utils.checkUrl("/plugins/PluginMoments/assets/logo.svg"),
 			url: "https://www.halo.run/store/apps/app-SnwWD"
 		}
@@ -52,7 +52,7 @@ export const NeedPlugins = new Map([
 		NeedPluginIds.PluginSearchWidget, {
 			id: "PluginSearchWidget",
 			name: "搜索组件",
-			desc: "为应用提供统一的搜索组件。",
+			desc: "为应用提供统一的搜索组件",
 			logo: utils.checkUrl("/plugins/PluginSearchWidget/assets/logo.svg"),
 			url: "https://www.halo.run/store/apps/app-DlacW"
 		}

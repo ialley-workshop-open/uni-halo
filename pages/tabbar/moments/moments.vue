@@ -1,5 +1,5 @@
 <template>
-	<view class="app-page">
+	<view class="app-page" :class="[uniHaloPluginPageClass]">
 		<PluginUnavailable v-if="!uniHaloPluginAvailable" :pluginId="uniHaloPluginId"
 			:error-text="uniHaloPluginAvailableError" />
 		<template v-else>
@@ -98,17 +98,19 @@
 		generateUUID
 	} from '@/utils/uuid.js';
 
-	import pluginAvailable from "@/common/mixins/pluginAvailable.js"
-
+	import pluginAvailableMixin from "@/common/mixins/pluginAvailable.js"
+	import PluginUnavailable from '@/components/plugin-unavailable/plugin-unavailable.vue'
+	
 	export default {
-		mixins: [pluginAvailable],
+		mixins: [pluginAvailableMixin],
 		components: {
 			tmSkeleton,
 			tmFlotbutton,
 			tmTranslate,
 			tmEmpty,
 			tmTags,
-			mpHtml
+			mpHtml,
+			PluginUnavailable
 		},
 		data() {
 			return {
@@ -159,7 +161,11 @@
 			this.fnGetData();
 		},
 		onPullDownRefresh() {
-			if (!this.uniHaloPluginAvailable) return;
+			if (!this.uniHaloPluginAvailable) {
+				uni.hideLoading();
+				uni.stopPullDownRefresh();
+				return
+			}
 			this.isLoadMore = false;
 			this.queryParams.page = 0;
 			this.videoContexts = {};

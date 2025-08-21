@@ -1,5 +1,5 @@
 <template>
-	<view class="app-page card-shadow">
+	<view class="app-page card-shadow" :class="[uniHaloPluginPageClass]">
 		<PluginUnavailable v-if="!uniHaloPluginAvailable" :pluginId="uniHaloPluginId"
 			:error-text="uniHaloPluginAvailableError" />
 		<template v-else>
@@ -121,10 +121,11 @@
 	import tmImages from '@/tm-vuetify/components/tm-images/tm-images.vue';
 	import tmPoup from '@/tm-vuetify/components/tm-poup/tm-poup.vue';
 
-	import pluginAvailable from "@/common/mixins/pluginAvailable.js"
+	import pluginAvailableMixin from "@/common/mixins/pluginAvailable.js"
+	import PluginUnavailable from '@/components/plugin-unavailable/plugin-unavailable.vue'
 
 	export default {
-		mixins: [pluginAvailable],
+		mixins: [pluginAvailableMixin],
 		components: {
 			tmSkeleton,
 			tmTranslate,
@@ -132,7 +133,8 @@
 			tmTags,
 			tmEmpty,
 			tmImages,
-			tmPoup
+			tmPoup,
+			PluginUnavailable
 		},
 		data() {
 			return {
@@ -189,7 +191,11 @@
 			this.fnGetLinkGroupData();
 		},
 		onPullDownRefresh() {
-			if (!this.uniHaloPluginAvailable) return;
+			if (!this.uniHaloPluginAvailable) {
+				uni.hideLoading();
+				uni.stopPullDownRefresh();
+				return
+			}
 			this.isLoadMore = false;
 			this.queryParams.page = 1;
 			this.dataList = []

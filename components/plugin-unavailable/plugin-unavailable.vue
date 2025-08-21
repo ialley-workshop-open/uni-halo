@@ -1,5 +1,6 @@
 <template>
-	<view v-if="pluginInfo" class="plugin-unavailable flex flex-col flex-center">
+	<view v-if="pluginInfo" class="plugin-unavailable flex flex-col flex-center"
+		:class="{border:useBorder,'decoration':useDecoration}" :style="[calcCustomStyle]">
 		<!-- 图标 -->
 		<image class="plugin-logo" :src="pluginInfo.logo" mode="scaleToFill"></image>
 		<!-- 名称 -->
@@ -21,9 +22,14 @@
 			插件地址：{{ pluginInfo.url }}
 		</view>
 		<!-- 反馈按钮/复制地址 -->
-		<view class="plugin-btns">
-			<tm-button theme="light-blue" open-type="contact" plan text>复制地址</tm-button>
-			<tm-button theme="light-blue">提交反馈</tm-button>
+		<view class="plugin-btns w-full flex-center">
+			<!-- #ifndef MP-WEIXIN -->
+			<tm-button theme="light-blue" :block="true" class="w-full" :height="70" @click="copy">复制地址</tm-button>
+			<!-- #endif -->
+			<!-- #ifdef MP-WEIXIN -->
+			<tm-button theme="light-blue" plan text :height="70" @click="copy">复制地址</tm-button>
+			<tm-button theme="light-blue" open-type="contact" :height="70">提交反馈</tm-button>
+			<!-- #endif -->
 		</view>
 
 		<view class="plugin-copyright">
@@ -55,17 +61,48 @@
 			errorText: {
 				type: String,
 				default: ""
+			},
+			useDecoration: {
+				type: Boolean,
+				default: true
+			},
+			useBorder: {
+				type: Boolean,
+				default: true
+			},
+			customStyle: {
+				type: Object,
+				default: () => ({})
 			}
 		},
 		data() {
 			return {
 				NeedPluginIds,
 				NeedPlugins,
-				pluginInfo: null
+				pluginInfo: null,
+				defaultStyle: {
+					width: "80vw",
+					borderRadius: "24rpx"
+				}
 			};
 		},
-		created() {
-			this.pluginInfo = NeedPlugins.get(this.pluginId)
+		computed: {
+			calcCustomStyle() {
+				const style = this.customStyle ?? {}
+				return {
+					...this.defaultStyle,
+					...style
+				}
+			}
+		},
+		watch: {
+			pluginId: {
+				deep: true,
+				immediate: true,
+				handler(newVal, oldVal) {
+					this.pluginInfo = NeedPlugins.get(newVal)
+				}
+			}
 		},
 		methods: {
 			copy() {
@@ -79,22 +116,29 @@
 	.plugin-unavailable {
 		box-sizing: border-box;
 		margin: auto;
-		width: 80vw;
 		padding: 100rpx 36rpx;
 		gap: 24rpx;
-		border-radius: 24rpx;
-		border: 2rpx solid #E2E8F0;
-		background-color: rgba(255, 255, 255, 0.95);
-		box-shadow: 0 0 12rpx rgba(226, 232, 240, 0.5);
-		backdrop-filter: blur(6rpx);
 		font-size: 28rpx;
-		border-top: 12rpx solid #03A9F4;
+
+		&.border {
+			// border: 2rpx solid #E2E8F0;
+			border: 2rpx solid #eee;
+		}
+
+		&.decoration {
+			background-color: rgba(255, 255, 255, 0.95);
+			box-shadow: 0 0 12rpx rgba(226, 232, 240, 0.35);
+			backdrop-filter: blur(6rpx);
+			border-top: 12rpx solid rgba(3, 169, 244, 1);
+		}
+
 	}
 
 	.plugin-logo {
 		box-sizing: border-box;
 		width: 120rpx;
 		height: 120rpx;
+		border-radius: 24rpx;
 	}
 
 	.plugin-name {

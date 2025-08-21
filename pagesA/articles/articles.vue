@@ -1,5 +1,5 @@
 <template>
-	<view class="app-page">
+	<view class="app-page" :class="[uniHaloPluginPageClass]">
 		<PluginUnavailable v-if="!uniHaloPluginAvailable" :pluginId="uniHaloPluginId"
 			:error-text="uniHaloPluginAvailableError" />
 		<template v-else>
@@ -80,9 +80,11 @@
 	import MarkdownConfig from '@/common/markdown/markdown.config.js';
 	import mpHtml from '@/components/mp-html/components/mp-html/mp-html.vue';
 
-	import pluginAvailable from "@/common/mixins/pluginAvailable.js"
+	import pluginAvailableMixin from "@/common/mixins/pluginAvailable.js"
+	import PluginUnavailable from '@/components/plugin-unavailable/plugin-unavailable.vue'
+
 	export default {
-		mixins: [pluginAvailable],
+		mixins: [pluginAvailableMixin],
 		components: {
 			tmSkeleton,
 			tmSearch,
@@ -91,7 +93,8 @@
 			tmFlotbutton,
 			tmEmpty,
 			tmTags,
-			mpHtml
+			mpHtml,
+			PluginUnavailable
 		},
 		data() {
 			return {
@@ -126,7 +129,7 @@
 			this.fnSetPageTitle('内容搜索');
 			// 检查插件
 			this.setPluginId(this.NeedPluginIds.PluginSearchWidget)
-			this.setPluginError("阿偶，检测到当前插件没有安装或者启用，无法使用瞬间功能哦，请联系管理员")
+			this.setPluginError("阿偶，检测到当前插件没有安装或者启用，无法使用搜索功能哦，请联系管理员")
 			if (!await this.checkPluginAvailable()) return
 			if (!this.queryParams.keyword) {
 				this.loading = 'success'
@@ -136,9 +139,12 @@
 		},
 
 		onPullDownRefresh() {
-			if (!this.uniHaloPluginAvailable) return;
-			this.fnResetSetAniWaitIndex();
-			this.fnGetData();
+			if (!this.uniHaloPluginAvailable) {
+				uni.hideLoading();
+				uni.stopPullDownRefresh();
+				return
+			}
+			this.fnOnSearch()
 		},
 
 		methods: {

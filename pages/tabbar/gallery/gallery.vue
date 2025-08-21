@@ -1,5 +1,5 @@
 <template>
-	<view class="app-page">
+	<view class="app-page" :class="[uniHaloPluginPageClass]">
 		<PluginUnavailable v-if="!uniHaloPluginAvailable" :pluginId="uniHaloPluginId"
 			:error-text="uniHaloPluginAvailableError" />
 		<template v-else>
@@ -75,7 +75,7 @@
 	import tmButton from '@/tm-vuetify/components/tm-button/tm-button.vue';
 
 	import pluginAvailable from "@/common/mixins/pluginAvailable.js"
-
+	import PluginUnavailable from '@/components/plugin-unavailable/plugin-unavailable.vue'
 	export default {
 		options: {
 			multipleSlots: true
@@ -91,7 +91,8 @@
 			tmImages,
 			tmFlowLayoutCustom,
 			tmTabs,
-			tmButton
+			tmButton,
+			PluginUnavailable
 		},
 		data() {
 			return {
@@ -130,7 +131,7 @@
 		},
 		watch: {
 			galleryConfig: {
-				  async handler(newValue, oldValue) {
+				async handler(newValue, oldValue) {
 					if (!newValue) return;
 					this.fnSetPageTitle(newValue.pageTitle);
 					this.fnGetCategory();
@@ -146,7 +147,11 @@
 			await this.checkPluginAvailable()
 		},
 		onPullDownRefresh() {
-			if (!this.uniHaloPluginAvailable) return;
+			if (!this.uniHaloPluginAvailable) {
+				uni.hideLoading();
+				uni.stopPullDownRefresh();
+				return
+			}
 			this.dataList = []
 			this.isLoadMore = false;
 			this.queryParams.page = 1;

@@ -1,13 +1,13 @@
 <template>
-	<view class="app-page">
+	<view class="app-page" :class="[uniHaloPluginPageClass]">
 		<PluginUnavailable v-if="!uniHaloPluginAvailable" :pluginId="uniHaloPluginId"
 			:error-text="uniHaloPluginAvailableError" />
 		<template v-else>
 			<!-- 顶部切换 -->
-			<view class="e-fixed">
+			<view class="e-fixed filter-box">
 				<tm-search v-model="queryParams.keyword" :round="24" :shadow="0" color="light-blue"
 					insert-color="light-blue" :clear="true" @input="fnOnSearch" @confirm="fnOnSearch"></tm-search>
-				<tm-dropDownMenu :shadow="1" color="light-blue" active-color="light-blue"
+				<tm-dropDownMenu :shadow="0" color="light-blue" active-color="light-blue"
 					:default-selected="filterOption.selected" :list="filterOption.list"
 					@confirm="fnOnFilterConfirm"></tm-dropDownMenu>
 			</view>
@@ -58,13 +58,14 @@
 	import {
 		voteCacheUtil
 	} from '@/utils/vote.js'
-	import pluginAvailable from "@/common/mixins/pluginAvailable.js"
+	import pluginAvailableMixin from "@/common/mixins/pluginAvailable.js"
+	import PluginUnavailable from '@/components/plugin-unavailable/plugin-unavailable.vue'
 
 	export default {
-		options: { 
+		options: {
 			styleIsolation: 'shared'
 		},
-		mixins: [pluginAvailable], 
+		mixins: [pluginAvailableMixin],
 		components: {
 			tmSkeleton,
 			tmSearch,
@@ -74,7 +75,8 @@
 			tmEmpty,
 			tmTags,
 			tmDropDownMenu,
-			VoteCard
+			VoteCard,
+			PluginUnavailable
 		},
 		data() {
 			return {
@@ -199,7 +201,11 @@
 			this.fnGetData();
 		},
 		onPullDownRefresh() {
-			if (!this.uniHaloPluginAvailable) return;
+			if (!this.uniHaloPluginAvailable) {
+				uni.hideLoading();
+				uni.stopPullDownRefresh();
+				return
+			}
 			this.fnResetSetAniWaitIndex();
 			this.isLoadMore = false;
 			this.queryParams.page = 0;
@@ -383,6 +389,10 @@
 		&.is-balck {
 			background-color: #212121;
 		}
+	}
+
+	.filter-box {
+		box-shadow: 0rpx 0rpx 12rpx rgba(0, 0, 0, 0.035);
 	}
 
 	.content {

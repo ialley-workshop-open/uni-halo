@@ -11,11 +11,9 @@
 				<tm-empty icon="icon-shiliangzhinengduixiang-" label="未查询到数据"></tm-empty>
 			</view>
 			<block v-else>
-				<view class="vote-card">
+				<view class="vote-card vote-info-card">
 					<view class="sub-title"> 投票信息 </view>
-					<view class="vote-card-body flex flex-col"
-						style="margin-top:12rpx;font-size:28rpx;gap:12rpx 0;background:#F3F4F6;color:#2B2F33;padding:24rpx;border-radius:12rpx;">
-
+					<view class="vote-card-body flex flex-col uh-mt-8">
 						<view class="">
 							投票类型：<tm-tags v-if="vote.spec.type==='single'" color="light-blue" :shadow="0" size="xs"
 								model="fill">单选</tm-tags>
@@ -34,9 +32,6 @@
 								model="fill">匿名</tm-tags>
 							<tm-tags v-else color="red" size="xs" :shadow="0" model="fill">不匿名</tm-tags>
 						</view>
-						<view v-if="vote.spec.remark" class="">
-							投票说明：{{ vote.spec.remark||"暂无说明" }}
-						</view>
 						<view class="">
 							截止时间：{{ {d: vote.spec.endDate, f: 'yyyy-MM-dd HH:mm'} | formatTime }}
 						</view>
@@ -49,29 +44,14 @@
 						<view class="sub-content">
 							{{ vote.spec.title }}
 						</view>
+						<view v-if="vote.spec.remark" class="sub-remark">
+							{{ vote.spec.remark  }}
+						</view>
 					</view>
-					<view class="vote-card-body">
+					<view class="vote-card-body uh-mt-8">
 						<view class="sub-title"> 投票选项 <text v-if="vote.spec.type==='multiple'"
 								class="sub-title-count">（最多选择 {{ vote.spec.maxVotes }} 项）</text> </view>
 						<view v-if="vote.spec.type==='single'" class="single">
-							<!-- <tm-groupradio @change="onOptionRadioChange">
-								<tm-radio v-for="(option,optionIndex) in vote.spec.options" :key="optionIndex" dense
-									:disabled="vote.spec.disabled" v-model="option.checked" :extendData="option">
-									<template v-slot:default="{checkData}">
-										<tm-button :shadow="0" :theme="checkData.checked?'light-blue':'grey-lighten-3'"
-											:plan="false" size="m" :height="72">
-											<view class="flex flex-between w-full">
-												<text class="text-align-left text-overflow">
-													{{ checkData.extendData.title }}
-												</text>
-												<text v-if="checkData.extendData.isVoted" class="flex-shrink ml-12">
-													{{checkData.extendData.percent }}%
-												</text>
-											</view>
-										</tm-button>
-									</template>
-								</tm-radio>
-							</tm-groupradio> -->
 							<view class="w-full flex flex-col uh-gap-8">
 								<tm-button v-for="(option,optionIndex) in vote.spec.options" :key="optionIndex"
 									:shadow="0" :theme="option.checked?'light-blue':'grey-lighten-3'" :plan="false"
@@ -90,25 +70,6 @@
 						</view>
 
 						<view v-else-if="vote.spec.type==='multiple'" class="multiple">
-							<!-- <tm-groupcheckbox @change="onOptionCheckboxChange">
-								<tm-checkbox v-for="(option,optionIndex) in vote.spec.options" :key="optionIndex" dense
-									:disabled="vote.spec.disabled" v-model="option.checked" :extendData="option">
-									<template v-slot:default="{checkData}">
-										<tm-button :shadow="0" :theme="checkData.checked?'light-blue':'grey-lighten-3'"
-											:plan="false" size="m" :height="72">
-											<view class="flex flex-between w-full">
-												<text class="text-align-left text-overflow">
-													{{ checkData.extendData.title }}
-												</text>
-												<text v-if="checkData.extendData.isVoted" class="flex-shrink ml-12">
-													{{checkData.extendData.percent }}%
-												</text>
-											</view>
-										</tm-button>
-									</template>
-								</tm-checkbox>
-							</tm-groupcheckbox> -->
-
 							<view class="w-full flex flex-col uh-gap-8">
 								<tm-button v-for="(option,optionIndex) in vote.spec.options" :key="optionIndex"
 									:shadow="0" :theme="option.checked?'light-blue':'grey-lighten-3'" :plan="false"
@@ -138,25 +99,6 @@
 								</view>
 							</view>
 							<view class="option-foot w-full flex flex-between">
-								<!-- <tm-groupradio @change="onOptionPkChange" >
-									<tm-radio v-for="(option,optionIndex) in vote.spec.options" :key="optionIndex" dense
-										:disabled="vote.spec.disabled" v-model="option.checked"
-										:extendData="{optionIndex:optionIndex,...option}"  >
-										<template v-slot:default="{checkData}">
-											<tm-button :shadow="0"
-												:theme="checkData.checked?'light-blue':'grey-lighten-3'" :plan="false"
-												size="m" :height="72">
-												<view class="flex flex-between w-full">
-													<text class="text-align-left text-overflow">
-														选项{{checkData.extendData.optionIndex+1}}：{{ checkData.extendData.title }}
-													</text>
-												</view>
-											</tm-button>
-										</template>
-									</tm-radio>
-								</tm-groupradio> -->
-
-
 								<view class="w-full flex flex-between uh-gap-8">
 									<tm-button v-for="(option,optionIndex) in vote.spec.options" :key="optionIndex"
 										:shadow="0" :theme="option.checked?'light-blue':'grey-lighten-3'" :plan="false"
@@ -169,7 +111,6 @@
 										</view>
 									</tm-button>
 								</view>
-
 							</view>
 						</view>
 					</view>
@@ -181,6 +122,7 @@
 						<view class="">
 							<tm-tags color="grey-darken-4" size="s" model="text">{{ vote.stats.voteCount }}
 								人已参与</tm-tags>
+							<tm-tags v-if="vote.spec.isVoted" color="blue" rounded size="s" model="text">已投票</tm-tags>
 						</view>
 					</view>
 				</view>
@@ -191,6 +133,8 @@
 						:block="true" @click="handleSubmit()">不允许匿名投票</tm-button>
 					<tm-button v-else-if="fnCalcIsVoted()" theme="white" text :block="true"
 						class="w-full">您已参与投票</tm-button>
+					<tm-button v-else-if="submitForm.voteData.length===0" theme="white" text class="w-full"
+						:block="true" @click="handleSubmitTip()">提交投票（请选择选项）</tm-button>
 					<tm-button v-else theme="light-blue" class="w-full" :block="true"
 						@click="handleSubmit()">提交投票</tm-button>
 				</view>
@@ -203,10 +147,6 @@
 	import tmSkeleton from '@/tm-vuetify/components/tm-skeleton/tm-skeleton.vue';
 	import tmEmpty from '@/tm-vuetify/components/tm-empty/tm-empty.vue';
 	import tmButton from '@/tm-vuetify/components/tm-button/tm-button.vue';
-	import tmGroupradio from '@/tm-vuetify/components/tm-groupradio/tm-groupradio.vue';
-	import tmRadio from '@/tm-vuetify/components/tm-radio/tm-radio.vue';
-	import tmGroupcheckbox from '@/tm-vuetify/components/tm-groupcheckbox/tm-groupcheckbox.vue';
-	import tmCheckbox from '@/tm-vuetify/components/tm-checkbox/tm-checkbox.vue';
 	import tmTags from '@/tm-vuetify/components/tm-tags/tm-tags.vue';
 
 	import {
@@ -224,10 +164,6 @@
 			tmSkeleton,
 			tmEmpty,
 			tmButton,
-			tmGroupradio,
-			tmRadio,
-			tmGroupcheckbox,
-			tmCheckbox,
 			tmTags,
 		},
 		data() {
@@ -241,11 +177,6 @@
 				vote: null,
 				submitForm: {
 					voteData: []
-				},
-				votedSelected: {
-					checkbox: [],
-					radio: [],
-					pk: []
 				}
 			};
 		},
@@ -350,6 +281,12 @@
 			formatJsonStr(jsonStr) {
 				return jsonStr ? JSON.parse(jsonStr) : {}
 			},
+			handleSubmitTip(){
+				uni.showToast({
+					icon: "none",
+					title: "请选择选项后继续"
+				})
+			},
 			handleSubmit() {
 				if (!this.vote.spec.canAnonymously) {
 					uni.showModal({
@@ -371,9 +308,6 @@
 				uni.showLoading({
 					title: "正在保存..."
 				})
-
-				// 使用简单版
-				this.submitForm.voteData = this.vote.spec.options.filter(x => x.checked).map(item => item.id)
 
 				this.$httpApi.v2
 					.submitVote(this.name, this.submitForm, this.vote.spec.canAnonymously)
@@ -410,15 +344,30 @@
 						item.checked = false
 					}
 				})
+
+				this.submitForm.voteData = this.vote.spec.options.filter(x => x.checked).map(item => item.id)
 			},
 
 			handleSelectCheckboxOption(option) {
 				if (this.vote.spec.disabled) return
+
+				const checkedList = this.vote.spec.options.filter(x => x.checked && x.id != option.id)
+
+				if (this.vote.spec.type === 'multiple' && checkedList.length >= this.vote.spec.maxVotes) {
+					uni.showToast({
+						icon: "none",
+						title: `最多选择 ${this.vote.spec.maxVotes} 项`
+					})
+					return
+				}
+
 				this.vote.spec.options.map(item => {
 					if (option.id == item.id) {
 						item.checked = !item.checked
 					}
 				})
+
+				this.submitForm.voteData = this.vote.spec.options.filter(x => x.checked).map(item => item.id)
 			}
 		}
 	};
@@ -467,6 +416,17 @@
 		box-shadow: 0rpx 2rpx 24rpx rgba(0, 0, 0, 0.03);
 		overflow: hidden;
 		margin-bottom: 24rpx;
+	}
+
+	.vote-info-card {
+		.vote-card-body {
+			font-size: 28rpx;
+			gap: 12rpx 0;
+			background: #F3F4F6;
+			color: #3F3F3F;
+			padding: 24rpx;
+			border-radius: 12rpx;
+		}
 	}
 
 	.vote-card-head {
@@ -620,20 +580,26 @@
 	}
 
 	.sub-content {
+		margin-bottom: 12rpx;
+		padding: 12rpx 0;
 		font-weight: bold;
 		color: #2B2F33;
-		padding: 12rpx 0;
-		font-size: 32rpx;
-		margin-bottom: 12rpx;
+		font-size: 30rpx;
 	}
 
+	.sub-remark {
+		margin-bottom: 36rpx;
+		padding-top: 12rpx;
+		color: #3F3F3F;
+		font-size: 28rpx;
+	}
 
 	.sub-title {
 		box-sizing: border-box;
 		position: relative;
 		margin-bottom: 12rpx;
 		padding-left: 24rpx;
-		font-weight: bold;
+		// font-weight: bold;
 		font-size: 30rpx;
 
 		&:before {

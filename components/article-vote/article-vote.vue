@@ -151,6 +151,10 @@
 			index: {
 				type: Number,
 				default: 0
+			},
+			article: {
+				type: Object,
+				default: () => ({})
 			}
 		},
 		data() {
@@ -236,6 +240,12 @@
 			formatJsonStr(jsonStr) {
 				return jsonStr ? JSON.parse(jsonStr) : {}
 			},
+			handleSubmitTip() {
+				uni.showToast({
+					icon: "none",
+					title: "请选择选项后继续"
+				})
+			},
 			handleSubmit() {
 				if (!this.vote.spec.canAnonymously) {
 					uni.showModal({
@@ -247,7 +257,8 @@
 						confirmText: "复制地址",
 						success: (res) => {
 							if (res.confirm) {
-								this.$utils.copyText(this.$baseApiUrl, "复制成功")
+								const articleUrl = this.$baseApiUrl + (this.article?.status?.permalink ?? "")
+								this.$utils.copyText(articleUrl, "原文地址复制成功")
 							}
 						}
 					})
@@ -296,6 +307,17 @@
 
 			handleSelectCheckboxOption(option) {
 				if (this.vote.spec.disabled) return
+
+				const checkedList = this.vote.spec.options.filter(x => x.checked && x.id != option.id)
+
+				if (this.vote.spec.type === 'multiple' && checkedList.length >= this.vote.spec.maxVotes) {
+					uni.showToast({
+						icon: "none",
+						title: `最多选择 ${this.vote.spec.maxVotes} 项`
+					})
+					return
+				}
+
 				this.vote.spec.options.map(item => {
 					if (option.id == item.id) {
 						item.checked = !item.checked

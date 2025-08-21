@@ -106,24 +106,32 @@
 				</view>
 
 				<!-- 投票 -->
-				<view v-if="!calcAuditModeEnabled && result._voteIds.length!==0" class="vote-wrap copyright-wrap bg-white mt-24 pa-24 round-4">
-					<PluginUnavailable v-if="!uniHaloPluginAvailable" :pluginId="uniHaloPluginId"
-						:error-text="uniHaloPluginAvailableError" />
-					<template v-else>
-						<view class="copyright-title text-weight-b flex items-center justify-between">
-							<text>相关投票</text>
-							<text class="vote-opra" @click="voteIsOpen=!voteIsOpen">
-								{{ voteIsOpen?'收起':'展开'  }}
-							</text>
-						</view>
-						<view v-show="voteIsOpen" class="flex flex-col uh-gap-8 uh-mt-8">
-							<ArticleVote v-for="(voteId,voteIdIndex) in result._voteIds" :key="voteId" :voteId="voteId" :index="voteIdIndex">
+				<view v-if="!calcAuditModeEnabled && result._voteIds.length!==0"
+					class="vote-wrap copyright-wrap bg-white mt-24 pa-24 round-4">
+
+					<view class="copyright-title text-weight-b flex items-center justify-between">
+						<text>相关投票</text>
+						<text class="vote-opra" @click="voteIsOpen=!voteIsOpen">
+							{{ voteIsOpen?'收起':'展开'  }}
+						</text>
+					</view>
+					<view v-show="voteIsOpen" class="flex flex-col uh-gap-8 uh-mt-8">
+						<PluginUnavailable v-if="!uniHaloPluginAvailable" :article="result" :pluginId="uniHaloPluginId"
+							:error-text="uniHaloPluginAvailableError" :useDecoration="false" :customStyle="{
+								width:'100%',borderRadius:'16rpx' }" />
+						<template v-else>
+							<ArticleVote v-for="(voteId,voteIdIndex) in result._voteIds" :key="voteId" :voteId="voteId"
+								:index="voteIdIndex">
 							</ArticleVote>
-						</view>
-						<view v-show="!voteIsOpen" class="vote-tip" @click="voteIsOpen=!voteIsOpen">
-							投票已收起，点击展开 {{result._voteIds.length}} 个投票项
-						</view>
-					</template>
+							<view v-show="!voteIsOpen" class="vote-tip" @click="voteIsOpen=!voteIsOpen">
+								投票已收起，点击展开 {{result._voteIds.length}} 个投票项
+							</view>
+						</template>
+					</view>
+					<view v-show="!uniHaloPluginAvailable && !voteIsOpen" class="vote-tip"
+						@click="voteIsOpen=!voteIsOpen">
+						提示区域已收起，点击显示
+					</view>
 				</view>
 
 				<!-- 版权声明 -->
@@ -325,11 +333,12 @@
 	import RestrictReadSkeleton from "@/components/restrict-read-skeleton/restrict-read-skeleton.vue";
 	import TmImages from "@/tm-vuetify/components/tm-images/tm-images.vue";
 	import TmInput from "@/tm-vuetify/components/tm-input/tm-input.vue";
-	import pluginAvailable from "@/common/mixins/pluginAvailable.js"
+	import pluginAvailableMixin from "@/common/mixins/pluginAvailable.js"
+	import PluginUnavailable from '@/components/plugin-unavailable/plugin-unavailable.vue'
 
 	let videoAd = null;
 	export default {
-		mixins:[pluginAvailable],
+		mixins: [pluginAvailableMixin],
 		components: {
 			TmInput,
 			TmImages,
@@ -347,7 +356,8 @@
 			rCanvas,
 			barrage,
 			commentModal,
-			ArticleVote
+			ArticleVote,
+			PluginUnavailable
 		},
 		data() {
 			return {
@@ -454,7 +464,7 @@
 			this.setPluginId(this.NeedPluginIds.PluginVote)
 			this.setPluginError("阿偶，检测到当前插件没有安装或者启用，无法使用投票功能，请联系管理员")
 			await this.checkPluginAvailable()
-			
+
 			this.fnSetPageTitle('文章加载中...');
 			this.queryParams.name = e.name;
 			this.fnGetData();
@@ -1444,18 +1454,19 @@
 	.vote-opra {
 		font-size: 24rpx;
 		font-weight: normal;
-		color:#999;
+		color: #999;
 	}
-	.vote-tip{
-		margin-top:12rpx;
-		padding:50rpx 24rpx;
-		background:#F1F5F9;
-		color:#666;
-		font-size:24rpx;
-		border-radius:12rpx;
+
+	.vote-tip {
+		margin-top: 12rpx;
+		padding: 50rpx 24rpx;
+		background: #F1F5F9;
+		color: #666;
+		font-size: 24rpx;
+		border-radius: 12rpx;
 		text-align: center;
 	}
-	
+
 	.markdown-wrap {
 		overflow: hidden;
 		border-radius: 12rpx;

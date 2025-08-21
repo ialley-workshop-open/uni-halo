@@ -173,7 +173,7 @@
 		padding: 24rpx;
 		border-radius: 12rpx;
 		background-color: #ffff;
-		box-shadow: 0rpx 2rpx 24rpx rgba(0, 0, 0, 0.075);
+		box-shadow: 0rpx 2rpx 12rpx rgba(0, 0, 0, 0.035);
 		overflow: hidden;
 		margin-bottom: 24rpx;
 		// border: 1px solid #eee;
@@ -207,7 +207,7 @@
 		box-sizing: border-box;
 		padding-top: 6px;
 		margin-top: 6px;
-		border-top: 2rpx solid #eee;
+		border-top: 2rpx solid #F7F7F7;
 		
 		.left{
 			

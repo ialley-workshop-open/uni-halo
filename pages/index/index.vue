@@ -15,7 +15,7 @@
 
 	const _DEV_ = false
 	const _DEV_TO_TYPE_ = "page"
-	const _DEV_TO_PATH_ = ""
+	const _DEV_TO_PATH_ = "/pagesA/article-detail/article-detail?name=077efb85-3544-4307-b24c-537a9e53f116"
 
 	export default {
 		mixins: [pluginAvailableMixin],

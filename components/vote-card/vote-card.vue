@@ -1,7 +1,7 @@
 <template>
 	<view class="vote-card" @click="$emit('on-click',vote)">
 		<view class="vote-card-head flex">
-			<view class="left flex flex-center">
+			<view class="left flex flex-center w-full">
 				<view class="flex-shrink">
 					<tm-tags v-if="vote.spec.type==='single'" color="light-blue" :shadow="0" rounded size="s"
 						model="fill">单选</tm-tags>
@@ -14,12 +14,12 @@
 					{{ vote.spec.title }}
 				</view>
 			</view>
-			<view class="flex-shrink right flex flex-end">
+			<view v-if="false" class="flex-shrink right flex flex-end">
 				<tm-tags v-if="vote.spec.hasEnded" color="red" rounded :shadow="0" size="s" model="text">已结束</tm-tags>
 				<tm-tags v-else color="green" rounded size="s" :shadow="0" model="text">进行中</tm-tags>
 			</view>
 		</view>
-		<view class="vote-card-body">
+		<view class="vote-card-body w-full">
 
 			<view v-if="vote.spec.remark" class="remark text-overflow-2 text-size-s">
 				{{vote.spec.remark}}
@@ -94,13 +94,29 @@
 		</view>
 		<view class="vote-card-foot flex flex-between">
 			<view class="left flex">
-				<tm-tags color="grey-darken-2" rounded size="s"
-					model="text">{{ {d: vote.spec.endDate, f: 'yyyy-MM-dd HH:mm'} | formatTime }} 结束</tm-tags>
+				<tm-tags v-if="vote.spec._state=='已结束'" color="red" size="s" rounded :shadow="0"
+					model="text">已结束</tm-tags>
+				<tm-tags v-else-if="vote.spec._state=='未开始'" color="orange" size="s" rounded :shadow="0"
+					model="text">未开始</tm-tags>
+				<tm-tags v-else-if="vote.spec._state=='进行中'" color="green" size="s" rounded :shadow="0"
+					model="text">进行中</tm-tags>
+				
+				<tm-tags v-if="vote.spec.isVoted" color="blue" rounded size="s" model="text">已投票</tm-tags>
+
+				<tm-tags v-if="vote.spec.timeLimit==='permanent'" color="grey-darken-2" rounded size="s"
+					model="text">结束：永久有效 </tm-tags>
+				<tm-tags v-else color="grey-darken-2" rounded size="s" model="text">
+					<template
+						v-if="vote.spec._state=='未开始'">开始：{{ {d: vote.spec.startDate, f: 'yyyy-MM-dd HH:mm'} | formatTime }}
+					</template>
+					<template v-else>结束：{{ {d: vote.spec.endDate, f: 'yyyy-MM-dd HH:mm'} | formatTime }}
+					</template>
+				</tm-tags>
 			</view>
 
-			<view class="right flex flex-end">
-				<tm-tags color="grey-darken-2" rounded size="s" model="text">{{ vote.stats.voteCount }} 人已参与</tm-tags>
-				<tm-tags v-if="vote.spec.isVoted" color="blue" rounded size="s" model="text">已投票</tm-tags>
+			<view v-if="false" class="right flex flex-end">
+				<tm-tags v-if="false" color="grey-darken-2" rounded size="s" model="text">{{ vote.stats.voteCount }}
+					人已参与</tm-tags>
 			</view>
 		</view>
 	</view>
@@ -140,8 +156,7 @@
 				type: Boolean,
 				default: false
 			}
-		},
-
+		}, 
 		methods: {
 			onOptionRadioChange(e) {
 				console.log("onOptionRadioChange", e)
@@ -197,9 +212,9 @@
 
 		.remark {
 			box-sizing: border-box;
-			padding: 12rpx 6rpx;
 			padding-top: 0;
 			color: rgba(0, 0, 0, 0.75);
+			margin-bottom: 12rpx;
 		}
 	}
 
@@ -208,10 +223,8 @@
 		padding-top: 6px;
 		margin-top: 6px;
 		border-top: 2rpx solid #F7F7F7;
-		
-		.left{
-			
-		}
+
+		.left {}
 	}
 
 

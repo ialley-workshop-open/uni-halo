@@ -252,11 +252,7 @@ export default {
 	 * 获取投票列表
 	 */
 	getVoteList: (params) => {
-		return HttpHandler.Get(`/apis/console.api.vote.kunkunyu.com/v1alpha1/votes`, params, {
-			custom: {
-				personalToken: getPersonalToken()
-			}
-		})
+		return HttpHandler.Get(`/apis/api.vote.kunkunyu.com/v1alpha1/votes`, params)
 	},
 	/**
 	 * 获取投票详情

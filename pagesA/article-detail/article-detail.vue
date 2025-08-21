@@ -115,23 +115,27 @@
 							{{ voteIsOpen?'收起':'展开'  }}
 						</text>
 					</view>
-					<view v-show="voteIsOpen" class="flex flex-col uh-gap-8 uh-mt-8">
-						<PluginUnavailable v-if="!uniHaloPluginAvailable" :article="result" :pluginId="uniHaloPluginId"
-							:error-text="uniHaloPluginAvailableError" :useDecoration="false" :customStyle="{
+					<template v-if="reloadVote">
+						<view v-show="voteIsOpen" class="flex flex-col uh-gap-8 uh-mt-8">
+							<PluginUnavailable v-if="!uniHaloPluginAvailable" :pluginId="uniHaloPluginId"
+								:error-text="uniHaloPluginAvailableError" :useDecoration="false" :customStyle="{
 								width:'100%',borderRadius:'16rpx' }" />
-						<template v-else>
-							<ArticleVote v-for="(voteId,voteIdIndex) in result._voteIds" :key="voteId" :voteId="voteId"
-								:index="voteIdIndex">
-							</ArticleVote>
-							<view v-show="!voteIsOpen" class="vote-tip" @click="voteIsOpen=!voteIsOpen">
-								投票已收起，点击展开 {{result._voteIds.length}} 个投票项
-							</view>
-						</template>
-					</view>
-					<view v-show="!uniHaloPluginAvailable && !voteIsOpen" class="vote-tip"
-						@click="voteIsOpen=!voteIsOpen">
-						提示区域已收起，点击显示
-					</view>
+							<template v-else>
+								<ArticleVote v-for="(voteId,voteIdIndex) in result._voteIds" :key="voteId"
+									:voteId="voteId" :article="result" :index="voteIdIndex">
+								</ArticleVote>
+
+							</template>
+						</view>
+						<view v-show="uniHaloPluginAvailable && !voteIsOpen" class="vote-tip"
+							@click="voteIsOpen=!voteIsOpen">
+							投票已收起，点击展开 {{result._voteIds.length}} 个投票项
+						</view>
+						<view v-show="!uniHaloPluginAvailable && !voteIsOpen" class="vote-tip"
+							@click="voteIsOpen=!voteIsOpen">
+							提示区域已收起，点击显示
+						</view>
+					</template>
 				</view>
 
 				<!-- 版权声明 -->
@@ -409,7 +413,8 @@
 
 				commentListScrollTop: 0,
 
-				voteIsOpen: true
+				voteIsOpen: true,
+				reloadVote: false
 			};
 		},
 		computed: {
@@ -469,7 +474,14 @@
 			this.queryParams.name = e.name;
 			this.fnGetData();
 		},
-
+		onShow() {
+			if (this.reloadVote) {
+				this.reloadVote = false
+				setTimeout(() => {
+					this.reloadVote = true
+				}, 100);
+			}
+		},
 		onPullDownRefresh() {
 			this.fnGetData();
 		},
@@ -540,6 +552,7 @@
 						this.result = tempResult;
 						this.fnSetPageTitle('文章详情');
 						this.loading = 'success';
+						this.reloadVote = true;
 						this.fnHandleSetFlotButtonItems(this.haloConfigs);
 						this.handleQueryCommentListScrollTop()
 					})

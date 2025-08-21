@@ -340,5 +340,10 @@ $spacing-sizes: (
 }
 
 .justify-center {
-  justify-content: center;
+	justify-content: center;
+}
+
+.text-break {
+	overflow-wrap: break-word;
+	word-break: break-all;
 }

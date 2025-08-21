@@ -23,9 +23,16 @@
 								model="fill">双选PK</tm-tags>
 						</view>
 						<view class="">
-							投票状态：<tm-tags v-if="vote.spec.hasEnded" color="red" size="xs" :shadow="0"
+							投票状态：<tm-tags v-if="vote.spec._state=='已结束'" color="red" size="xs" :shadow="0"
 								model="fill">已结束</tm-tags>
-							<tm-tags v-else color="green" size="xs" :shadow="0" model="fill">进行中</tm-tags>
+							<tm-tags v-else-if="vote.spec._state=='未开始'" color="orange" size="xs" :shadow="0"
+								model="fill">
+								未开始
+							</tm-tags>
+							<tm-tags v-else-if="vote.spec._state=='进行中'" color="green" size="xs" :shadow="0"
+								model="fill">
+								进行中
+							</tm-tags>
 						</view>
 						<view class="">
 							投票方式：<tm-tags v-if="vote.spec.canAnonymously" color="light-blue" size="xs" :shadow="0"
@@ -33,7 +40,15 @@
 							<tm-tags v-else color="red" size="xs" :shadow="0" model="fill">不匿名</tm-tags>
 						</view>
 						<view class="">
-							截止时间：{{ {d: vote.spec.endDate, f: 'yyyy-MM-dd HH:mm'} | formatTime }}
+							开始时间：{{ {d: vote.spec.startDate, f: 'yyyy-MM-dd HH:mm'} | formatTime }}
+						</view>
+						<view class="">
+							<text v-if="vote.spec.timeLimit==='permanent'">
+								结束时间：永久有效
+							</text>
+							<text v-else>
+								结束时间：{{ {d: vote.spec.endDate, f: 'yyyy-MM-dd HH:mm'} | formatTime }}
+							</text>
 						</view>
 					</view>
 				</view>
@@ -53,37 +68,57 @@
 								class="sub-title-count">（最多选择 {{ vote.spec.maxVotes }} 项）</text> </view>
 						<view v-if="vote.spec.type==='single'" class="single">
 							<view class="w-full flex flex-col uh-gap-8">
-								<tm-button v-for="(option,optionIndex) in vote.spec.options" :key="optionIndex"
-									:shadow="0" :theme="option.checked?'light-blue':'grey-lighten-3'" :plan="false"
-									size="m" :height="72" :block="true" class="flex-1 w-full"
-									@click="handleSelectSingleOption(option)">
-									<view class="flex flex-between w-full">
-										<text class="text-align-left text-overflow">
-											{{option.title }}
-										</text>
-										<text v-if="vote.spec.isVoted" class="flex-shrink ml-12">
-											{{option.percent }}%
-										</text>
+								<template v-if="vote.spec.isVoted">
+									<view v-for="(option,optionIndex) in vote.spec.options" :key="optionIndex"
+										class="is-voted-item" :class="[option.checked?'selected':'']" :style="{
+											'--percent':option.percent+ '%'
+										}">
+										<view class="is-voted-item-content flex w-full flex-between uh-gap-8">
+											<view class="flex-1 text-align-left text-break">
+												{{option.title }}
+											</view>
+											<view class="flex-shrink">
+												{{option.percent }}%
+											</view>
+										</view>
 									</view>
-								</tm-button>
+								</template>
+								<template v-else>
+									<view v-for="(option,optionIndex) in vote.spec.options" :key="optionIndex"
+										class="vote-select-option flex-1 w-full text-break"
+										:class="[option.checked?'light-blue':'grey-lighten-3']"
+										@click="handleSelectSingleOption(option)">
+										{{option.title }}
+									</view>
+								</template>
 							</view>
 						</view>
 
 						<view v-else-if="vote.spec.type==='multiple'" class="multiple">
 							<view class="w-full flex flex-col uh-gap-8">
-								<tm-button v-for="(option,optionIndex) in vote.spec.options" :key="optionIndex"
-									:shadow="0" :theme="option.checked?'light-blue':'grey-lighten-3'" :plan="false"
-									size="m" :height="72" :block="true" class="flex-1 full"
-									@click="handleSelectCheckboxOption(option)">
-									<view class="flex flex-between w-full">
-										<text class="text-align-left text-overflow">
-											{{option.title }}
-										</text>
-										<text v-if="vote.spec.isVoted" class="flex-shrink ml-12">
-											{{option.percent }}%
-										</text>
+								<template v-if="vote.spec.isVoted">
+									<view v-for="(option,optionIndex) in vote.spec.options" :key="optionIndex"
+										class="is-voted-item" :class="[option.checked?'selected':'']" :style="{
+											'--percent':option.percent + '%'
+										}">
+										<view class="is-voted-item-content flex w-full flex-between uh-gap-8">
+											<view class="flex-1 text-align-left text-break">
+												{{option.title }}
+											</view>
+											<view class="flex-shrink">
+												{{option.percent }}%
+											</view>
+										</view>
 									</view>
-								</tm-button>
+								</template>
+								<template v-else>
+									<view v-for="(option,optionIndex) in vote.spec.options" :key="optionIndex"
+										class="vote-select-option flex-1 w-full text-break"
+										:class="[option.checked?'light-blue':'grey-lighten-3']"
+										@click="handleSelectCheckboxOption(option)">
+										{{option.title }}
+									</view>
+								</template>
 							</view>
 						</view>
 
@@ -91,26 +126,37 @@
 							<view class="pk-container">
 								<view class="radio-item" v-for="(option,optionIndex) in vote.spec.options"
 									:key="optionIndex" :class="[optionIndex==0?'radio-left':'radio-right']"
-									:style="{width:option.percent + '%'}">
+									:style="{width: option.percent + '%'}">
 									<view class="option-item"
 										:class="[optionIndex==0?'option-item-left':'option-item-right']">
 										{{option.percent }}%
 									</view>
 								</view>
 							</view>
-							<view class="option-foot w-full flex flex-between">
-								<view class="w-full flex flex-between uh-gap-8">
-									<tm-button v-for="(option,optionIndex) in vote.spec.options" :key="optionIndex"
-										:shadow="0" :theme="option.checked?'light-blue':'grey-lighten-3'" :plan="false"
-										size="m" :height="72" :block="true" class="flex-1"
-										@click="handleSelectSingleOption(option)">
-										<view class="flex flex-between w-full">
-											<text class="text-align-left text-overflow">
+							<view class="option-foot w-full flex flex-col uh-gap-8">
+								<template v-if="vote.spec.isVoted">
+									<view v-for="(option,optionIndex) in vote.spec.options" :key="optionIndex"
+										class="is-voted-item" :class="[option.checked?'selected':'']" :style="{
+											'--percent': option.percent + '%'
+										}">
+										<view class="is-voted-item-content flex w-full flex-between uh-gap-8">
+											<view class="flex-1 text-align-left text-break">
 												选项{{ optionIndex+1}}：{{option.title }}
-											</text>
+											</view>
+											<view class="flex-shrink">
+												{{option.percent }}%
+											</view>
 										</view>
-									</tm-button>
-								</view>
+									</view>
+								</template>
+								<template v-else>
+									<view v-for="(option,optionIndex) in vote.spec.options" :key="optionIndex"
+										class="vote-select-option flex-1 w-full text-break"
+										:class="[option.checked?'light-blue':'grey-lighten-3']"
+										@click="handleSelectSingleOption(option)">
+										选项{{ optionIndex+1}}：{{option.title }}
+									</view>
+								</template>
 							</view>
 						</view>
 					</view>
@@ -122,21 +168,32 @@
 						<view class="">
 							<tm-tags color="grey-darken-4" size="s" model="text">{{ vote.stats.voteCount }}
 								人已参与</tm-tags>
-							<tm-tags v-if="vote.spec.isVoted" color="blue" rounded size="s" model="text">已投票</tm-tags>
+							<!-- <tm-tags v-if="vote.spec.isVoted" color="blue" rounded size="s" model="text">已投票</tm-tags> -->
 						</view>
 					</view>
 				</view>
+
+				<!-- 暂时不做,目前没有意义 -->
+				<!-- <view v-if="vote.spec.canSeeVoters" class="vote-card">
+					<view class="vote-card-body">
+						<view class="sub-title"> 投票用户 </view>
+						<view class="">
+							
+						</view>
+					</view>
+				</view> -->
+
 				<view class="vote-submit flex w-full flex-center" :style="{
 					paddingBottom:safeAreaBottom + 'rpx'
 				}">
 					<tm-button v-if="!vote.spec.canAnonymously" theme="red" :shadow="0" class="w-full" text
-						:block="true" @click="handleSubmit()">不允许匿名投票</tm-button>
+						:block="true" @click="handleSubmit()">不支持匿名投票</tm-button>
 					<tm-button v-else-if="fnCalcIsVoted()" theme="white" text :block="true"
 						class="w-full">您已参与投票</tm-button>
 					<tm-button v-else-if="submitForm.voteData.length===0" theme="white" text class="w-full"
 						:block="true" @click="handleSubmitTip()">提交投票（请选择选项）</tm-button>
-					<tm-button v-else theme="light-blue" class="w-full" :block="true"
-						@click="handleSubmit()">提交投票</tm-button>
+					<tm-button v-else theme="light-blue" class="w-full" :block="true" :loading="submitLoading"
+						:disabled="submitLoading" @click="handleSubmit()">提交投票</tm-button>
 				</view>
 			</block>
 		</block>
@@ -170,6 +227,7 @@
 			return {
 				safeAreaBottom: 24,
 				loading: 'loading',
+				submitLoading: false,
 				pageTitle: '加载中...',
 
 				name: '',
@@ -184,7 +242,7 @@
 		onLoad(e) {
 			this.name = e.name;
 			this.fnGetData();
-
+			this.fnGetVoteUserList();
 			// #ifndef H5
 			const systemInfo = uni.getSystemInfoSync();
 			this.safeAreaBottom = systemInfo.safeAreaInsets.bottom + 12;
@@ -192,6 +250,7 @@
 		},
 		onPullDownRefresh() {
 			this.fnGetData();
+			this.fnGetVoteUserList();
 		},
 		methods: {
 			fnGetData() {
@@ -207,6 +266,7 @@
 
 						tempVoteRes.vote.spec.isVoted = this.fnCalcIsVoted()
 						tempVoteRes.vote.spec.disabled = this.fnCalcIsVoted()
+						tempVoteRes.vote.spec._state = this.handleCalcVoteState(tempVoteRes.vote)
 
 						tempVoteRes.vote.spec.options.map((option, index) => {
 							option.value = option.id
@@ -227,9 +287,7 @@
 							return option
 						})
 
-
 						this.vote = tempVoteRes.vote
-						console.log("this.vote", this.vote)
 						this.detail = tempVoteRes;
 
 						setTimeout(() => {
@@ -248,6 +306,16 @@
 							this.fnSetPageTitle(this.pageTitle);
 						}, 200);
 					});
+			},
+			fnGetVoteUserList() {
+				this.$httpApi.v2
+					.getVoteUserList(this.name)
+					.then(res => {
+						console.log("查询投票用户列表")
+					})
+					.catch(err => {
+						console.log("err")
+					})
 			},
 			fnCalcPercent(voteOption, stats) {
 				if (!this.fnCalcIsVoted()) return 0;
@@ -268,7 +336,23 @@
 				const checked = data.selected.includes(option.id)
 				return checked
 			},
+			handleCalcVoteState(vote) {
+				if (vote.spec.timeLimit !== 'custom') {
+					return vote.spec.hasEnd ? "已结束" : "进行中"
+				}
 
+				const nowTime = new Date().getTime()
+				const startTime = new Date(vote.spec.startDate).getTime()
+				const endTime = new Date(vote.spec.endDate).getTime()
+
+				if (nowTime < startTime) {
+					return "未开始"
+				}
+				if (nowTime < endTime) {
+					return "进行中"
+				}
+				return vote.spec.hasEnd ? "已结束" : "进行中"
+			},
 			onOptionRadioChange(e) {
 				this.submitForm.voteData = e.map(item => this.vote.spec.options[item.index]?.id);
 			},
@@ -281,18 +365,15 @@
 			formatJsonStr(jsonStr) {
 				return jsonStr ? JSON.parse(jsonStr) : {}
 			},
-			handleSubmitTip(){
-				uni.showToast({
-					icon: "none",
-					title: "请选择选项后继续"
-				})
+			handleSubmitTip() {
+				this.showToast("请选择选项后继续")
 			},
 			handleSubmit() {
 				if (!this.vote.spec.canAnonymously) {
 					uni.showModal({
 						icon: "none",
 						title: "提示",
-						content: "该投票不允许匿名，请到博主的 网站端 进行投票！",
+						content: "该投票不支持匿名，请到博主的 网站端 进行投票！",
 						cancelColor: "#666666",
 						cancelText: "关闭",
 						confirmText: "复制地址",
@@ -305,6 +386,7 @@
 					return
 				}
 
+				this.submitLoading = true
 				uni.showLoading({
 					title: "正在保存..."
 				})
@@ -312,11 +394,8 @@
 				this.$httpApi.v2
 					.submitVote(this.name, this.submitForm, this.vote.spec.canAnonymously)
 					.then(res => {
-						uni.showToast({
-							icon: "none",
-							title: "提交成功"
-						})
 
+						this.showToast("提交成功")
 						voteCacheUtil.set(this.name, {
 							selected: [...this.submitForm.voteData],
 							data: this.vote
@@ -324,18 +403,21 @@
 
 						setTimeout(() => {
 							uni.startPullDownRefresh()
+							this.submitLoading = false
 						}, 1500);
 					})
 					.catch(err => {
 						console.error(err);
-						uni.showToast({
-							icon: "none",
-							title: "提交失败，请重试"
-						})
+						this.showToast("提交失败，请重试")
+						this.submitLoading = false
 					})
 			},
 
 			handleSelectSingleOption(option) {
+				if (this.vote.spec._state == '未开始') {
+					this.showToast(`投票未开始`)
+					return
+				}
 				if (this.vote.spec.disabled) return
 				this.vote.spec.options.map(item => {
 					if (option.id == item.id) {
@@ -349,15 +431,16 @@
 			},
 
 			handleSelectCheckboxOption(option) {
+				if (this.vote.spec._state == '未开始') {
+					this.showToast(`投票未开始`)
+					return
+				}
 				if (this.vote.spec.disabled) return
 
 				const checkedList = this.vote.spec.options.filter(x => x.checked && x.id != option.id)
 
 				if (this.vote.spec.type === 'multiple' && checkedList.length >= this.vote.spec.maxVotes) {
-					uni.showToast({
-						icon: "none",
-						title: `最多选择 ${this.vote.spec.maxVotes} 项`
-					})
+					this.showToast(`最多选择 ${this.vote.spec.maxVotes} 项`)
 					return
 				}
 
@@ -368,6 +451,13 @@
 				})
 
 				this.submitForm.voteData = this.vote.spec.options.filter(x => x.checked).map(item => item.id)
+			},
+			showToast(content) {
+				uni.showToast({
+					icon: "none",
+					title: content,
+					mask: true
+				})
 			}
 		}
 	};
@@ -460,47 +550,66 @@
 		border-top: 2rpx solid #eee;
 	}
 
+	.is-voted-item {
+		min-height: 72rpx;
+		box-sizing: border-box;
+		position: relative;
+		border-radius: 12rpx;
+		background-color: rgba(229, 229, 229, 0.75);
+		font-size: 24rpx;
+		overflow: hidden;
 
-	.single {
-		::v-deep {
-			.tm-groupradio {
-				box-sizing: border-box;
-				display: flex;
-				flex-wrap: wrap;
-				gap: 16rpx 0;
-			}
+		&::before {
+			content: "";
+			width: var(--percent);
+			position: absolute;
+			left: 0;
+			top: 0;
+			bottom: 0;
+			background-color: rgba(208, 208, 208, 1);
+			z-index: 0;
+			border-radius: 6rpx;
+		}
 
-			.tm-checkbox {
-				box-sizing: border-box;
-				// display: block;
-				// width: 100%;
-			}
+		&.selected {
+			background-color: rgba(3, 169, 244, 0.35);
+			color: #ffffff;
 
-			.tm-button-label {
-				width: 100%;
+			&::before {
+				background-color: rgba(3, 169, 244, 1);
 			}
 		}
 	}
 
-	.multiple {
-		::v-deep {
-			.tm-groupcheckbox {
-				box-sizing: border-box;
-				display: flex;
-				flex-wrap: wrap;
-				gap: 16rpx 0;
-			}
+	.is-voted-item-content {
+		box-sizing: border-box;
+		min-height: 72rpx;
+		padding: 12rpx 24rpx;
+		position: relative;
+		z-index: 2;
+	}
 
-			.tm-checkbox {
-				box-sizing: border-box;
-				// display: block;
-				// width: 100%;
-			}
+	.vote-select-option {
+		box-sizing: border-box;
+		padding: 20rpx 24rpx;
+		font-size: 24rpx;
+		border-radius: 12rpx;
+		transition: all 0.1s ease-in-out;
+	}
 
-			.tm-button-label {
-				width: 100%;
-			}
+
+	::v-deep {
+		.tm-button-label {
+			width: 100%;
 		}
+	}
+
+	.single {
+		::v-deep {}
+	}
+
+	.multiple {
+		::v-deep {}
 	}
 
 	.pk {
@@ -508,6 +617,7 @@
 		width: 100%;
 
 		::v-deep {
+
 			.pk-container {
 				box-sizing: border-box;
 				width: 100%;

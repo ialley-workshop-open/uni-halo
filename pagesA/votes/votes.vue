@@ -260,7 +260,7 @@
 						const tempItems = res.items.map(item => {
 							item.spec.disabled = true
 							item.spec.isVoted = this.fnCalcIsVoted(item.metadata.name)
-
+							item.spec._state = this.handleCalcVoteState(item)
 							item.spec.options.map((option, index) => {
 
 								option.checked = this.fnCalcIsChecked(item.metadata.name, option)
@@ -325,6 +325,23 @@
 				if (!data) return false;
 				const checked = data.selected.includes(option.id)
 				return checked
+			},
+			handleCalcVoteState(vote) {
+				if (vote.spec.timeLimit !== 'custom') {
+					return vote.spec.hasEnd ? "已结束" : "进行中"
+				}
+
+				const nowTime = new Date().getTime()
+				const startTime = new Date(vote.spec.startDate).getTime()
+				const endTime = new Date(vote.spec.endDate).getTime()
+
+				if (nowTime < startTime) {
+					return "未开始"
+				}
+				if (nowTime < endTime) {
+					return "进行中"
+				}
+				return vote.spec.hasEnd ? "已结束" : "进行中"
 			},
 			//跳转详情
 			fnToDetail(item) {

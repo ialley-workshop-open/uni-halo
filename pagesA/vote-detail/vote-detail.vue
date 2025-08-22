@@ -252,6 +252,22 @@
 			this.fnGetData();
 			this.fnGetVoteUserList();
 		},
+		onShareAppMessage() {
+			return {
+				path: '/pagesA/vote-detail/vote-detail?name=' + this.name,
+				title: this.vote?.spec?.title ?? "来投个票吧",
+				imageUrl: ""
+			}
+		},
+		onShareTimeline() {
+			return {
+				title: this.vote?.spec?.title ?? "来投个票吧",
+				query: {
+					name: this.name
+				},
+				imageUrl: ""
+			}
+		},
 		methods: {
 			fnGetData() {
 				// 设置状态为加载中 

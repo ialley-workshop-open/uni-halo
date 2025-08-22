@@ -18,7 +18,7 @@
 					</view>
 
 					<view class="cover" v-if="result.spec.cover">
-						<image class="cover-img" mode="aspectFill" :src="calcUrl(result.spec.cover)"></image>
+						<image class="cover-img" mode="aspectFill" :src="calcUrl(result.spec.cover)" @click="handlePreview(0,[{url:calcUrl(result.spec.cover)}])"></image>
 					</view>
 					<view class="count" :class="{ 'no-thumbnail': !result.spec.cover }">
 						<view class="count-item">
@@ -1287,8 +1287,13 @@
 				}
 
 				return ids;
-			}
-
+			},
+			handlePreview(index, list) {
+				uni.previewImage({
+					current: index,
+					urls: list.map(item => item.url)
+				})
+			}, 
 		}
 	};
 </script>

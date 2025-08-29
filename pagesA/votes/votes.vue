@@ -56,6 +56,8 @@
 	import VoteCard from '@/components/vote-card/vote-card.vue'
 
 	import {
+		VOTE_TYPES,
+		calcVoteState,
 		voteCacheUtil
 	} from '@/utils/vote.js'
 	import pluginAvailableMixin from "@/common/mixins/pluginAvailable.js"
@@ -260,14 +262,15 @@
 						const tempItems = res.items.map(item => {
 							item.spec.disabled = true
 							item.spec.isVoted = this.fnCalcIsVoted(item.metadata.name)
-							item.spec._state = this.handleCalcVoteState(item)
+							item.spec._uh_state = calcVoteState(item)
+							item.spec._uh_type = VOTE_TYPES[item.spec.type]
 							item.spec.options.map((option, index) => {
 
 								option.checked = this.fnCalcIsChecked(item.metadata.name, option)
 								option.value = option.id
 								option.label = option.title
 
-								// todo：计算当前的选择占比
+								// 计算当前的选择占比
 								if (item.spec.type === 'single') {
 									option.percent = this.fnCalcPercent(option, item.stats);
 								} else if (item.spec.type === 'multiple') {
@@ -326,23 +329,7 @@
 				const checked = data.selected.includes(option.id)
 				return checked
 			},
-			handleCalcVoteState(vote) {
-				if (vote.spec.timeLimit !== 'custom') {
-					return vote.spec.hasEnd ? "已结束" : "进行中"
-				}
-
-				const nowTime = new Date().getTime()
-				const startTime = new Date(vote.spec.startDate).getTime()
-				const endTime = new Date(vote.spec.endDate).getTime()
-
-				if (nowTime < startTime) {
-					return "未开始"
-				}
-				if (nowTime < endTime) {
-					return "进行中"
-				}
-				return vote.spec.hasEnd ? "已结束" : "进行中"
-			},
+		 
 			//跳转详情
 			fnToDetail(item) {
 				if (this.calcAuditModeEnabled) return;

@@ -15,24 +15,12 @@
 					<view class="sub-title"> 投票信息 </view>
 					<view class="vote-card-body flex flex-col uh-mt-8">
 						<view class="">
-							投票类型：<tm-tags v-if="vote.spec.type==='single'" color="light-blue" :shadow="0" size="xs"
-								model="fill">单选</tm-tags>
-							<tm-tags v-else-if="vote.spec.type==='multiple'" color="light-blue" :shadow="0" size="xs"
-								model="fill">多选</tm-tags>
-							<tm-tags v-else-if="vote.spec.type==='pk'" color="light-blue" :shadow="0" size="xs"
-								model="fill">双选PK</tm-tags>
+							投票类型：<tm-tags color="light-blue" :shadow="0" size="xs" model="fill">
+								{{ vote.spec._uh_type }} </tm-tags>
 						</view>
 						<view class="">
-							投票状态：<tm-tags v-if="vote.spec._state=='已结束'" color="red" size="xs" :shadow="0"
-								model="fill">已结束</tm-tags>
-							<tm-tags v-else-if="vote.spec._state=='未开始'" color="orange" size="xs" :shadow="0"
-								model="fill">
-								未开始
-							</tm-tags>
-							<tm-tags v-else-if="vote.spec._state=='进行中'" color="green" size="xs" :shadow="0"
-								model="fill">
-								进行中
-							</tm-tags>
+							投票状态：<tm-tags :color="vote.spec._uh_state.color" size="xs" :shadow="0"
+								model="fill">{{vote.spec._uh_state.state}}</tm-tags>
 						</view>
 						<view class="">
 							投票方式：<tm-tags v-if="vote.spec.canAnonymously" color="light-blue" size="xs" :shadow="0"
@@ -68,17 +56,17 @@
 								class="sub-title-count">（最多选择 {{ vote.spec.maxVotes }} 项）</text> </view>
 						<view v-if="vote.spec.type==='single'" class="single">
 							<view class="w-full flex flex-col uh-gap-8">
-								<template v-if="vote.spec.isVoted">
+								<template v-if="vote.spec.isVoted || vote.spec.hasEnded">
 									<view v-for="(option,optionIndex) in vote.spec.options" :key="optionIndex"
 										class="is-voted-item" :class="[option.checked?'selected':'']" :style="{
-											'--percent':option.percent+ '%'
+											'--percent':option._uh_percent + '%'
 										}">
 										<view class="is-voted-item-content flex w-full flex-between uh-gap-8">
 											<view class="flex-1 text-align-left text-break">
 												{{option.title }}
 											</view>
 											<view class="flex-shrink">
-												{{option.percent }}%
+												{{option._uh_percent }}%
 											</view>
 										</view>
 									</view>
@@ -96,17 +84,17 @@
 
 						<view v-else-if="vote.spec.type==='multiple'" class="multiple">
 							<view class="w-full flex flex-col uh-gap-8">
-								<template v-if="vote.spec.isVoted">
+								<template v-if="vote.spec.isVoted || vote.spec.hasEnded">
 									<view v-for="(option,optionIndex) in vote.spec.options" :key="optionIndex"
 										class="is-voted-item" :class="[option.checked?'selected':'']" :style="{
-											'--percent':option.percent + '%'
+											'--percent':option._uh_percent + '%'
 										}">
 										<view class="is-voted-item-content flex w-full flex-between uh-gap-8">
 											<view class="flex-1 text-align-left text-break">
 												{{option.title }}
 											</view>
 											<view class="flex-shrink">
-												{{option.percent }}%
+												{{option._uh_percent }}%
 											</view>
 										</view>
 									</view>
@@ -126,25 +114,25 @@
 							<view class="pk-container">
 								<view class="radio-item" v-for="(option,optionIndex) in vote.spec.options"
 									:key="optionIndex" :class="[optionIndex==0?'radio-left':'radio-right']"
-									:style="{width: option.percent + '%'}">
+									:style="{width: option._uh_percent + '%'}">
 									<view class="option-item"
 										:class="[optionIndex==0?'option-item-left':'option-item-right']">
-										{{option.percent }}%
+										{{option._uh_percent }}%
 									</view>
 								</view>
 							</view>
 							<view class="option-foot w-full flex flex-col uh-gap-8">
-								<template v-if="vote.spec.isVoted">
+								<template v-if="vote.spec.isVoted || vote.spec.hasEnded">
 									<view v-for="(option,optionIndex) in vote.spec.options" :key="optionIndex"
 										class="is-voted-item" :class="[option.checked?'selected':'']" :style="{
-											'--percent': option.percent + '%'
+											'--percent': option._uh_percent + '%'
 										}">
 										<view class="is-voted-item-content flex w-full flex-between uh-gap-8">
 											<view class="flex-1 text-align-left text-break">
 												选项{{ optionIndex+1}}：{{option.title }}
 											</view>
 											<view class="flex-shrink">
-												{{option.percent }}%
+												{{option._uh_percent }}%
 											</view>
 										</view>
 									</view>
@@ -186,12 +174,15 @@
 				<view class="vote-submit flex w-full flex-center" :style="{
 					paddingBottom:safeAreaBottom + 'rpx'
 				}">
-					<tm-button v-if="!vote.spec.canAnonymously" theme="red" :shadow="0" class="w-full" text
+					<tm-button v-if="fnCalcIsVoted()" theme="white" text :block="true" class="w-full">您已参与投票</tm-button>
+					<tm-button v-else-if="vote.spec._uh_state.state==='未开始'" theme="orange" text class="w-full"
+						:block="true" @click="handleSubmitTip('投票未开始')">投票未开始</tm-button>
+					<tm-button v-else-if="vote.spec._uh_state.state==='已结束'" theme="red" text class="w-full"
+						:block="true" @click="handleSubmitTip('投票已结束')">投票已结束</tm-button>
+					<tm-button v-else-if="!vote.spec.canAnonymously" theme="red" :shadow="0" class="w-full" text
 						:block="true" @click="handleSubmit()">不支持匿名投票</tm-button>
-					<tm-button v-else-if="fnCalcIsVoted()" theme="white" text :block="true"
-						class="w-full">您已参与投票</tm-button>
 					<tm-button v-else-if="submitForm.voteData.length===0" theme="white" text class="w-full"
-						:block="true" @click="handleSubmitTip()">提交投票（请选择选项）</tm-button>
+						:block="true" @click="handleSubmitTip('请选择选项')">提交投票（请选择选项）</tm-button>
 					<tm-button v-else theme="light-blue" class="w-full" :block="true" :loading="submitLoading"
 						:disabled="submitLoading" @click="handleSubmit()">提交投票</tm-button>
 				</view>
@@ -207,14 +198,11 @@
 	import tmTags from '@/tm-vuetify/components/tm-tags/tm-tags.vue';
 
 	import {
+		VOTE_TYPES,
+		calcVoteState,
+		calcVotePercent,
 		voteCacheUtil
 	} from '@/utils/vote.js'
-
-	const types = {
-		"pk": "双选PK",
-		"multiple": "多选",
-		"single": "单选"
-	}
 
 	export default {
 		components: {
@@ -242,7 +230,7 @@
 		onLoad(e) {
 			this.name = e.name;
 			this.fnGetData();
-			this.fnGetVoteUserList();
+			// this.fnGetVoteUserList();
 			// #ifndef H5
 			const systemInfo = uni.getSystemInfoSync();
 			this.safeAreaBottom = systemInfo.safeAreaInsets.bottom + 12;
@@ -250,7 +238,7 @@
 		},
 		onPullDownRefresh() {
 			this.fnGetData();
-			this.fnGetVoteUserList();
+			// this.fnGetVoteUserList();
 		},
 		onShareAppMessage() {
 			return {
@@ -276,27 +264,21 @@
 				this.$httpApi.v2
 					.getVoteDetail(this.name)
 					.then(res => {
-						this.pageTitle = "投票详情" + `（${types[res.vote.spec.type]}）`
+						this.pageTitle = "投票详情" + `（${VOTE_TYPES[res.vote.spec.type]}）`
 
 						const tempVoteRes = res;
 
 						tempVoteRes.vote.spec.isVoted = this.fnCalcIsVoted()
 						tempVoteRes.vote.spec.disabled = this.fnCalcIsVoted()
-						tempVoteRes.vote.spec._state = this.handleCalcVoteState(tempVoteRes.vote)
+						tempVoteRes.vote.spec._uh_state = calcVoteState(tempVoteRes.vote)
+						tempVoteRes.vote.spec._uh_type = VOTE_TYPES[tempVoteRes.vote.spec.type]
 
 						tempVoteRes.vote.spec.options.map((option, index) => {
 							option.value = option.id
 							option.label = option.title
 							option.isVoted = this.fnCalcIsVoted()
 							option.checked = this.fnCalcIsChecked(option)
-
-							if (tempVoteRes.vote.spec.type === 'single') {
-								option.percent = this.fnCalcPercent(option, tempVoteRes.vote.stats);
-							} else if (tempVoteRes.vote.spec.type === 'multiple') {
-								option.percent = this.fnCalcPercent(option, tempVoteRes.vote.stats);
-							} else if (tempVoteRes.vote.spec.type === 'pk') {
-								option.percent = this.fnCalcPercent(option, tempVoteRes.vote.stats);
-							}
+							option._uh_percent = calcVotePercent(tempVoteRes.vote, option);
 
 							option.dataStr = JSON.stringify(option)
 
@@ -333,15 +315,6 @@
 						console.log("err")
 					})
 			},
-			fnCalcPercent(voteOption, stats) {
-				if (!this.fnCalcIsVoted()) return 0;
-				if (!stats?.voteDataList) return 0;
-				const option = stats.voteDataList.find(x => x.id == voteOption.id)
-				if (!option) return 0;
-				const percent = (option.voteCount / stats.voteCount) * 100
-				return Math.round(percent)
-			},
-
 			fnCalcIsVoted() {
 				return voteCacheUtil.has(this.name)
 			},
@@ -351,23 +324,6 @@
 				if (!data) return false;
 				const checked = data.selected.includes(option.id)
 				return checked
-			},
-			handleCalcVoteState(vote) {
-				if (vote.spec.timeLimit !== 'custom') {
-					return vote.spec.hasEnd ? "已结束" : "进行中"
-				}
-
-				const nowTime = new Date().getTime()
-				const startTime = new Date(vote.spec.startDate).getTime()
-				const endTime = new Date(vote.spec.endDate).getTime()
-
-				if (nowTime < startTime) {
-					return "未开始"
-				}
-				if (nowTime < endTime) {
-					return "进行中"
-				}
-				return vote.spec.hasEnd ? "已结束" : "进行中"
 			},
 			onOptionRadioChange(e) {
 				this.submitForm.voteData = e.map(item => this.vote.spec.options[item.index]?.id);
@@ -381,8 +337,8 @@
 			formatJsonStr(jsonStr) {
 				return jsonStr ? JSON.parse(jsonStr) : {}
 			},
-			handleSubmitTip() {
-				this.showToast("请选择选项后继续")
+			handleSubmitTip(text) {
+				this.showToast(text)
 			},
 			handleSubmit() {
 				if (!this.vote.spec.canAnonymously) {
@@ -430,10 +386,11 @@
 			},
 
 			handleSelectSingleOption(option) {
-				if (this.vote.spec._state == '未开始') {
+				if (this.vote.spec._uh_state.state == '未开始') {
 					this.showToast(`投票未开始`)
 					return
 				}
+				if (this.vote.spec.hasEnded) return
 				if (this.vote.spec.disabled) return
 				this.vote.spec.options.map(item => {
 					if (option.id == item.id) {
@@ -447,10 +404,11 @@
 			},
 
 			handleSelectCheckboxOption(option) {
-				if (this.vote.spec._state == '未开始') {
+				if (this.vote.spec._uh_state.state == '未开始') {
 					this.showToast(`投票未开始`)
 					return
 				}
+				if (this.vote.spec.hasEnded) return
 				if (this.vote.spec.disabled) return
 
 				const checkedList = this.vote.spec.options.filter(x => x.checked && x.id != option.id)

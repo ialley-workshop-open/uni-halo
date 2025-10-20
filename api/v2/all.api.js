@@ -218,7 +218,7 @@ export default {
 	 * 提交友情链接
 	 */
 	submitLink(form) {
-		return HttpHandler.Post(`/apis/linksSubmit.muyin.site/v1alpha1/submit`, form, {
+		return HttpHandler.Post(`/apis/linkssubmit.muyin.site/v1alpha1/submit`, form, {
 			header: {
 				'Authorization': getAppConfigs().pluginConfig.linksSubmitPlugin?.Authorization,
 				'Wechat-Session-Id': uni.getStorageSync('openid'),

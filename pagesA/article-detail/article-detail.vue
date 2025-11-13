@@ -158,7 +158,7 @@
 				</view>
 
 				<!-- 豆瓣 -->
-				<view v-if="!calcAuditModeEnabled && result._doubanUrls.length !== 0 && doubanPluginConfig.position==='bottom'"  class="vote-wrap copyright-wrap bg-white pa-24 round-4">
+				<view v-if="!calcAuditModeEnabled && result._doubanUrls.length !== 0 && doubanPluginConfig.position==='bottom'"  class="vote-wrap copyright-wrap bg-white mt-24 pa-24 round-4">
 					<view class="copyright-title text-weight-b flex items-center justify-between">
 						<text>豆瓣资源</text>
 						<text class="vote-opra" @click="doubanIsOpen = !doubanIsOpen">

@@ -17,7 +17,7 @@ export const DefaultAppConfigs = {
 		toolsPlugin: {},
 		linksSubmitPlugin: {},
 		doubanPlugin: {
-			position: 'top'
+			position: 'bottom'
 		}
 	},
 	pageConfig: {

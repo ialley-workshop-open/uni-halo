@@ -5,16 +5,18 @@
 		</view>
 		<template v-else>
 			<view class="tag">豆瓣</view>
-			<view class="flex">
+			<view class="flex w-full">
 				<view v-if="posterEmpty" class="poster round-2">无封面</view>
 				<image v-else class="poster round-2" :src="poster" mode="aspectFill" @error="onPosterError"></image>
 				<view class="box">
-					<view class="flex box-right" style="gap: 0 12rpx">
-						<text class="title">{{ detail.spec.name }}</text>
+					<view class="title text-overflow">{{ detail.spec.name }}{{ detail.spec.name }}</view>
+					<view class="flex" style="align-items: center; margin-top: 12rpx">
+						<text class="text-size-s">评分：</text>
 						<tm-rate v-model="detail.spec.score / 2" color="orange" size="24" :margin="2" :num="5"></tm-rate>
-						<text class="text-size-s">{{ detail.spec.score }}</text>
+						<text class="text-size-s" style="margin-left: 4rpx">{{ detail.spec.score }}</text>
 					</view>
-					<view class="content">{{ detail.spec.cardSubtitle }}</view>
+
+					<view class="content text-overflow-2">{{ detail.spec.cardSubtitle }}</view>
 					<view class="flex flex-wrap" style="margin-left: -10rpx">
 						<tm-tags color="orange" :shadow="0" size="s" model="fill">{{ types[detail.spec.type] }}</tm-tags>
 						<tm-tags v-for="(gen, genIndex) in detail.spec.genres" :key="genIndex" color="light-blue" :shadow="0" size="s" model="fill">{{ gen }}</tm-tags>
@@ -122,8 +124,10 @@ export default {
 				this.$utils.copyText(this.detail?.spec.link, '豆瓣资源地址复制成功');
 				return;
 			}
-			if(type==='info'){
-				const content = `名称:${this.detail?.spec.name}丨其他:${this.detail?.spec.cardSubtitle}丨标签:${this.detail?.spec.genres.join('/')}丨时间:${this.detail?.spec.pubdate}丨评分:${this.detail?.spec.score}分丨链接:${this.detail?.spec.link}`
+			if (type === 'info') {
+				const content = `名称:${this.detail?.spec.name}丨其他:${this.detail?.spec.cardSubtitle}丨标签:${this.detail?.spec.genres.join('/')}丨时间:${
+					this.detail?.spec.pubdate
+				}丨评分:${this.detail?.spec.score}分丨链接:${this.detail?.spec.link}`;
 				this.$utils.copyText(content, '资源信息复制成功');
 			}
 		}
@@ -170,12 +174,14 @@ export default {
 }
 
 .card-error {
+	box-sizing: border-box;
 	padding: 50rpx 24rpx;
 	font-size: 24rpx;
 	border-radius: 12rpx;
 	text-align: center;
 }
 .poster {
+	box-sizing: border-box;
 	width: 180rpx;
 	height: 220rpx;
 	flex-shrink: 0;
@@ -187,34 +193,35 @@ export default {
 }
 
 .box {
+	flex-grow: 1;
 	box-sizing: border-box;
 	font-size: 26rpx;
 	padding-left: 24rpx;
-}
-.box-right {
-	display: flex;
-	align-items: center;
+	overflow: hidden;
 }
 .title {
+	box-sizing: border-box;
 	font-size: 32rpx;
 	font-weight: bold;
-	text-indent: 24rpx;
 }
 .content {
+	box-sizing: border-box;
 	margin-top: 12rpx;
-	text-indent: 24rpx;
 	line-height: 36rpx;
 	color: rgba(0, 0, 0, 0.85);
 }
 .tag {
+	box-sizing: border-box;
 	position: absolute;
 	right: 0;
 	top: 0;
 	font-size: 24rpx;
 	padding: 2rpx 12rpx;
 	background-color: #f5c618;
+	border-radius: 0 6rpx 0 12rpx;
 }
 .btn-group {
+	box-sizing: border-box;
 	display: flex;
 	align-items: center;
 	justify-content: space-between;

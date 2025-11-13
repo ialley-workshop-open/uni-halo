@@ -2,8 +2,8 @@
     "name" : "uni-halo",
     "appid" : "__UNI__5748B6E",
     "description" : "uni-halo博客：基于halo开源博客系统API开发的多端博客。",
-    "versionName" : "2.0.8",
-    "versionCode" : 208,
+    "versionName" : "2.0.9",
+    "versionCode" : 209,
     "transformPx" : false,
     /* 5+App特有相关 */
     "app-plus" : {

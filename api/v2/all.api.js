@@ -288,4 +288,11 @@ export default {
 	checkPluginAvailable: (name) => {
 		return HttpHandler.Get(`/apis/api.plugin.halo.run/v1alpha1/plugins/${name}/available`, {})
 	},
+	/**
+	 * 获取豆瓣详情
+	 * @param {String} url url 
+	 */
+	getDoubanDetail: (url) => {
+		return HttpHandler.Get(`/apis/api.douban.moony.la/v1alpha1/doubanmovies/-/getDoubanDetail`, {url})
+	}
 }

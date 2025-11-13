@@ -9,7 +9,7 @@
 				<view v-if="posterEmpty" class="poster round-2">无封面</view>
 				<image v-else class="poster round-2" :src="poster" mode="aspectFill" @error="onPosterError"></image>
 				<view class="box">
-					<view class="title text-overflow">{{ detail.spec.name }}{{ detail.spec.name }}</view>
+					<view class="title text-overflow">{{ detail.spec.name }}</view>
 					<view class="flex" style="align-items: center; margin-top: 12rpx">
 						<text class="text-size-s">评分：</text>
 						<tm-rate v-model="detail.spec.score / 2" color="orange" size="24" :margin="2" :num="5"></tm-rate>

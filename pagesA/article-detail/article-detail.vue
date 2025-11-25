@@ -101,7 +101,7 @@
 								:loading="true"
 								:lines="3"
 								:tip-text="`此处内容已隐藏，「${getRestrictReadTypeName(result)}可见」`"
-								button-text="查看更多"
+                :button-text="`${getRestrictReadTypeName(result)}`"
 								button-color="#1890ff"
 								skeleton-color="#f0f0f0"
 								skeleton-highlight="#e0e0e0"
@@ -129,7 +129,7 @@
 								:loading="true"
 								:lines="3"
 								:tip-text="`此处内容已隐藏，「${getRestrictReadTypeName(result)}可见」`"
-								button-text="查看更多"
+                :button-text="`${getRestrictReadTypeName(result)}`"
 								button-color="#1890ff"
 								skeleton-color="#f0f0f0"
 								skeleton-highlight="#e0e0e0"
@@ -726,8 +726,10 @@ export default {
 			this.commentModal.show = true;
 		},
 		fnOnCommentModalClose({ refresh, isSubmit }) {
-			console.log('refresh', refresh);
-			console.log('isSubmit', isSubmit);
+      // 评论后自动刷新
+      if (this.result?.metadata?.annotations?.restrictReadEnable === 'comment') {
+        this.fnGetData();
+      }
 			if (refresh && isSubmit && this.$refs.commentListRef) {
 				this.$refs.commentListRef.fnGetData();
 			}
@@ -1236,10 +1238,8 @@ export default {
 				this.verificationCodeModal.show = true;
 				return;
 			} else if (restrictReadEnable === 'comment') {
-				uni.showToast({
-					title: '前往web端评论后访问',
-					icon: 'none'
-				});
+        this.fnToComment();
+        return;
 			} else if (restrictReadEnable === 'login') {
 				uni.showToast({
 					title: '前往web端登录后访问',

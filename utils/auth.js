@@ -76,3 +76,20 @@ export function checkHasWxLogin() {
 export function checkHasAdminLogin() {
 	return !!getCache('APP_ADMIN_LOGIN_TOKEN')
 }
+
+/**
+ * 获取openid
+ */
+export function getOpenid() {
+	return uni.getStorageSync('openid');
+}
+
+/**
+ * 获取nologin-email
+ */
+export function getNologinEmail() {
+    let Visitor = uni.getStorageSync('Visitor');
+    if (!Visitor) return '';
+    Visitor = JSON.parse(Visitor)
+    return Visitor.email || Visitor.author || '';
+}

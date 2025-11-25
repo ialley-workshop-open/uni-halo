@@ -10,6 +10,7 @@ import qs from 'qs'
 import {
 	getAppConfigs
 } from '@/config/index.js'
+import {getNologinEmail, getOpenid} from "@/utils/auth";
 
 export default {
 	/**
@@ -27,7 +28,8 @@ export default {
 	getPostByName: (name) => {
 		return HttpHandler.Get(`/apis/api.content.halo.run/v1alpha1/posts/${name}`, {}, {
 			header: {
-				'Wechat-Session-Id': uni.getStorageSync('openid'),
+				'Wechat-Session-Id': getOpenid(),
+                'nologin-email': getNologinEmail()
 			}
 		})
 	},
@@ -197,7 +199,8 @@ export default {
 		return HttpHandler.Post(`/apis/tools.muyin.site/v1alpha1/restrict-read/check`, params, {
 			header: {
 				'Authorization': getAppConfigs().pluginConfig.toolsPlugin?.Authorization,
-				'Wechat-Session-Id': uni.getStorageSync('openid'),
+                'Wechat-Session-Id': getOpenid(),
+                'nologin-email': getNologinEmail()
 			}
 		})
 	},
@@ -209,7 +212,7 @@ export default {
 		return HttpHandler.Get(`/apis/tools.muyin.site/v1alpha1/restrict-read/create`, null, {
 			header: {
 				'Authorization': getAppConfigs().pluginConfig.toolsPlugin?.Authorization,
-				'Wechat-Session-Id': uni.getStorageSync('openid'),
+                'Wechat-Session-Id': getOpenid(),
 			}
 		})
 	},
@@ -221,7 +224,7 @@ export default {
 		return HttpHandler.Post(`/apis/linkssubmit.muyin.site/v1alpha1/submit`, form, {
 			header: {
 				'Authorization': getAppConfigs().pluginConfig.linksSubmitPlugin?.Authorization,
-				'Wechat-Session-Id': uni.getStorageSync('openid'),
+                'Wechat-Session-Id': getOpenid(),
 			}
 		})
 	},

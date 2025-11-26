@@ -69,7 +69,7 @@
 					</view>
 				</view>
 			</view>
-			<view v-if="!calcAuditModeEnabled && result._doubanUrls.length !== 0 && doubanPluginConfig.position==='top'" class="pa-24 pb-0">
+			<view v-if="!calcAuditModeEnabled && result._doubanUrls.length !== 0 && doubanPluginConfig.position === 'top'" class="pa-24 pb-0">
 				<view class="vote-wrap copyright-wrap bg-white pa-24 round-4">
 					<view class="copyright-title text-weight-b flex items-center justify-between">
 						<text>豆瓣资源</text>
@@ -101,7 +101,7 @@
 								:loading="true"
 								:lines="3"
 								:tip-text="`此处内容已隐藏，「${getRestrictReadTypeName(result)}可见」`"
-                :button-text="`${getRestrictReadTypeName(result)}`"
+								:button-text="`${getRestrictReadTypeName(result)}`"
 								button-color="#1890ff"
 								skeleton-color="#f0f0f0"
 								skeleton-highlight="#e0e0e0"
@@ -129,7 +129,7 @@
 								:loading="true"
 								:lines="3"
 								:tip-text="`此处内容已隐藏，「${getRestrictReadTypeName(result)}可见」`"
-                :button-text="`${getRestrictReadTypeName(result)}`"
+								:button-text="`${getRestrictReadTypeName(result)}`"
 								button-color="#1890ff"
 								skeleton-color="#f0f0f0"
 								skeleton-highlight="#e0e0e0"
@@ -158,14 +158,17 @@
 				</view>
 
 				<!-- 豆瓣 -->
-				<view v-if="!calcAuditModeEnabled && result._doubanUrls.length !== 0 && doubanPluginConfig.position==='bottom'"  class="vote-wrap copyright-wrap bg-white mt-24 pa-24 round-4">
+				<view
+					v-if="!calcAuditModeEnabled && result._doubanUrls.length !== 0 && doubanPluginConfig.position === 'bottom'"
+					class="vote-wrap copyright-wrap bg-white mt-24 pa-24 round-4"
+				>
 					<view class="copyright-title text-weight-b flex items-center justify-between">
 						<text>豆瓣资源</text>
 						<text class="vote-opra" @click="doubanIsOpen = !doubanIsOpen">
 							{{ doubanIsOpen ? '收起' : '展开' }}
 						</text>
 					</view>
-				
+
 					<view v-show="doubanIsOpen" class="flex flex-col uh-gap-8 uh-mt-8">
 						<ArticleDouban
 							v-for="(doubanUrl, doubanIndex) in result._doubanUrls"
@@ -506,7 +509,11 @@ export default {
 
 			voteIsOpen: true,
 			reloadVote: false,
-			doubanIsOpen: true
+			doubanIsOpen: true,
+
+			appAuthorize: {
+				writePhotosAlbum: ''
+			}
 		};
 	},
 	computed: {
@@ -548,8 +555,8 @@ export default {
 		pluginsConfig() {
 			return this.haloConfigs.pluginConfig;
 		},
-		doubanPluginConfig(){
-			return this.pluginsConfig.doubanPlugin
+		doubanPluginConfig() {
+			return this.pluginsConfig.doubanPlugin;
 		}
 	},
 	watch: {
@@ -726,10 +733,10 @@ export default {
 			this.commentModal.show = true;
 		},
 		fnOnCommentModalClose({ refresh, isSubmit }) {
-      // 评论后自动刷新
-      if (this.result?.metadata?.annotations?.restrictReadEnable === 'comment') {
-        this.fnGetData();
-      }
+			// 评论后自动刷新
+			if (this.result?.metadata?.annotations?.restrictReadEnable === 'comment') {
+				this.fnGetData();
+			}
 			if (refresh && isSubmit && this.$refs.commentListRef) {
 				this.$refs.commentListRef.fnGetData();
 			}
@@ -1116,15 +1123,119 @@ export default {
 			this.poster.showCanvas = false;
 			this.poster.loading = true;
 		},
-		fnSavePoster() {
+		fnGetAlbumAuthorize() {
+			return new Promise((resolve) => {
+				uni.showModal({
+					title: '提示',
+					content: '保存到相册未授权，是否去授权？',
+					success: (res) => {
+						if (res.confirm) {
+							// uni.authorize({
+							// 	scope: 'scope.writePhotosAlbum',
+							// 	success() {
+							// 		uni.showToast({
+							// 			icon: 'none',
+							// 			title: '授权成功，请重新保存'
+							// 		});
+							// 		resolve(true);
+							// 	},
+							// 	fail: (err) => {
+							// 		uni.showToast({
+							// 			icon: 'none',
+							// 			title: '授权失败，请手动授权'
+							// 		});
+							// 		resolve(false);
+							// 	}
+							// });
+							uni.openSetting({
+								success: (res) => {
+									if (res.authSetting['scope.writePhotosAlbum'] === true) {
+										uni.showToast({
+											icon: 'none',
+											title: '授权成功，请重新保存'
+										});
+										resolve(true);
+									} else {
+										uni.showToast({
+											icon: 'none',
+											title: '未进行授权操作'
+										});
+										resolve(false);
+									}
+								},
+								fail: (err) => {
+									uni.showToast({
+										icon: 'none',
+										title: '授权失败'
+									});
+									resolve(false);
+								}
+							});
+						}
+					},
+					fail: () => {
+						resolve(false);
+					}
+				});
+			});
+		},
+		fnCheckAlbumAppAuthorize() {
+			return new Promise((resolve) => {
+				// #ifdef MP-WEIXIN
+				uni.getSetting({
+					success: async (res) => {
+						if (res.authSetting['scope.writePhotosAlbum'] === false) {
+							const authorize = await this.fnGetAlbumAuthorize();
+							console.log('authorize1', authorize);
+							if (!authorize) {
+								uni.openSetting({
+									success: (res) => {
+										console.log('授权1', res);
+									}
+								});
+								console.log('打开授权页面1');
+							}
+							resolve(false);
+						} else {
+							resolve(true);
+						}
+					},
+					fail: async () => {
+						const authorize = await this.fnGetAlbumAuthorize();
+						console.log('authorize2', authorize);
+						if (!authorize) {
+							uni.openSetting({
+								success: (res) => {
+									console.log('授权2', res);
+								}
+							});
+							console.log('打开授权页面2');
+						}
+						resolve(false);
+					}
+				});
+				// #endif
+				// #ifndef MP-WEIXIN
+				resolve(true);
+				// #endif
+			});
+		},
+		async fnSavePoster() {
 			// this.$refs.rCanvas.saveImage(this.poster.res.tempFilePath);
+
+			// 检查授权
+			const authorize = await this.fnCheckAlbumAppAuthorize();
+			if (!authorize) return;
+
 			uni.saveImageToPhotosAlbum({
 				filePath: this.poster.url,
 				success: () => {
 					uni.$tm.toast('保存成功');
 				},
 				fail: (e) => {
-					uni.$tm.toast('保存失败，请重试');
+					if(!e?.errMsg.includes('cancel')){
+						uni.$tm.toast('保存失败，请重试');
+					}
 				}
 			});
 		},
@@ -1238,8 +1349,8 @@ export default {
 				this.verificationCodeModal.show = true;
 				return;
 			} else if (restrictReadEnable === 'comment') {
-        this.fnToComment();
-        return;
+				this.fnToComment();
+				return;
 			} else if (restrictReadEnable === 'login') {
 				uni.showToast({
 					title: '前往web端登录后访问',

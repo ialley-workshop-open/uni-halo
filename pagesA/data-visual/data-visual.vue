@@ -46,7 +46,15 @@
 					</view>
 					<view v-show="categoryChart.isExpand" class="card-body flex">
 						<view class="chart-box">
-							<qiun-data-charts :type="categoryChart.type" :opts="categoryChart.opts" :chartData="categoryChart.data" :tooltipFormat="categoryChart.tooltipFormat" />
+							<qiun-data-charts
+								:canvasId="categoryChart.id"
+								:canvas2d="true"
+								:ontouch="true"
+								:type="categoryChart.type"
+								:opts="categoryChart.opts"
+								:chartData="categoryChart.data"
+								:tooltipFormat="categoryChart.tooltipFormat"
+							/>
 						</view>
 					</view>
 				</view>
@@ -63,7 +71,7 @@
 						</view>
 					</view>
 					<view v-show="trandArticleChart.isExpand" class="card-body flex">
-						<heatmap :chartData="trandArticleChart.data"></heatmap>
+						<heatmap style="width: 100%" :chartData="trandArticleChart.data"></heatmap>
 					</view>
 				</view>
 				<!-- 评论活跃用户 -->
@@ -81,6 +89,9 @@
 					<view v-show="userCommentsChart.isExpand" class="card-body flex">
 						<view class="chart-box">
 							<qiun-data-charts
+								:canvasId="userCommentsChart.id"
+								:canvas2d="true"
+								:ontouch="true"
 								:type="userCommentsChart.type"
 								:opts="userCommentsChart.opts"
 								:chartData="userCommentsChart.data"
@@ -101,9 +112,12 @@
 							<tm-icons v-else :size="24" name="icon-angle-up" color="gray"></tm-icons>
 						</view>
 					</view>
-					<view v-show="top10ArticlesChart.isExpand" class="card-body flex">
+					<view class="card-body flex">
 						<view class="chart-box">
 							<qiun-data-charts
+								:canvasId="top10ArticlesChart.id"
+								:canvas2d="true"
+								:ontouch="true"
 								:type="top10ArticlesChart.type"
 								:opts="top10ArticlesChart.opts"
 								:chartData="top10ArticlesChart.data"
@@ -148,6 +162,7 @@ export default {
 			loading: 'loading',
 			statistics: null,
 			tagChart: {
+				id: 'tagChart',
 				isExpand: true,
 				type: 'ring',
 				data: {},
@@ -158,7 +173,6 @@ export default {
 					color: ['#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6', '#EC4899', '#14B8A6', '#F97316', '#ea7ccc', '#0EA5E9'],
 					padding: [5, 5, 5, 5],
 					dataLabel: false,
-					enableScroll: true,
 					legend: {
 						show: false,
 						position: 'right',
@@ -194,6 +208,7 @@ export default {
 				}
 			},
 			categoryChart: {
+				id: 'categoryChart',
 				isExpand: true,
 				type: 'line',
 				data: {},
@@ -201,14 +216,18 @@ export default {
 				opts: {
 					color: ['#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6', '#EC4899', '#14B8A6', '#F97316', '#ea7ccc', '#0EA5E9'],
 					padding: [20, 15, 10, 15],
-					enableScroll: false,
+					touchMoveLimit: 24,
+					enableScroll: true,
 					legend: {
 						show: false
 					},
 					xAxis: {
 						disableGrid: true,
 						fontSize: 11,
-						boundaryGap: 'center'
+						scrollShow: true,
+						itemCount: 6,
+						boundaryGap: 'center',
+						format: 'xAxisCategory'
 					},
 					yAxis: {
 						gridType: 'dash',
@@ -239,6 +258,7 @@ export default {
 				opts: {}
 			},
 			userCommentsChart: {
+				id: 'userCommentsChart',
 				isExpand: true,
 				loading: true,
 				type: 'column',
@@ -290,6 +310,7 @@ export default {
 				}
 			},
 			top10ArticlesChart: {
+				id: 'top10ArticlesChart',
 				isExpand: true,
 				type: 'column',
 				data: {},
@@ -409,7 +430,7 @@ export default {
 		},
 		// 处理分类统计
 		handleCategoriesChart() {
-			const data = this.statistics.categories.sort((a, b) => a.total - b.total);
+			const data = this.statistics.categories.sort((a, b) => b.total - a.total);
 			const seriesItemData = data.map((item) => item.total);
 			if (Math.max(...seriesItemData) < 10) {
 				this.categoryChart.opts.yAxis.data[0].max = 10;

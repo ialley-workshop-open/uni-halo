@@ -85,12 +85,18 @@ const cfu = {
       }
     },
 	"xAxisTop10Article":function(val, index, opts){
-		if(val.length>4){
-			return val.slice(0,4) +'...'
+		if(val.length>6){
+			return val.slice(0,6) +'...'
 		}
 		return val
 	},
 	"xAxisUserComments":function(val, index, opts){
+		if(val.length>6){
+			return val.slice(0,6) +'...'
+		}
+		return val
+	},
+	"xAxisCategory":function(val, index, opts){
 		if(val.length>6){
 			return val.slice(0,6) +'...'
 		}

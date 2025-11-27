@@ -6,7 +6,7 @@
 				<view>{{ dataRangeYears }}</view>
 			</view>
 			<view class="controls">
-				<tm-stepper v-model="currentYear" :width="220" :height="48" :min="1999" :max="2099" :shadow="0" :round="2" color="light-blue" @change="changeYear"></tm-stepper>
+				<tm-stepper v-model="currentYear" :width="220" :height="48" :min="0" :max="2099" :shadow="0" :round="2" color="light-blue" @change="changeYear"></tm-stepper>
 			</view>
 		</view>
 
@@ -52,7 +52,7 @@ import tmStepper from '@/tm-vuetify/components/tm-stepper/tm-stepper.vue';
 export default {
 	name: 'Heatmap',
 	components: {
-		tmStepper
+		tmStepper 
 	},
 	props: {
 		year: {
@@ -77,7 +77,8 @@ export default {
 			displayDays: [],
 			showTooltip: null,
 			currentYear: '1900',
-			currentYearData: []
+			currentYearData: [],
+			yearList:[]
 		};
 	},
 	computed: {
@@ -213,9 +214,16 @@ export default {
 		}
 	},
 	created() {
+		this.initYearList()
 		this.filterAndSetCurrentYearData(this.year);
 	},
 	methods: {
+		initYearList(){
+			for (var index = 1900; index < 2099; index++) {
+				 this.yearList.push(index)
+			}
+			this.yearList = this.yearList.reverse();
+		},
 		filterAndSetCurrentYearData(year) {
 			this.currentYear = year;
 			this.currentYearData = this.chartData.filter((x) => x.name.includes(this.currentYear));
@@ -390,6 +398,7 @@ export default {
 	height: 24rpx!important; 
 }
 .heatmap-container {
+	width: 100%;
 	display: flex;
 	padding-bottom: 20rpx;
 }
@@ -427,8 +436,10 @@ export default {
 }
 
 .heatmap-content {
+	width: 100%;
 	display: flex;
 	flex-direction: column;
+	overflow: hidden;
 	overflow-x: auto;
 }
 

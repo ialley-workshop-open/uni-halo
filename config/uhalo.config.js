@@ -5,6 +5,7 @@ const UHaloBaseConfig = Object.freeze({
     BASE_API: "",
     // 示例：
     // BASE_API: "https://blog.xiaoxiaomo.cn",
+    // BASE_API: "https://www.xhhao.com",
 
     // todo：可能有其他配置
 })

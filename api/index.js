@@ -16,7 +16,7 @@ import v2Config from './v2/all.config.js'
 
 const ApiManager = {
     v2,
-    v2Config,
+    v2Config
 };
 
 const install = (Vue) => {

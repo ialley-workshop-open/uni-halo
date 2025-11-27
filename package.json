@@ -17,9 +17,6 @@
     "url": "https://gitee.com/ialley-workshop-open/uni-halo/issues"
   },
   "homepage": "https://uni-halo.925i.cn",
-  "devDependencies": {
-    "vue-i18n": "^9.1.10"
-  },
   "dependencies": {
     "qs": "^6.12.1"
   }

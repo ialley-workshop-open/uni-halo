@@ -9,6 +9,7 @@ export const NeedPluginIds = Object.freeze({
 	PluginSearchWidget: "PluginSearchWidget",
 	PluginCommentWidget: "PluginCommentWidget",
 	PluginVote: "vote",
+	PluginDataStatistics: 'data-statistics'
 })
 
 export const NeedPlugins = new Map([
@@ -73,6 +74,15 @@ export const NeedPlugins = new Map([
 			desc: "投票模块所需要的插件，用于展示投票和提交投票",
 			logo: utils.checkUrl("/plugins/vote/assets/logo.png"),
 			url: "https://www.halo.run/store/apps/app-veyvzyhv"
+		}
+	],
+	[
+		NeedPluginIds.PluginDataStatistics, {
+			id: "data-statistics",
+			name: "数据看板",
+			desc: "为 Halo2 提供强大的数据可视化统计功能，支持 Umami 流量统计、uptime、网站内部数据图表（标签、分类、文章趋势、评论排行、热门文章等）",
+			logo: utils.checkUrl("/plugins/data-statistics/assets/logo.svg"),
+			url: "https://www.halo.run/store/apps/app-rtnbbgfk"
 		}
 	]
 ])

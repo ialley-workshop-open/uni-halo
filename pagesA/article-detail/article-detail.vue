@@ -297,30 +297,7 @@
 				</scroll-view>
 			</view>
 		</tm-poup>
-
-		<!-- 海报 -->
-		<!--  <tm-poup v-model="poster.show" width="90vw" height="auto" :round="6" :over-close="true" position="center">
-            <view class="poster-content pt-12 bg-white">
-                <view v-if="poster.loading" class="poster-loading flex flex-center text-grey-darken-1">
-                    <text class="e-loading-icon iconfont icon-loading"></text>
-                    <text class="ml-6">海报正在生成...</text>
-                </view>
-                <block v-if="poster.showCanvas">
-                    <r-canvas ref="rCanvas"></r-canvas>
-                    <view class="poster-save ma-24 mt-0 pt-20 flex flex-center">
-                        <tm-button theme="bg-gradient-light-blue-accent" size="m" @click="fnSavePoster()">
-                            保存到相册
-                        </tm-button>
-                        <tm-button v-if="false" theme="bg-gradient-orange-accent" size="m" @click="fnShareTo()">
-                            分享给好友
-                        </tm-button>
-                        <tm-button theme="bg-gradient-blue-grey-accent" size="m" @click="fnOnPosterClose()">
-                            关 闭
-                        </tm-button>
-                    </view>
-                </block>
-            </view>
-        </tm-poup> -->
+ 
 		<tm-poup v-model="poster.show" width="90vw" height="auto" :round="6" :over-close="true" position="center">
 			<view class="poster-content pt-12 bg-white">
 				<liu-poster ref="liuPoster" :width="674" :height="940" @change="handleOnPosterChange"></liu-poster>
@@ -420,8 +397,7 @@ import commentItem from '@/components/comment-item/comment-item.vue';
 import commentModal from '@/components/comment-modal/comment-modal.vue';
 import ArticleVote from '@/components/article-vote/article-vote.vue';
 import ArticleDouban from '@/components/article-douban/article-douban.vue';
-
-import rCanvas from '@/components/r-canvas/r-canvas.vue';
+ 
 import barrage from '@/components/barrage/barrage.vue';
 import { getAppConfigs } from '@/config/index.js';
 import { upvote } from '@/utils/upvote.js';
@@ -449,8 +425,7 @@ export default {
 		tmMore,
 		mpHtml,
 		commentList,
-		commentItem,
-		rCanvas,
+		commentItem, 
 		barrage,
 		commentModal,
 		ArticleVote,
@@ -769,10 +744,7 @@ export default {
 			this.poster.show = true;
 			await this.handleCreatePoster();
 			setTimeout(() => {
-				this.poster.showCanvas = true;
-				// this.fnCreatePoster(res => {
-				//     this.poster.res = res;
-				// });
+				this.poster.showCanvas = true; 
 				this.$nextTick(() => {
 					this.$refs.liuPoster.init(this.poster.configs);
 				});
@@ -930,194 +902,7 @@ export default {
 			ctx.lineTo(w, y);
 			ctx.stroke();
 			y += 20;
-		},
-		fnCreatePoster(callback) {
-			this.$nextTick(async () => {
-				const systemInfo = await uni.getSystemInfoSync();
-				const _bloggerAvatar = this.$utils.checkAvatarUrl(this.bloggerInfo.avatar, true);
-				const _articleCover = this.$utils.checkThumbnailUrl(this.result.spec.cover, true);
-				// 初始化
-				await this.$refs.rCanvas.init({
-					canvas_id: 'rCanvas',
-					// canvas_width: systemInfo.windowWidth - uni.upx2px(76),
-					canvas_width: 337,
-					canvas_height: 460,
-					background_color: 'rgba(255,255,255,0)'
-				});
-				// 画圆角背景
-				await this.$refs.rCanvas
-					.fillRoundRect({
-						x: 0,
-						y: 0,
-						w: 337,
-						h: 460,
-						radius: 12,
-						fill_color: '#fff'
-					})
-					.catch((err_msg) => {
-						uni.showToast({
-							title: err_msg,
-							icon: 'none'
-						});
-					});
-				// 博主信息
-				await this.$refs.rCanvas
-					.drawImage({
-						url: _bloggerAvatar,
-						x: 12,
-						y: 12,
-						w: 48,
-						h: 48,
-						border_radius: 24
-					})
-					.catch((err_msg) => {
-						uni.showToast({
-							title: err_msg,
-							icon: 'none'
-						});
-					});
-
-				await this.$refs.rCanvas
-					.drawText({
-						text: this.bloggerInfo.nickname,
-						max_width: 0,
-						x: 70,
-						y: 30,
-						font_color: '#000',
-						font_size: 15
-					})
-					.catch((err_msg) => {
-						uni.showToast({
-							title: err_msg,
-							icon: 'none'
-						});
-					});
-				await this.$refs.rCanvas
-					.drawText({
-						text: this.bloggerInfo.description,
-						max_width: 0,
-						x: 70,
-						y: 52,
-						font_color: '#666',
-						font_size: 12
-					})
-					.catch((err_msg) => {
-						uni.showToast({
-							title: err_msg,
-							icon: 'none'
-						});
-					});
-				// 文章封面图
-				await this.$refs.rCanvas
-					.drawImage({
-						url: _articleCover,
-						x: 12,
-						y: 75,
-						w: 312,
-						h: 180,
-						border_radius: 6
-					})
-					.catch((err_msg) => {
-						uni.showToast({
-							title: err_msg,
-							icon: 'none'
-						});
-					});
-
-				// 文章标题
-				await this.$refs.rCanvas
-					.drawText({
-						text: this.result.spec.title,
-						max_width: 312,
-						line_clamp: 1,
-						x: 12,
-						y: 285,
-						font_weight: 'bold',
-						font_color: '#333',
-						font_size: 14
-					})
-					.catch((err_msg) => {
-						uni.showToast({
-							title: err_msg,
-							icon: 'none'
-						});
-					});
-				await this.$refs.rCanvas
-					.drawText({
-						text: this.result?.status?.excerpt || '文章暂无摘要信息',
-						max_width: 312,
-						line_clamp: 2,
-						x: 12,
-						y: 310,
-						font_color: '#333',
-						font_size: 13,
-						line_height: 20
-					})
-					.catch((err_msg) => {
-						uni.showToast({
-							title: err_msg,
-							icon: 'none'
-						});
-					});
-
-				this.drawDashedLine(this.$refs.rCanvas.ctx, 14, 356, 332, 0.5, [8, 5, 5, 5], '#999');
-				// 小程序信息
-				const _qrCodeImageUrl = await this.qrCodeImageUrl();
-				await this.$refs.rCanvas
-					.drawImage({
-						url: this.$utils.checkImageUrl(_qrCodeImageUrl),
-						x: 20,
-						y: 360,
-						w: 80,
-						h: 80
-					})
-					.catch((err_msg) => {
-						uni.showToast({
-							title: err_msg,
-							icon: 'none'
-						});
-					});
-
-				await this.$refs.rCanvas
-					.drawText({
-						text: '长按识别小程序',
-						x: 150,
-						y: 390,
-						font_color: '#333',
-						font_size: 15,
-						font_weight: 'bold',
-						line_height: 22
-					})
-					.catch((err_msg) => {
-						uni.showToast({
-							title: err_msg,
-							icon: 'none'
-						});
-					});
-				await this.$refs.rCanvas
-					.drawText({
-						text: '关注我，给你分享更多有趣的知识',
-						x: 115,
-						y: 425,
-						font_color: '#333',
-						font_size: 12,
-						line_height: 22
-					})
-					.catch((err_msg) => {
-						uni.showToast({
-							title: err_msg,
-							icon: 'none'
-						});
-					});
-				// 生成海报
-				await this.$refs.rCanvas.draw((res) => {
-					//res.tempFilePath：生成成功，返回base64图片
-					// 保存图片
-					this.poster.loading = false;
-					callback(res);
-				});
-			});
-		},
+		}, 
 		fnOnPosterClose() {
 			this.poster.show = false;
 			this.poster.showCanvas = false;
@@ -1129,24 +914,7 @@ export default {
 					title: '提示',
 					content: '保存到相册未授权，是否去授权？',
 					success: (res) => {
-						if (res.confirm) {
-							// uni.authorize({
-							// 	scope: 'scope.writePhotosAlbum',
-							// 	success() {
-							// 		uni.showToast({
-							// 			icon: 'none',
-							// 			title: '授权成功，请重新保存'
-							// 		});
-							// 		resolve(true);
-							// 	},
-							// 	fail: (err) => {
-							// 		uni.showToast({
-							// 			icon: 'none',
-							// 			title: '授权失败，请手动授权'
-							// 		});
-							// 		resolve(false);
-							// 	}
-							// });
+						if (res.confirm) { 
 							uni.openSetting({
 								success: (res) => {
 									if (res.authSetting['scope.writePhotosAlbum'] === true) {
@@ -1220,9 +988,7 @@ export default {
 				// #endif
 			});
 		},
-		async fnSavePoster() {
-			// this.$refs.rCanvas.saveImage(this.poster.res.tempFilePath);
-
+		async fnSavePoster() {  
 			// 检查授权
 			const authorize = await this.fnCheckAlbumAppAuthorize();
 			if (!authorize) return;

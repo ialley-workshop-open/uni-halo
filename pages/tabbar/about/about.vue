@@ -190,11 +190,21 @@
 				_isWx = true;
 				// #endif
 				this.navList = [{
+						key: 'data-visual',
+						title:  '数据看板',
+						leftIcon: 'icon-chart-bar',
+						leftIconColor: 'light-blue',
+						rightText:  '站点数据可视化',
+						path: '/pagesA/data-visual/data-visual',
+						isAdmin: false,
+						type: 'page',
+						show: await checkNeedPluginAvailable(NeedPluginIds.PluginDataStatistics)
+					},{
 						key: 'archives',
 						title: this.calcAuditModeEnabled ? '内容归档' : '文章归档',
 						leftIcon: 'halocoloricon-classify',
 						leftIconColor: 'red',
-						rightText: this.calcAuditModeEnabled ? '已归档的内容' : '已归档的文章',
+						rightText: this.calcAuditModeEnabled ? '全部已归档内容' : '全部已归档文章',
 						path: '/pagesA/archives/archives',
 						isAdmin: false,
 						type: 'page',
@@ -214,7 +224,7 @@
 						title: '投票中心',
 						leftIcon: 'icon-box',
 						leftIconColor: 'red',
-						rightText: '查看当前的投票',
+						rightText: '查看和进行投票',
 						path: '/pagesA/votes/votes',
 						isAdmin: false,
 						type: 'page',

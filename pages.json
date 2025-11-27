@@ -1,368 +1,375 @@
 {
-  "pages": [
-    {
-      "path": "pages/index/index",
-      "style": {
-        "navigationBarTitleText": "uni-halo",
-        "enablePullDownRefresh": false,
-        "navigationStyle": "custom"
-      }
-    },
-    {
-      "path": "pages/tabbar/home/home",
-      "style": {
-        "navigationBarTitleText": "首页",
-        "enablePullDownRefresh": true,
-        "navigationStyle": "custom",
-        "app-plus": {
-          "pullToRefresh": {
-            "color": "#03a9f4",
-            "style": "circle"
-          }
-        }
-      }
-    },
-    {
-      "path": "pages/tabbar/category/category",
-      "style": {
-        "navigationBarTitleText": "分类",
-        "enablePullDownRefresh": true,
-        "app-plus": {
-          "pullToRefresh": {
-            "color": "#03a9f4",
-            "style": "circle"
-          }
-        }
-      }
-    },
-    {
-      "path": "pages/tabbar/gallery/gallery",
-      "style": {
-        "navigationBarTitleText": "图库",
-        "enablePullDownRefresh": true,
-        "app-plus": {
-          "pullToRefresh": {
-            "color": "#03a9f4",
-            "style": "circle"
-          }
-        }
-      }
-    },
-    {
-      "path": "pages/tabbar/moments/moments",
-      "style": {
-        "navigationBarTitleText": "瞬间",
-        "enablePullDownRefresh": true,
-        "app-plus": {
-          "pullToRefresh": {
-            "color": "#03a9f4",
-            "style": "circle"
-          }
-        }
-      }
-    },
-    {
-      "path": "pages/tabbar/about/about",
-      "style": {
-        "navigationBarTitleText": "关于",
-        "navigationStyle": "custom",
-        "enablePullDownRefresh": true,
-        "app-plus": {
-          "pullToRefresh": {
-            "color": "#03a9f4",
-            "style": "circle"
-          }
-        }
-      }
-    },
-    {
-      "path": "uni_modules/uni-upgrade-center-app/pages/upgrade-popup",
-      "style": {
-        "disableScroll": true,
-        "app-plus": {
-          "backgroundColorTop": "transparent",
-          "background": "transparent",
-          "titleNView": false,
-          "scrollIndicator": false,
-          "popGesture": "none",
-          "animationType": "fade-in",
-          "animationDuration": 200
-        }
-      }
-    }
-  ],
-  //此配置为小程序的分包加载机制。在5+App里始终为整包。
-  "subPackages": [
-    {
-      "root": "pagesA",
-      "pages": [
-        {
-          "path": "start/start",
-          "style": {
-            "navigationBarTitleText": "uni-halo",
-            "enablePullDownRefresh": false,
-            "navigationStyle": "custom"
-          }
-        },
-        {
-          "path": "article-detail/article-detail",
-          "style": {
-            "navigationBarTitleText": "内容详情",
-            "enablePullDownRefresh": true,
-            "app-plus": {
-              "pullToRefresh": {
-                "color": "#03a9f4",
-                "style": "circle"
-              }
-            }
-          }
-        },
-        {
-          "path": "love/love",
-          "style": {
-            "navigationBarTitleText": "恋爱日记",
-            "navigationStyle": "custom",
-            "enablePullDownRefresh": false,
-            "app-plus": {
-              "pullToRefresh": {
-                "color": "#03a9f4",
-                "style": "circle"
-              }
-            }
-          }
-        },
-        {
-          "path": "love/list",
-          "style": {
-            "navigationBarTitleText": "恋爱清单",
-            "enablePullDownRefresh": false,
-            "navigationStyle": "custom"
-          }
-        },
-        {
-          "path": "love/album",
-          "style": {
-            "navigationBarTitleText": "恋爱相册",
-            "enablePullDownRefresh": true,
-            "app-plus": {
-              "pullToRefresh": {
-                "color": "#03a9f4",
-                "style": "circle"
-              }
-            }
-          }
-        },
-        {
-          "path": "love/journey",
-          "style": {
-            "navigationBarTitleText": "我们的故事",
-            "navigationStyle": "custom",
-            "enablePullDownRefresh": false
-          }
-        },
-        {
-          "path": "archives/archives",
-          "style": {
-            "navigationBarTitleText": "归档",
-            "enablePullDownRefresh": true,
-            "app-plus": {
-              "pullToRefresh": {
-                "color": "#03a9f4",
-                "style": "circle"
-              }
-            }
-          }
-        },
-        {
-          "path": "friend-links/friend-links",
-          "style": {
-            "navigationBarTitleText": "友情链接",
-            "enablePullDownRefresh": true,
-            "app-plus": {
-              "pullToRefresh": {
-                "color": "#03a9f4",
-                "style": "circle"
-              }
-            }
-          }
-        }, 
-        {
-          "path": "articles/articles",
-          "style": {
-            "navigationBarTitleText": "内容搜索",
-            "enablePullDownRefresh": true,
-            "app-plus": {
-              "pullToRefresh": {
-                "color": "#03a9f4",
-                "style": "circle"
-              }
-            }
-          }
-        },
-        {
-          "path": "category-detail/category-detail",
-          "style": {
-            "navigationBarTitleText": "分类详情",
-            "enablePullDownRefresh": true,
-            "app-plus": {
-              "pullToRefresh": {
-                "color": "#03a9f4",
-                "style": "circle"
-              }
-            }
-          }
-        },
-        {
-          "path": "disclaimers/disclaimers",
-          "style": {
-            "navigationBarTitleText": "免责声明",
-            "enablePullDownRefresh": false
-          }
-        },
-        {
-          "path": "contact/contact",
-          "style": {
-            "navigationBarTitleText": "联系博主",
-            "enablePullDownRefresh": false
-          }
-        },
-        {
-          "path": "about/about",
-          "style": {
-            "navigationBarTitleText": "关于博客",
-            "enablePullDownRefresh": false
-          }
-        },
-        {
-          "path": "setting/setting",
-          "style": {
-            "navigationBarTitleText": "设置",
-            "enablePullDownRefresh": false
-          }
-        },
-        {
-          "path": "tags/tags",
-          "style": {
-            "navigationBarTitleText": "",
-            "enablePullDownRefresh": false
-          }
-        },
-        {
-          "path": "tag-detail/tag-detail",
-          "style": {
-            "navigationBarTitleText": "标签详情",
-            "enablePullDownRefresh": true,
-            "app-plus": {
-              "pullToRefresh": {
-                "color": "#03a9f4",
-                "style": "circle"
-              }
-            }
-          }
-        },
-        {
-          "path": "submit-link/submit-link",
-          "style": {
-            "navigationBarTitleText": "友链提交",
-            "enablePullDownRefresh": false
-          }
-        },
-		{
-		  "path": "moment-detail/moment-detail",
-		  "style": {
-		    "navigationBarTitleText": "瞬间详情",
-		    "enablePullDownRefresh": true,
-		    "app-plus": {
-		      "pullToRefresh": {
-		        "color": "#03a9f4",
-		        "style": "circle"
-		      }
-		    }
-		  }
-		},
-		{
-			"path": "votes/votes",
+	"pages": [{
+			"path": "pages/index/index",
 			"style": {
-			  "navigationBarTitleText": "投票列表",
-			  "enablePullDownRefresh": true,
-			  "app-plus": {
-			    "pullToRefresh": {
-			      "color": "#03a9f4",
-			      "style": "circle"
-			    }
-			  }
+				"navigationBarTitleText": "uni-halo",
+				"enablePullDownRefresh": false,
+				"navigationStyle": "custom"
 			}
 		},
 		{
-			"path": "vote-detail/vote-detail",
+			"path": "pages/tabbar/home/home",
 			"style": {
-			  "navigationBarTitleText": "投票详情",
-			  "enablePullDownRefresh": true,
-			  "app-plus": {
-			    "pullToRefresh": {
-			      "color": "#03a9f4",
-			      "style": "circle"
-			    }
-			  }
+				"navigationBarTitleText": "首页",
+				"enablePullDownRefresh": true,
+				"navigationStyle": "custom",
+				"app-plus": {
+					"pullToRefresh": {
+						"color": "#03a9f4",
+						"style": "circle"
+					}
+				}
+			}
+		},
+		{
+			"path": "pages/tabbar/category/category",
+			"style": {
+				"navigationBarTitleText": "分类",
+				"enablePullDownRefresh": true,
+				"app-plus": {
+					"pullToRefresh": {
+						"color": "#03a9f4",
+						"style": "circle"
+					}
+				}
+			}
+		},
+		{
+			"path": "pages/tabbar/gallery/gallery",
+			"style": {
+				"navigationBarTitleText": "图库",
+				"enablePullDownRefresh": true,
+				"app-plus": {
+					"pullToRefresh": {
+						"color": "#03a9f4",
+						"style": "circle"
+					}
+				}
+			}
+		},
+		{
+			"path": "pages/tabbar/moments/moments",
+			"style": {
+				"navigationBarTitleText": "瞬间",
+				"enablePullDownRefresh": true,
+				"app-plus": {
+					"pullToRefresh": {
+						"color": "#03a9f4",
+						"style": "circle"
+					}
+				}
+			}
+		},
+		{
+			"path": "pages/tabbar/about/about",
+			"style": {
+				"navigationBarTitleText": "关于",
+				"navigationStyle": "custom",
+				"enablePullDownRefresh": true,
+				"app-plus": {
+					"pullToRefresh": {
+						"color": "#03a9f4",
+						"style": "circle"
+					}
+				}
+			}
+		},
+		{
+			"path": "uni_modules/uni-upgrade-center-app/pages/upgrade-popup",
+			"style": {
+				"disableScroll": true,
+				"app-plus": {
+					"backgroundColorTop": "transparent",
+					"background": "transparent",
+					"titleNView": false,
+					"scrollIndicator": false,
+					"popGesture": "none",
+					"animationType": "fade-in",
+					"animationDuration": 200
+				}
 			}
 		}
-      ]
-    },
-    {
-      "root": "pagesC",
-      "pages": [
-        {
-          "path": "website/website",
-          "style": {
-            "navigationBarTitleText": "",
-            "enablePullDownRefresh": false
-          }
-        }
-      ]
-    }
-  ],
-  "globalStyle": {
-    "navigationBarTextStyle": "black",
-    "navigationBarTitleText": "uni-halo",
-    "navigationBarBackgroundColor": "#ffffff",
-    "backgroundColor": "#F8F8F8"
-  },
-  "tabBar": {
-    "backgroundColor": "#fff",
-    "borderStyle": "white",
-    "color": "#303133",
-    "selectedColor": "#03a9f4",
-    "list": [
-      {
-        "iconPath": "static/tabbar/select_home.png",
-        "selectedIconPath": "static/tabbar/select_home_active.png",
-        "pagePath": "pages/tabbar/home/home",
-        "text": "首页"
-      },
-      {
-        "iconPath": "static/tabbar/select_category.png",
-        "selectedIconPath": "static/tabbar/select_category_active.png",
-        "pagePath": "pages/tabbar/category/category",
-        "text": "分类"
-      },
-      {
-        "iconPath": "static/tabbar/select_gallery.png",
-        "selectedIconPath": "static/tabbar/select_gallery_active.png",
-        "pagePath": "pages/tabbar/gallery/gallery",
-        "text": "图库"
-      },
-      {
-        "iconPath": "static/tabbar/select_links.png",
-        "selectedIconPath": "static/tabbar/select_links_active.png",
-        "pagePath": "pages/tabbar/moments/moments",
-        "text": "瞬间"
-      },
-      {
-        "iconPath": "static/tabbar/select_mine.png",
-        "selectedIconPath": "static/tabbar/select_mine_active.png",
-        "pagePath": "pages/tabbar/about/about",
-        "text": "关于"
-      }
-    ]
-  }
+	],
+	//此配置为小程序的分包加载机制。在5+App里始终为整包。
+	"subPackages": [{
+			"root": "pagesA",
+			"pages": [{
+					"path": "start/start",
+					"style": {
+						"navigationBarTitleText": "uni-halo",
+						"enablePullDownRefresh": false,
+						"navigationStyle": "custom"
+					}
+				},
+				{
+					"path": "article-detail/article-detail",
+					"style": {
+						"navigationBarTitleText": "内容详情",
+						"enablePullDownRefresh": true,
+						"app-plus": {
+							"pullToRefresh": {
+								"color": "#03a9f4",
+								"style": "circle"
+							}
+						}
+					}
+				},
+				{
+					"path": "love/love",
+					"style": {
+						"navigationBarTitleText": "恋爱日记",
+						"navigationStyle": "custom",
+						"enablePullDownRefresh": false,
+						"app-plus": {
+							"pullToRefresh": {
+								"color": "#03a9f4",
+								"style": "circle"
+							}
+						}
+					}
+				},
+				{
+					"path": "love/list",
+					"style": {
+						"navigationBarTitleText": "恋爱清单",
+						"enablePullDownRefresh": false,
+						"navigationStyle": "custom"
+					}
+				},
+				{
+					"path": "love/album",
+					"style": {
+						"navigationBarTitleText": "恋爱相册",
+						"enablePullDownRefresh": true,
+						"app-plus": {
+							"pullToRefresh": {
+								"color": "#03a9f4",
+								"style": "circle"
+							}
+						}
+					}
+				},
+				{
+					"path": "love/journey",
+					"style": {
+						"navigationBarTitleText": "我们的故事",
+						"navigationStyle": "custom",
+						"enablePullDownRefresh": false
+					}
+				},
+				{
+					"path": "archives/archives",
+					"style": {
+						"navigationBarTitleText": "归档",
+						"enablePullDownRefresh": true,
+						"app-plus": {
+							"pullToRefresh": {
+								"color": "#03a9f4",
+								"style": "circle"
+							}
+						}
+					}
+				},
+				{
+					"path": "friend-links/friend-links",
+					"style": {
+						"navigationBarTitleText": "友情链接",
+						"enablePullDownRefresh": true,
+						"app-plus": {
+							"pullToRefresh": {
+								"color": "#03a9f4",
+								"style": "circle"
+							}
+						}
+					}
+				},
+				{
+					"path": "articles/articles",
+					"style": {
+						"navigationBarTitleText": "内容搜索",
+						"enablePullDownRefresh": true,
+						"app-plus": {
+							"pullToRefresh": {
+								"color": "#03a9f4",
+								"style": "circle"
+							}
+						}
+					}
+				},
+				{
+					"path": "category-detail/category-detail",
+					"style": {
+						"navigationBarTitleText": "分类详情",
+						"enablePullDownRefresh": true,
+						"app-plus": {
+							"pullToRefresh": {
+								"color": "#03a9f4",
+								"style": "circle"
+							}
+						}
+					}
+				},
+				{
+					"path": "disclaimers/disclaimers",
+					"style": {
+						"navigationBarTitleText": "免责声明",
+						"enablePullDownRefresh": false
+					}
+				},
+				{
+					"path": "contact/contact",
+					"style": {
+						"navigationBarTitleText": "联系博主",
+						"enablePullDownRefresh": false
+					}
+				},
+				{
+					"path": "about/about",
+					"style": {
+						"navigationBarTitleText": "关于博客",
+						"enablePullDownRefresh": false
+					}
+				},
+				{
+					"path": "setting/setting",
+					"style": {
+						"navigationBarTitleText": "设置",
+						"enablePullDownRefresh": false
+					}
+				},
+				{
+					"path": "tags/tags",
+					"style": {
+						"navigationBarTitleText": "",
+						"enablePullDownRefresh": false
+					}
+				},
+				{
+					"path": "tag-detail/tag-detail",
+					"style": {
+						"navigationBarTitleText": "标签详情",
+						"enablePullDownRefresh": true,
+						"app-plus": {
+							"pullToRefresh": {
+								"color": "#03a9f4",
+								"style": "circle"
+							}
+						}
+					}
+				},
+				{
+					"path": "submit-link/submit-link",
+					"style": {
+						"navigationBarTitleText": "友链提交",
+						"enablePullDownRefresh": false
+					}
+				},
+				{
+					"path": "moment-detail/moment-detail",
+					"style": {
+						"navigationBarTitleText": "瞬间详情",
+						"enablePullDownRefresh": true,
+						"app-plus": {
+							"pullToRefresh": {
+								"color": "#03a9f4",
+								"style": "circle"
+							}
+						}
+					}
+				},
+				{
+					"path": "votes/votes",
+					"style": {
+						"navigationBarTitleText": "投票列表",
+						"enablePullDownRefresh": true,
+						"app-plus": {
+							"pullToRefresh": {
+								"color": "#03a9f4",
+								"style": "circle"
+							}
+						}
+					}
+				},
+				{
+					"path": "vote-detail/vote-detail",
+					"style": {
+						"navigationBarTitleText": "投票详情",
+						"enablePullDownRefresh": true,
+						"app-plus": {
+							"pullToRefresh": {
+								"color": "#03a9f4",
+								"style": "circle"
+							}
+						}
+					}
+				},
+				{
+					"path": "data-visual/data-visual",
+					"style": {
+						"navigationBarTitleText": "数据看板",
+						"enablePullDownRefresh": true,
+						"app-plus": {
+							"pullToRefresh": {
+								"color": "#03a9f4",
+								"style": "circle"
+							}
+						}
+					}
+				}
+			]
+		},
+		{
+			"root": "pagesC",
+			"pages": [{
+				"path": "website/website",
+				"style": {
+					"navigationBarTitleText": "",
+					"enablePullDownRefresh": false
+				}
+			}]
+		}
+	],
+	"globalStyle": {
+		"navigationBarTextStyle": "black",
+		"navigationBarTitleText": "uni-halo",
+		"navigationBarBackgroundColor": "#ffffff",
+		"backgroundColor": "#F8F8F8"
+	},
+	"tabBar": {
+		"backgroundColor": "#fff",
+		"borderStyle": "white",
+		"color": "#303133",
+		"selectedColor": "#03a9f4",
+		"list": [{
+				"iconPath": "static/tabbar/select_home.png",
+				"selectedIconPath": "static/tabbar/select_home_active.png",
+				"pagePath": "pages/tabbar/home/home",
+				"text": "首页"
+			},
+			{
+				"iconPath": "static/tabbar/select_category.png",
+				"selectedIconPath": "static/tabbar/select_category_active.png",
+				"pagePath": "pages/tabbar/category/category",
+				"text": "分类"
+			},
+			{
+				"iconPath": "static/tabbar/select_gallery.png",
+				"selectedIconPath": "static/tabbar/select_gallery_active.png",
+				"pagePath": "pages/tabbar/gallery/gallery",
+				"text": "图库"
+			},
+			{
+				"iconPath": "static/tabbar/select_links.png",
+				"selectedIconPath": "static/tabbar/select_links_active.png",
+				"pagePath": "pages/tabbar/moments/moments",
+				"text": "瞬间"
+			},
+			{
+				"iconPath": "static/tabbar/select_mine.png",
+				"selectedIconPath": "static/tabbar/select_mine_active.png",
+				"pagePath": "pages/tabbar/about/about",
+				"text": "关于"
+			}
+		]
+	}
 }

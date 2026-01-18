@@ -725,7 +725,10 @@
 		flex-wrap: wrap;
 		align-items: center;
 		// justify-content: space-between;
-		justify-content: space-around;
+		//justify-content: space-around;
+    //justify-content: start;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
 	}
 
 	.nav-item {

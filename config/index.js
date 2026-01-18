@@ -14,11 +14,13 @@ export const DefaultAppConfigs = {
 	authorConfig: {},
 	appConfig: {},
 	pluginConfig: {
+		votePlugin: {},
 		toolsPlugin: {},
+		linksPlugin:{},
 		linksSubmitPlugin: {},
 		doubanPlugin: {
 			position: 'bottom'
-		}
+		},
 	},
 	pageConfig: {
 		homeConfig: {

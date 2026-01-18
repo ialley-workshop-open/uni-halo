@@ -165,6 +165,12 @@
 			calcAuditModeEnabled() {
 				return this.haloConfigs.auditConfig.auditModeEnabled
 			},
+      calcVotePluginEnabled() {
+        return !!this.haloConfigs?.pluginConfig?.votePlugin?.enabled;
+      },
+      calcLinksPluginEnabled() {
+        return !!this.haloConfigs?.pluginConfig?.linksPlugin?.enabled;
+      },
 		},
 		watch: {
 			haloConfigs: {
@@ -228,7 +234,7 @@
 						path: '/pagesA/votes/votes',
 						isAdmin: false,
 						type: 'page',
-						show: !this.calcAuditModeEnabled
+						show: !this.calcAuditModeEnabled && !!this.calcVotePluginEnabled,
 					}, {
 						key: 'disclaimers',
 						title: '友情链接',
@@ -238,7 +244,7 @@
 						path: '/pagesA/friend-links/friend-links',
 						isAdmin: false,
 						type: 'page',
-						show: true
+						show: !!this.calcLinksPluginEnabled,
 					},
 					{
 						key: 'disclaimers',

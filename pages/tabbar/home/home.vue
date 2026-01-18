@@ -193,6 +193,12 @@
 				}
 				return this.haloConfigs.pageConfig.homeConfig.useCategory
 			},
+      calcVotePluginEnabled() {
+        return !!this.haloConfigs?.pluginConfig?.votePlugin?.enabled
+      },
+      calcLinksPluginEnabled() {
+        return !!this.haloConfigs?.pluginConfig?.linksPlugin?.enabled;
+      },
 			bannerConfig() {
 				return this.haloConfigs.pageConfig.homeConfig.bannerConfig
 			}
@@ -556,7 +562,7 @@
 					iconColor: '',
 					path: '/pagesA/votes/votes',
 					type: 'page',
-					show: !this.calcAuditModeEnabled
+					show: !this.calcAuditModeEnabled && !!this.calcVotePluginEnabled,
 				}, {
 					key: 'disclaimers',
 					title: '友情链接',
@@ -567,7 +573,7 @@
 					iconColor: '',
 					path: '/pagesA/friend-links/friend-links',
 					type: 'page',
-					show: true
+					show: !!this.calcLinksPluginEnabled,
 				}, {
 					key: 'love',
 					title: '恋爱日记',

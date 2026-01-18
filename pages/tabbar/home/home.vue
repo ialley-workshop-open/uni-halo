@@ -30,7 +30,7 @@
 			</view>
 
 			<!-- 金刚区 :v-if="navList.filter(x=>x.show).length>=4" -->
-			<view :v-if="navList.filter(x=>x.show).length>=4" class="nav-box mt-16 mb-24 pl-24 pr-24 uh-py-12">
+      <view v-if="calcIsShowQuickNavigationEnabled && !!navList.filter(x=>x.show).length" class="nav-box mt-16 mb-24 pl-24 pr-24 uh-py-12">
 				<view class="page-item_title text-weight-b ">快捷导航</view>
 				<view class="nav-list flex uh-mt-12">
 					<template v-for="(item,index) in navList">
@@ -179,6 +179,10 @@
 			},
 			calcAuditModeEnabled() {
 				return this.haloConfigs.auditConfig.auditModeEnabled
+			},
+			calcIsShowQuickNavigationEnabled() {
+				console.log('this.haloConfigs?.pageConfig?.homeConfig', this.haloConfigs?.pageConfig?.homeConfig, !!this.haloConfigs?.pageConfig?.homeConfig?.useQuickNavigation)
+				return !!this.haloConfigs?.pageConfig?.homeConfig?.useQuickNavigation
 			},
 			calcIsShowCategory() {
 				if (this.calcAuditModeEnabled && this.categoryList.length !== 0) {

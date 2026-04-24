@@ -34,27 +34,20 @@
 - 支持特色功能，恋爱日记
 - 理论支持编译为 小程序（推荐）、APP
 
-
-### 在线预览（小莫唐尼）
-
-微信内容扫描下方二维码，即可在线预览小程序。
-
-![QQ交流群](https://blog.xiaoxiaomo.cn/upload/xiaochengxu.gif)
-
-
 ### 部分截图
 
 |首页|分类|我的|
 |:--:|:--:|:--:|
 |![首页](https://gcore.jsdelivr.net/gh/uni-halo/uni-halo-static-resources/screenshots/v2/首页.png)|![分类](https://gcore.jsdelivr.net/gh/uni-halo/uni-halo-static-resources/screenshots/v2/分类.jpg)|![我的](https://gcore.jsdelivr.net/gh/uni-halo/uni-halo-static-resources/screenshots/v2/关于.jpg)|
 
- 
+
 
 ### 恋爱日记
 
 - 在 uni-halo 中，我们为您准备了一个恋爱日记的模块，您可以在其中记录您的恋爱故事，分享给您的朋友们，请扫示例小程序，在线体验恋爱日记的功能。
 
 ![恋爱日记](https://gcore.jsdelivr.net/gh/uni-halo/uni-halo-static-resources/screenshots/v2/恋爱日记.jpg)
+
 <br/>
 
 

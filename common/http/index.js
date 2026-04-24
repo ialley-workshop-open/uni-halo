@@ -21,7 +21,7 @@ const http = new Request()
 http.setConfig((config) => {
 
 	// 如果是在外部浏览器调试或者编译为h5，请注释该行代码
-	config.baseURL = HaloTokenConfig.BASE_API;
+	config.baseURL = HaloTokenConfig.BASE_API.replace(/\/+$/, "");
 
 	config.header = {
 		...config.header,

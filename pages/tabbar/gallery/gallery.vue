@@ -18,7 +18,7 @@
 				<tm-skeleton model="card"></tm-skeleton>
 			</view>
 			<view v-else-if="loading == 'error'" class="flex flex-col flex-center" style="width:100%;height:60vh;">
-				<tm-empty icon="icon-wind-cry" label="阿偶，似乎获取数据失败了~">
+				<tm-empty icon="icon-wind-cry" label="阿偶，获取数据失败了~">
 					<tm-button theme="light-blue" size="m" :shadow="0" @click="fnGetData(true)">刷新试试</tm-button>
 				</tm-empty>
 			</view>
@@ -206,14 +206,18 @@
 					page: 1,
 					size: 0
 				}).then(res => {
-					this.category.list = res.items.map(item => {
+					this.category.list = res.map(item => {
 						return {
 							name: item.metadata.name,
 							displayName: item.spec.displayName,
 							priority: item.spec.priority
 						}
-					}).sort((a, b) => a.priority - b.priority);
-
+					}).sort((a, b) => a.priority - b.priority)
+					this.category.list.unshift({
+						name: undefined,
+						displayName: '全部',
+						priority: 0
+					});
 					if (this.category.list.length !== 0) {
 						this.queryParams.group = this.category.list[0].name;
 						this.fnGetData(true);

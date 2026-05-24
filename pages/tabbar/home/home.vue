@@ -30,7 +30,7 @@
 			</view>
 
 			<!-- 金刚区 :v-if="navList.filter(x=>x.show).length>=4" -->
-      <view v-if="calcIsShowQuickNavigationEnabled && !!navList.filter(x=>x.show).length" class="nav-box mt-16 mb-24 pl-24 pr-24 uh-py-12">
+      		<view v-if="calcIsShowQuickNavigationEnabled && !!navList.filter(x=>x.show).length" class="nav-box mt-16 mb-24 pl-24 pr-24 uh-py-12">
 				<view class="page-item_title text-weight-b ">快捷导航</view>
 				<view class="nav-list flex uh-mt-12">
 					<template v-for="(item,index) in navList">
@@ -193,12 +193,12 @@
 				}
 				return this.haloConfigs.pageConfig.homeConfig.useCategory
 			},
-      calcVotePluginEnabled() {
-        return !!this.haloConfigs?.pluginConfig?.votePlugin?.enabled
-      },
-      calcLinksPluginEnabled() {
-        return !!this.haloConfigs?.pluginConfig?.linksPlugin?.enabled;
-      },
+			calcVotePluginEnabled() {
+				return !!this.haloConfigs?.pluginConfig?.votePlugin?.enabled
+			},
+			calcLinksPluginEnabled() {
+				return !!this.haloConfigs?.pluginConfig?.linksPlugin?.enabled;
+			},
 			bannerConfig() {
 				return this.haloConfigs.pageConfig.homeConfig.bannerConfig
 			}

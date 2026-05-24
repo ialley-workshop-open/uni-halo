@@ -222,11 +222,14 @@
 						size: 0
 					})
 					.then(res => {
-						this.linkGroupList = res.items;
+						console.log("友情链接分组数据：", res);
+						this.linkGroupList = res;
 						this.fnGetData()
 					})
 					.catch(err => {
 						console.error(err);
+						this.loading = 'error';
+						this.loadMoreText = err;
 					});
 			},
 			findLinkGroupDisplayNameByGroupMetadataName(groupName) {

@@ -2,3 +2,4 @@ node_modules/
 unpackage/
 package-lock.json
 .idea
+.trae

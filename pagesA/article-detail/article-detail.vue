@@ -401,6 +401,7 @@ import ArticleDouban from '@/components/article-douban/article-douban.vue';
 import barrage from '@/components/barrage/barrage.vue';
 import { getAppConfigs } from '@/config/index.js';
 import { upvote } from '@/utils/upvote.js';
+import { getDomainOnly } from '@/utils/url.params.js'
 import { checkPostRestrictRead, copyToClipboard, getRestrictReadTypeName, getShowableContent } from '@/utils/restrictRead';
 import HaloTokenConfig from '@/config/uhalo.config';
 import RestrictReadSkeleton from '@/components/restrict-read-skeleton/restrict-read-skeleton.vue';
@@ -636,6 +637,7 @@ export default {
 					this.reloadVote = true;
 					this.fnHandleSetFlotButtonItems(this.haloConfigs);
 					this.handleQueryCommentListScrollTop();
+					this.fnTrackersCounter();
 				})
 				.catch((err) => {
 					console.log('错误', err);
@@ -739,6 +741,20 @@ export default {
 				.catch((err) => {
 					uni.$tm.toast('点赞失败');
 				});
+		},
+		fnTrackersCounter(){
+			const winInfo = uni.getWindowInfo()
+			const appBaseInfo = uni.getAppBaseInfo()
+			this.$httpApi.v2.postTrackersCounter({
+				group: 'content.halo.run',
+				plural: 'posts',
+				name: this.result?.metadata?.name,
+				hostname: getDomainOnly(HaloTokenConfig.BASE_API),
+				screen: `${winInfo.screenWidth}x${winInfo.screenHeight}`,
+				language: appBaseInfo.language,
+				url: `/archives/${HaloTokenConfig.BASE_API}`,
+				referrer: `${HaloTokenConfig.BASE_API}/`
+			})
 		},
 		async fnShowShare() {
 			this.poster.show = true;

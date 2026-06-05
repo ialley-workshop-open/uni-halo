@@ -177,5 +177,9 @@ export default {
 
 	getDoubanDetail: (url) => {
 		return HttpHandler.Get(`/apis/api.douban.moony.la/v1alpha1/doubanmovies/-/getDoubanDetail`, { url })
-	}
+	},
+	
+	postTrackersCounter: (data) => {
+		return HttpHandler.Post(`/apis/api.halo.run/v1alpha1/trackers/counter`, data)
+	},
 }

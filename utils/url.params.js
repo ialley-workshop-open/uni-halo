@@ -50,3 +50,12 @@ export function jsonToUrlParams2(json) {
 		})
 	).join('&')
 }
+
+/**
+* 仅获取域名
+* @param {String} url
+* @returns {String}
+*/
+export function getDomainOnly(url){
+  return url.replace(/^(https?:\/\/)/, '').split('/')[0]
+}

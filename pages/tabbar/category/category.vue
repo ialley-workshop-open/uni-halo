@@ -240,8 +240,6 @@ export default {
             this.$httpApi.v2
                 .getCategoryList(this.queryParams)
                 .then(res => {
-                    console.log('请求结果：');
-                    console.log(res);
                     if (this.calcShowType === 'list') {
                         this.loading = 'success';
                         this.loadMoreText = res.hasNext ? '上拉加载更多' : '呜呜，没有更多数据啦~';
@@ -249,6 +247,7 @@ export default {
                         this.hasNext = res.hasNext;
 
                         const tempItems = res.items.map(item => {
+							item.postCount = item.postCount ?? 0
                             item.spec.cover = this.$utils.checkThumbnailUrl(item.spec.cover, true)
                             return item;
                         })
@@ -262,9 +261,10 @@ export default {
                         this.dataList = res.items
                         this.categoryList = res.items.map(item => {
                             return {
+								...item,
                                 displayName: item.spec.displayName,
                                 name: item.metadata.name,
-                                ...item,
+								postCount: item.postCount ?? 0
                             }
                         })
                         this.triggered = false;

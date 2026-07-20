@@ -275,7 +275,10 @@
 						fieldSelector: ['spec.hideFromList=false']
 					})
 					.then(res => {
-						this.categoryList = res.items.sort((a, b) => {
+						this.categoryList = res.items.map(item=>{
+							item.postCount = item.postCount ?? 0
+							return item;
+						}).sort((a, b) => {
 							return b.postCount - a.postCount;
 						});
 

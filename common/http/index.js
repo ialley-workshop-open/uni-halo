@@ -16,7 +16,9 @@ import {
 } from "./interceptors.js";
 import Request from "@/js_sdk/luch-request/luch-request";
 
-const http = new Request()
+const http = new Request({
+	withCredentials: true, // 是否携带cookie
+})
 /* 设置全局配置 */
 http.setConfig((config) => {
 

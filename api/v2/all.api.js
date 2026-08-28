@@ -3,12 +3,14 @@ import {
 } from '@/utils/token.js'
 import HttpHandler from '@/common/http/request.js'
 import qs from 'qs'
-
+import { getCache } from "@/utils/storage";
+import { getAppConfigs } from '@/config/index.js'
 import {
-	getAppConfigs
-} from '@/config/index.js'
-import { getNologinEmail, getOpenid } from "@/utils/auth";
-
+	getNologinEmail,
+	getOpenid
+} from "@/utils/auth";
+import { CommentWidgetCaptchaCookies } from '@/common/constant/cookies.js'
+ 
 export default {
 	getPostList: (params) => {
 		return HttpHandler.Get(`/apis/api.content.halo.run/v1alpha1/posts`, params)
@@ -52,11 +54,27 @@ export default {
 	},
 
 	addPostComment: (data) => {
-		return HttpHandler.Post(`/apis/api.halo.run/v1alpha1/comments`, data)
+		const captchaCode = data.captchaCode;
+		delete data.captchaCode;
+		return HttpHandler.Post(`/apis/api.halo.run/v1alpha1/comments`, data, {
+			header: {
+				"Accept": "application/json",
+				"X-Captcha-Code": captchaCode,
+				"Cookie": getCache(CommentWidgetCaptchaCookies) ?? undefined
+			}
+		})
 	},
 
 	addPostCommentReply: (commentName, data) => {
-		return HttpHandler.Post(`/apis/api.halo.run/v1alpha1/comments/${commentName}/reply`, data)
+		const captchaCode = data.captchaCode;
+		delete data.captchaCode;
+		return HttpHandler.Post(`/apis/api.halo.run/v1alpha1/comments/${commentName}/reply`, data, {
+			header: {
+				"Accept": "application/json",
+				"X-Captcha-Code": captchaCode,
+				"Cookie": getCache(CommentWidgetCaptchaCookies) ?? undefined
+			}
+		})
 	},
 
 	getTagList: (params) => {
@@ -68,19 +86,11 @@ export default {
 	},
 
 	getMomentList: (params) => {
-		return HttpHandler.Get(`/apis/api.moment.halo.run/v1alpha1/moments`, params, {
-			custom: {
-				personalToken: getPersonalToken()
-			}
-		})
+		return HttpHandler.Get(`/apis/api.moment.halo.run/v1alpha1/moments`, params)
 	},
 
 	getMomentByName: (name) => {
-		return HttpHandler.Get(`/apis/api.moment.halo.run/v1alpha1/moments/${name}`, {}, {
-			custom: {
-				personalToken: getPersonalToken()
-			}
-		})
+		return HttpHandler.Get(`/apis/api.moment.halo.run/v1alpha1/moments/${name}`, {})
 	},
 
 	getBlogStatistics: () => {
@@ -176,10 +186,17 @@ export default {
 	},
 
 	getDoubanDetail: (url) => {
-		return HttpHandler.Get(`/apis/api.douban.moony.la/v1alpha1/doubanmovies/-/getDoubanDetail`, { url })
+		return HttpHandler.Get(`/apis/api.douban.moony.la/v1alpha1/doubanmovies/-/getDoubanDetail`, {
+			url
+		})
 	},
-	
+
 	postTrackersCounter: (data) => {
 		return HttpHandler.Post(`/apis/api.halo.run/v1alpha1/trackers/counter`, data)
 	},
+
+	/** 获取评论验证码 */
+	getCommentWidgetCaptcha: () => {
+		return HttpHandler.Get(`/apis/api.commentwidget.halo.run/v1alpha1/captcha/-/generate`, {})
+	}
 }

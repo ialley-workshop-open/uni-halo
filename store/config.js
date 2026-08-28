@@ -6,6 +6,7 @@
  *  版本：v0.1.0
  */
 import {DefaultAppConfigs, getAppConfigs, getAppMockJson, setAppConfigs, setAppMockJson} from '@/config/index.js'
+import {DefaultHaloGlobalConfigs, getHaloGlobalConfigs, setHaloGlobalConfigs} from '@/config/halo.config.js'
 import v2Config from '@/api/v2/all.config.js'
 import utils from '@/utils/index.js'
 import {setTokens} from "@/utils/token";
@@ -13,10 +14,15 @@ import {setTokens} from "@/utils/token";
 export default {
     namespaced: true,
     state: {
+		haloConfig: getHaloGlobalConfigs(),
         configs: getAppConfigs(),
         mockJson: getAppMockJson(),
     },
     getters: {
+		getHaloConfig(state) {
+			if (state.haloConfig) return state.haloConfig;
+			return getHaloGlobalConfigs();
+		},
         getConfigs(state) {
             if (state.configs) return state.configs;
             return getAppConfigs()
@@ -27,6 +33,10 @@ export default {
         }
     },
     mutations: {
+		setHaloConfigs(state, data) {
+			state.haloConfig = data;
+			setHaloGlobalConfigs(data);
+		},
         setConfigs(state, data) {
             state.configs = data;
             setAppConfigs(data)
@@ -37,6 +47,23 @@ export default {
         }
     },
     actions: {
+		fetchHaloConfigs({state, commit, dispatch}) {
+		    return new Promise(async (resolve, reject) => {
+		        try {
+		            const res = await v2Config.getHaloGlobalInfo()
+		            if (res) {
+		                commit('setHaloConfigs', utils.deepMerge(DefaultHaloGlobalConfigs, res))
+		                resolve(res)
+		            } else {
+		                dispatch("setDefaultHaloGlobalConfigs");
+		                reject()
+		            }
+		        } catch (e) {
+		            dispatch("setDefaultHaloGlobalConfigs");
+		            reject()
+		        }
+		    })
+		},
         fetchConfigs({state, commit, dispatch}) {
             return new Promise(async (resolve, reject) => {
                 try {
@@ -59,6 +86,10 @@ export default {
                 }
             })
         },
+		// 设置默认的数据
+		setDefaultHaloGlobalConfigs({commit}) {
+		    commit('setHaloConfigs', JSON.parse(JSON.stringify(DefaultHaloGlobalConfigs)))
+		},
         // 设置默认的数据
         setDefaultAppSettings({commit}) {
             commit('setConfigs', JSON.parse(JSON.stringify(DefaultAppConfigs)))

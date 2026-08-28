@@ -91,9 +91,6 @@
 					}
 				}
 			}
-		},
-		created() {
-			console.log("comment", this.comment)
 		}
 	};
 </script>

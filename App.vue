@@ -20,7 +20,11 @@ export default {
         // #endif
 
         uni.$tm.vx.actions('config/fetchConfigs').then((res) => {
+			console.log('fetchConfigs', res);
         })
+		uni.$tm.vx.actions('config/fetchHaloConfigs').then((res) => {
+			console.log('fetchHaloConfigs', res);
+		})
         // 启动检查app的配置是否已经就绪，若未就绪则设置默认的
         uni.$tm.vx.actions('setting/checkAndSetDefaultAppSettings');
     },

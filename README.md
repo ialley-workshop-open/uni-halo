@@ -5,7 +5,7 @@
 > 📌 最新代码与开发请前往新组织仓库：
 > https://github.com/uni-halo
 >
-> 新的 UniHalo v3.x 已经正式发布版本，并已上架应用市场。
+> 新的 **【UniHalo v3.x】** 已经正式发布版本，并已上架应用市场。
 >
 > 官网主页：https://uni-halo.ialley.cn
 >

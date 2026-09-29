@@ -1,3 +1,22 @@
+> [!WARNING]
+> # 仓库即将停止维护
+> 本仓库 **不再进行任何更新**，不接受 Pull Request，Issue 将会被自动关闭。
+>
+> 📌 最新代码与开发请前往新组织仓库：
+> https://github.com/uni-halo
+>
+> 新的 UniHalo v3.x 已经正式发布版本，并已上架应用市场。
+>
+> 官网主页：https://uni-halo.ialley.cn
+>
+> 应用源码：https://github.com/uni-halo/uni-halo
+> 
+> 插件源码：https://github.com/uni-halo/uni-halo-plugin
+>
+> 应用市场：https://www.halo.run/store/apps/app-aukgwe3y
+
+---
+
 <p align="center">
     <a href="https://uni-halo.925i.cn" target="_blank" rel="noopener noreferrer">
         <img width="100" src="https://uni-halo.925i.cn/logo.png" alt="uni-halo logo" />
@@ -15,8 +34,7 @@
 	<a href="https://github.com/ialley-workshop-open/uni-halo">仓库地址</a>
 	<a href="https://github.com/ialley-workshop-open/plugin-uni-halo">插件仓库</a>
 </p>
-
----
+ 
 
 如果您觉得这个项目对您有帮助，可以帮作者买杯饮料鼓励鼓励，同时为了项目能够持续发展，可以根据您的喜好支持一下本项目哦，非常感谢您的支持，作者也会更有动力持续维护和更新新的功能哦~
 
